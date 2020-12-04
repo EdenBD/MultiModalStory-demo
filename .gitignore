@@ -1,0 +1,73 @@
+# Personal choices
+_archive
+
+# Projects
+.idea
+.vscode
+*.code-workspace
+
+# Emacs things
+\#*
+.#*
+
+# Vim
+*.swp
+
+# Large files
+*.hdf5
+*.faiss
+
+# Scrap notebooks
+_notebooks
+.ipynb_checkpoints
+
+# Python
+.mypy_cache
+.pytest_cache
+*.pyc
+*.egg-info
+
+# Client side
+.cache
+.cache-loader
+node_modules
+dist
+client/src/*.css
+client/src/*.css.map
+client/src/demo
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+__pycache__
+client_ref/
+_store/
+.cache/
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Ignore pre-trained models downloads, fine-tuned models and datasets
+backend/story_generator/downloaded/**
+backend/story_generator/style_transfer/**
+client/dist/unsplash25k/**
