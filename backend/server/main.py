@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 import server.api as api
 import path_fixes as pf
-from story_generator.pipeline import Pipeline
+# from story_generator.pipeline import Pipeline
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -43,7 +43,8 @@ class Story:
 # Generate an instance of the framework that generates one story.
 @lru_cache
 def getGenerator():
-    return Pipeline(top=1)
+    raise NotImplementedError
+    # return Pipeline(top=1)
 
 
 # Main routes
@@ -71,6 +72,9 @@ def send_static_client(file_path: str):
 ## MAIN API ##
 # ======================================================================
 
+@app.get("/api/docs")
+async def docs():
+    return RedirectResponse(url="/docs")
 
 # GET to read data, parameters that are not partt of the path, automatically become query parameters.
 @app.get("/api/get-a-hi", response_model=str)
@@ -78,7 +82,7 @@ async def hello(firstname: str, age: int = 45):
     return "Hello " + firstname
 
 
-# POST to send/ create data, response_model converts output data to its type declaration.
+# POST yo send/ create data, response_model converts output data to its type declaration.
 @app.post("/api/post-a-bye", response_model=str)
 async def goodbye(payload: api.GoodbyePayload):
     # Coerce into correct type. Not needed if no test written for this endpoint
