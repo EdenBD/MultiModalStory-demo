@@ -12,7 +12,7 @@
             target="_blank"
             href="https://github.com/EdenBD/multimodal-storytelling-gan"
           >
-            <i class="fa fa-info-circle" style="color: #6d6d6d;"></i>
+            <i class="fa fa-info-circle" style="color: #6d6d6d"></i>
           </a>
           <div class="options">
             <div class="options-el">
@@ -29,7 +29,8 @@
             </div>
             <div class="options-el">
               <a>
-                <i class="fa fa-picture-o" aria-hidden="true"></i> Retrieve Image
+                <i class="fa fa-picture-o" aria-hidden="true"></i> Retrieve
+                Image
               </a>
               or
               <code> shift </code>
@@ -44,7 +45,8 @@
         <summary></summary>
         <div class="desciption-txt">
           <b>Step 1:</b> Change title and Generate a Story. <br />
-          <b>Step 2:</b> continue writing and autocomplete text and images. <br />
+          <b>Step 2:</b> continue writing and autocomplete text and images.
+          <br />
           <b>Step 3:</b> Give feedback and submit your story. <br />
           The<a href="https://github.com/EdenBD/multimodal-storytelling-gan">
             framework</a
@@ -56,7 +58,7 @@
         </div>
       </details>
     </div>
-  
+
     <div>
       <article>
         <!-- TODO(ADD onClick Change story)-->
@@ -65,9 +67,18 @@
         <!-- TODO(FORM submission database + free text form submission security issues) -->
         <!-- TODO(Loading symbol, progresss according to total time? Completed steps?) -->
         <!-- TODO(BEN - Q | MAURO - Q) -->
-        <h2 class="editable story-title" contenteditable="true" id="story-title">
-          The Mighty Dragon
+        <h2
+          class="editable story-title"
+          contenteditable="true"
+          id="story-title"
+        >
+          {{ title }}
         </h2>
+        <div>
+          <span v-for="name in nameOptions" v-bind:key="name" class="name-option" @click="() => updateTitle(name)">{{
+            name
+          }}</span>
+        </div>
         <div id="story-article">
           <p class="editable" contenteditable="true" id="story-p0">
             This creature, the Mighty Dragon, lived hundreds of years, rising in
@@ -81,23 +92,21 @@
             id="story-img0"
           />
           <p class="editable" contenteditable="true" id="story-p1">
-            So huge were his wings that he could fly over lands and water with the
-            ease of a bird. It would seem that he was invincible to the Japanese,
-            so all Japan was awed by the sight of the Mighty Dragon on the
-            mountains of Fuji, only he could never make himself understood as a
-            name.
+            So huge were his wings that he could fly over lands and water with
+            the ease of a bird. It would seem that he was invincible to the
+            Japanese, so all Japan was awed by the sight of the Mighty Dragon on
+            the mountains of Fuji, only he could never make himself understood
+            as a name.
           </p>
           <img
             class="story-img"
             src="unsplash25k/sketch_images/e9QFb4VVu8M.jpg"
             id="story-img1"
           />
-          <p class="editable" contenteditable="true">
-            CONTINUE STORY HERE ...
-          </p>
+          <p class="editable" contenteditable="true">CONTINUE STORY HERE ...</p>
         </div>
       </article>
-  
+
       <article class="ratings-card">
         <h3 class="card-title">Score Auto-Generated Story</h3>
         <form id="scores" action="#" method="post">
@@ -150,7 +159,9 @@
                   id="coherence-star5"
                   name="coherence-rating"
                   value="5"
-                /><label for="coherence-star5" title="Outstanding">5 stars</label>
+                /><label for="coherence-star5" title="Outstanding"
+                  >5 stars</label
+                >
                 <input
                   type="radio"
                   id="coherence-star4"
@@ -196,7 +207,9 @@
                   id="creativity-star4"
                   name="creativity-rating"
                   value="4"
-                /><label for="creativity-star4" title="Very Good">4 stars</label>
+                /><label for="creativity-star4" title="Very Good"
+                  >4 stars</label
+                >
                 <input
                   type="radio"
                   id="creativity-star3"
@@ -234,7 +247,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, watch, watchEffect } from "vue";
 import { API } from "./ts/api/mainApi";
-import HelloWorld from "./components/HelloWorld.vue";
+// import HelloWorld from "./components/HelloWorld.vue";
 
 export default defineComponent({
   name: "App",
@@ -242,20 +255,21 @@ export default defineComponent({
     // HelloWorld
   },
   setup() {
-    const msg = ref("Welcome to Vue, Eden");
+    const selectedName = ref("Eden")
+    const title = computed(() => `Welcome to Vue, ${selectedName.value}`);
+    const nameOptions = ["Eden", "Ben", "Hen", "Jacob"];
     const api = new API();
 
-    function buttonClick() {
-      api.getAHi("Ben").then(r => {
-        msg.value = r;
-      });
+    function updateTitle(name: string) {
+      selectedName.value = name
     }
 
     return {
-      msg,
-      buttonClick
+      title,
+      nameOptions,
+      updateTitle,
     };
-  }
+  },
 });
 </script>
 
@@ -264,22 +278,20 @@ export default defineComponent({
 @import "./fonts/plex_sans.css";
 @import "./css/base.scss";
 
+// Add additional custom css in either the files above or here
+
 body {
-  background-color:#eee;
-  font-family: 'IBM Plex Sans', sans-serif;
+  background-color: #eee;
+  font-family: "IBM Plex Sans", sans-serif;
   font-weight: 400;
   margin: 5em;
   margin-top: 12em;
   font-size: larger;
 }
 
-
-// #app {
-//   font-family: Avenir, Helvetica, Arial, sans-serif;
-//   -webkit-font-smoothing: antialiased;
-//   -moz-osx-font-smoothing: grayscale;
-//   text-align: center;
-//   color: #2c3e50;
-//   margin-top: 60px;
-// }
+.name-option {
+  margin: 2px 0.3rem;
+  border: solid 2px brown;
+  border-radius: 2px;
+}
 </style>

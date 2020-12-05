@@ -10,7 +10,9 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 import server.api as api
 import path_fixes as pf
-# from story_generator.pipeline import Pipeline
+
+# BROKEN IMPORT
+# from story_generator.pipeline import Pipeline 
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -52,7 +54,10 @@ def getGenerator():
 
 @app.get("/")
 def index():
-    """For local development, serve the index.html in the dist folder"""
+    """For local development, serve the index.html in the dist folder
+    
+    NOTE: Not needed for vue cli
+    """
     return RedirectResponse(url="client/index.html")
 
 
@@ -60,6 +65,8 @@ def index():
 @app.get("/client/{file_path:path}")
 def send_static_client(file_path: str):
     """ Serves (makes accessible) all files from ./client/ to ``/client/{path}``. Used primarily for development. NGINX handles production.
+
+    NOTE: Not needed for Vue CLI
 
     Args:
         path: Name of file in the client directory
