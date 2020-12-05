@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { SimpleEventHandler } from "./etc/SimpleEventHandler";
 import { API } from "./api/mainApi";
-import { AnyMxRecord } from "dns";
+// import { AnyMxRecord } from "dns";
 
 /**
  * Main functionality in the below function
