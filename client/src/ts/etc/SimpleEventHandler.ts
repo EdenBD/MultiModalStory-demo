@@ -7,32 +7,31 @@
  * Ensure the class calling the event emits itself in the 'caller' key of details
  */
 export interface EventDetails {
-    caller: any
+  caller: any;
 }
 
 export class SimpleEventHandler {
+  element: Element;
+  eventListeners: object[];
 
-    element: Element;
-    eventListeners: object[];
+  constructor(element: Element) {
+    this.element = element;
+    this.eventListeners = [];
+  }
 
-    constructor(element: Element) {
-        this.element = element;
-        this.eventListeners = []
+  bind(eventNames: string, eventFunction: Function) {
+    for (const eventName of eventNames.split(" ")) {
+      this.eventListeners.push({ eventName, eventFunction });
+      const eventFunctionWrap = e => eventFunction(e.detail, e);
+      this.element.addEventListener(eventName, eventFunctionWrap, false);
     }
+  }
 
-    bind(eventNames: string, eventFunction: Function) {
-        for (const eventName of eventNames.split(' ')) {
-            this.eventListeners.push({eventName, eventFunction});
-            const eventFunctionWrap = e => eventFunction(e.detail, e);
-            this.element.addEventListener(eventName, eventFunctionWrap, false);
-        }
-    }
+  getListeners() {
+    return this.eventListeners;
+  }
 
-    getListeners() {
-        return this.eventListeners;
-    }
-
-    trigger(eventName: string, detail: {caller: any}) {
-        this.element.dispatchEvent(new CustomEvent(eventName, {detail}));
-    }
+  trigger(eventName: string, detail: { caller: any }) {
+    this.element.dispatchEvent(new CustomEvent(eventName, { detail }));
+  }
 }

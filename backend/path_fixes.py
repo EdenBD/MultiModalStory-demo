@@ -6,5 +6,5 @@ ROOT = Path(
     os.path.abspath(__file__)
 ).parent.parent  # Root directory of the project
 SRC = ROOT / "src"
-CLIENT = ROOT / "client"
-DIST = CLIENT / "dist"
+CLIENT = ROOT / "client" # NOT NEEDED FOR VUE CLI
+DIST = CLIENT / "dist" # NOT NEEDED FOR VUE CLI

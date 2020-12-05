@@ -7,6 +7,8 @@ channels:
 dependencies:
   - pip>=19.0.3
   - python>=3.8
+  - pytorch
+  - torchvision=0.6.1
   - boto3
   - regex
   - numpy
@@ -16,16 +18,14 @@ dependencies:
   - mypy
   - black
   - pip:
-    - fastapi[all]==0.54.1
+    - transformers==3.5.1
+    - fastapi[all]>=0.54.1
     - pydantic>=1.2.0,<2.0.0
     - async-lru
-    - transformers==3.5.1
     - stop-words
     - nltk
     - spacy
     - scikit-learn
-    - torch==1.5.1
-    - torchvision==0.6.1
     - pandas
     - matplotlib
 
