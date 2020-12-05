@@ -116,6 +116,12 @@ article p + p {
   margin-top: .7em;
 }
 
+article strong {
+  border-radius: 6px;
+  background-color: #d6eaf8;
+  font-weight: normal;
+}
+
 code {
   background-color:#eee;
   color: black;

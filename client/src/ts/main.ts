@@ -62,14 +62,14 @@ export function main() {
     //     allText += pText.text().replace(/\s\s+/g, ' ');
     // });
     // Append generated texts. 
-    api.autocompleteTextByAllExtracts(allText).then((text_completions) => {
-        for (let i = 0; i < text_completions.length; i++) {
-            // TODO(append texts to options bar)
-            current_p.append("span")
-                .text(text_completions[i])
-                .attr("class", "editable");
-        }
-    });
+    // api.autocompleteTextByAllExtracts(allText).then((text_completions) => {
+    //     for (let i = 0; i < text_completions.length; i++) {
+    //         // TODO(append texts to options bar)
+    //         current_p.append("span")
+    //             .text(text_completions[i])
+    //             .attr("class", "editable");
+    //     }
+    // });
 
     // Event handler on change of rating value:
     // const clarity_all = d3.selectAll('input[name="clarity-rating"]');

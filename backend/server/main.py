@@ -39,16 +39,16 @@ class Story:
         self.images = images
 
 
-# Function will run once thanks to cache
-# Generate an instance of the framework that generates one story.
 @lru_cache
 def getGenerator():
+    """
+    Function will run once thanks to cache.
+    Generate an instance of the framework that generates one story.
+    """
     return Pipeline(top=1)
 
 
 # Main routes
-
-
 @app.get("/")
 def index():
     """For local development, serve the index.html in the dist folder"""
