@@ -1,8 +1,8 @@
 # Local imports
-import story_generator.constants as constants
-from story_generator.generation_utils import sample_stories_texts, retrieve_images_for_one_story, retrieve_images_for_one_extract, get_retreival_info, load_style_transfer_model, story_style_transfer, _sample_sequence
-from story_generator.ranking_utils import score_text, images_coherency, KLDIV_error_per_text
-from story_generator.helper_functions import split_to_extracts
+import constants
+from generation_utils import sample_stories_texts, retrieve_images_for_one_story, retrieve_images_for_one_extract, get_retreival_info, load_style_transfer_model, story_style_transfer, _sample_sequence
+from ranking_utils import score_text, images_coherency, KLDIV_error_per_text
+from helper_functions import split_to_extracts
 
 # ML imports
 import torch

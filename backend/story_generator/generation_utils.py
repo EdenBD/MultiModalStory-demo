@@ -1,7 +1,7 @@
-import story_generator.constants as constants
+import constants
 
 # Text Generation
-from story_generator.ranking_utils import score_text, sort_scores
+from ranking_utils import score_text, sort_scores
 import torch
 from math import ceil
 
@@ -16,11 +16,11 @@ import spacy
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
-from story_generator.helper_functions import generate_prompt
+from helper_functions import generate_prompt
 
 # Image style transfer
 from torchvision import transforms
-from story_generator.style_transfer.transformer_net import TransformerNet
+from style_transfer.transformer_net import TransformerNet
 
 
 def _last_stop_token(tokenizer, tokens_output):

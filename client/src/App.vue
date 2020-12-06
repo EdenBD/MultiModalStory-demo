@@ -25,7 +25,8 @@
               <a>
                 <i class="fa fa-magic" aria-hidden="true"></i> Autocomplete Text
               </a>
-              or <code> tab </code>
+              or
+              <code>tab</code>
             </div>
             <div class="options-el">
               <a>
@@ -33,7 +34,7 @@
                 Image
               </a>
               or
-              <code> shift </code>
+              <code>shift</code>
             </div>
           </div>
         </div>
@@ -44,13 +45,13 @@
       <details open>
         <summary></summary>
         <div class="desciption-txt">
-          <b>Step 1:</b> Change title and Generate a Story. <br />
+          <b>Step 1:</b> Change title and Generate a Story.
+          <br />
           <b>Step 2:</b> continue writing and autocomplete text and images.
           <br />
-          <b>Step 3:</b> Give feedback and submit your story. <br />
-          The<a href="https://github.com/EdenBD/multimodal-storytelling-gan">
-            framework</a
-          >
+          <b>Step 3:</b> Give feedback and submit your story.
+          <br />The
+          <a href="https://github.com/EdenBD/multimodal-storytelling-gan">framework</a>
           uses a guided fine-tuned
           <a href="https://huggingface.co/gpt2">GPT-2</a> text generations and
           <a href="https://github.com/unsplash/datasets">Unsplash</a> Image
@@ -67,43 +68,39 @@
         <!-- TODO(FORM submission database + free text form submission security issues) -->
         <!-- TODO(Loading symbol, progresss according to total time? Completed steps?) -->
         <!-- TODO(BEN - Q | MAURO - Q) -->
-        <h2
-          class="editable story-title"
-          contenteditable="true"
-          id="story-title"
-        >
-          {{ title }}
-        </h2>
+        <h2 class="editable story-title" contenteditable="true" id="story-title">{{ title }}</h2>
         <div>
-          <span v-for="name in nameOptions" v-bind:key="name" class="name-option" @click="() => updateTitle(name)">{{
+          <span
+            v-for="name in nameOptions"
+            v-bind:key="name"
+            class="name-option"
+            @click="() => updateTitle(name)"
+          >
+            {{
             name
-          }}</span>
+            }}
+          </span>
         </div>
-        <div id="story-article">
-          <p class="editable" contenteditable="true" id="story-p0">
-            This creature, the Mighty Dragon, lived hundreds of years, rising in
-            the clouds above the world and his great body slowly sinking beneath
-            the earth. His power was greater than all the dragons on Mount Fuji,
-            as his body held more power than all the dragons in the world.
+        <div id="story-article" contenteditable="true" class="editable">
+          <p id="story-p0">
+            <strong>
+              This creature, the Mighty Dragon,
+              lived hundreds of years, rising in the clouds above the world and his great body slowly sinking
+              beneath
+              the earth.His power was greater than
+              all the dragons on Mount Fuji, as his body held more power
+              than all the dragons in the world.
+            </strong> NOT GENERATED.
           </p>
-          <img
-            class="story-img"
-            src="unsplash25k/sketch_images/pWzcj7wnC-c.jpg"
-            id="story-img0"
-          />
-          <p class="editable" contenteditable="true" id="story-p1">
-            So huge were his wings that he could fly over lands and water with
-            the ease of a bird. It would seem that he was invincible to the
-            Japanese, so all Japan was awed by the sight of the Mighty Dragon on
-            the mountains of Fuji, only he could never make himself understood
-            as a name.
+          <img class="story-img" src="unsplash25k/sketch_images/pWzcj7wnC-c.jpg" id="story-img0" />
+          <p id="story-p1">
+            So huge were his wings that he could fly over lands and water
+            with the ease of a bird. It would seem that he was invincible to the Japanese, so all Japan was awed
+            by the sight of the Mighty Dragon on the mountains of Fuji, only he could never make himself
+            understood as a name.
           </p>
-          <img
-            class="story-img"
-            src="unsplash25k/sketch_images/e9QFb4VVu8M.jpg"
-            id="story-img1"
-          />
-          <p class="editable" contenteditable="true">CONTINUE STORY HERE ...</p>
+          <img class="story-img" src="unsplash25k/sketch_images/e9QFb4VVu8M.jpg" id="story-img1" />
+          <p>CONTINUE STORY HERE ...</p>
         </div>
       </article>
 
@@ -116,36 +113,16 @@
             <div class="rating-el-title-el star-rating">
               <fieldset>
                 <!-- same name attributes ensures users can only choose one star -->
-                <input
-                  type="radio"
-                  id="clarity-star5"
-                  name="clarity-rating"
-                  value="5"
-                /><label for="clarity-star5" title="Outstanding">5 stars</label>
-                <input
-                  type="radio"
-                  id="clarity-star4"
-                  name="clarity-rating"
-                  value="4"
-                /><label for="clarity-star4" title="Very Good">4 stars</label>
-                <input
-                  type="radio"
-                  id="clarity-star3"
-                  name="clarity-rating"
-                  value="3"
-                /><label for="clarity-star3" title="Good">3 stars</label>
-                <input
-                  type="radio"
-                  id="clarity-star2"
-                  name="clarity-rating"
-                  value="2"
-                /><label for="clarity-star2" title="Poor">2 stars</label>
-                <input
-                  type="radio"
-                  id="clarity-star1"
-                  name="clarity-rating"
-                  value="1"
-                /><label for="clarity-star1" title="Very Poor">1 star</label>
+                <input type="radio" id="clarity-star5" name="clarity-rating" value="5" />
+                <label for="clarity-star5" title="Outstanding">5 stars</label>
+                <input type="radio" id="clarity-star4" name="clarity-rating" value="4" />
+                <label for="clarity-star4" title="Very Good">4 stars</label>
+                <input type="radio" id="clarity-star3" name="clarity-rating" value="3" />
+                <label for="clarity-star3" title="Good">3 stars</label>
+                <input type="radio" id="clarity-star2" name="clarity-rating" value="2" />
+                <label for="clarity-star2" title="Poor">2 stars</label>
+                <input type="radio" id="clarity-star1" name="clarity-rating" value="1" />
+                <label for="clarity-star1" title="Very Poor">1 star</label>
               </fieldset>
             </div>
           </div>
@@ -154,38 +131,16 @@
             <h4 class="card-title rating-el-title-el">Coherence</h4>
             <div class="rating-el-title-el star-rating">
               <fieldset>
-                <input
-                  type="radio"
-                  id="coherence-star5"
-                  name="coherence-rating"
-                  value="5"
-                /><label for="coherence-star5" title="Outstanding"
-                  >5 stars</label
-                >
-                <input
-                  type="radio"
-                  id="coherence-star4"
-                  name="coherence-rating"
-                  value="4"
-                /><label for="coherence-star4" title="Very Good">4 stars</label>
-                <input
-                  type="radio"
-                  id="coherence-star3"
-                  name="coherence-rating"
-                  value="3"
-                /><label for="coherence-star3" title="Good">3 stars</label>
-                <input
-                  type="radio"
-                  id="coherence-star2"
-                  name="coherence-rating"
-                  value="2"
-                /><label for="coherence-star2" title="Poor">2 stars</label>
-                <input
-                  type="radio"
-                  id="coherence-star1"
-                  name="coherence-rating"
-                  value="1"
-                /><label for="coherence-star1" title="Very Poor">1 star</label>
+                <input type="radio" id="coherence-star5" name="coherence-rating" value="5" />
+                <label for="coherence-star5" title="Outstanding">5 stars</label>
+                <input type="radio" id="coherence-star4" name="coherence-rating" value="4" />
+                <label for="coherence-star4" title="Very Good">4 stars</label>
+                <input type="radio" id="coherence-star3" name="coherence-rating" value="3" />
+                <label for="coherence-star3" title="Good">3 stars</label>
+                <input type="radio" id="coherence-star2" name="coherence-rating" value="2" />
+                <label for="coherence-star2" title="Poor">2 stars</label>
+                <input type="radio" id="coherence-star1" name="coherence-rating" value="1" />
+                <label for="coherence-star1" title="Very Poor">1 star</label>
               </fieldset>
             </div>
           </div>
@@ -194,46 +149,20 @@
             <h4 class="card-title rating-el-title-el">Creativity</h4>
             <div class="rating-el-title-el star-rating">
               <fieldset>
-                <input
-                  type="radio"
-                  id="creativity-star5"
-                  name="creativity-rating"
-                  value="5"
-                /><label for="creativity-star5" title="Outstanding"
-                  >5 stars</label
-                >
-                <input
-                  type="radio"
-                  id="creativity-star4"
-                  name="creativity-rating"
-                  value="4"
-                /><label for="creativity-star4" title="Very Good"
-                  >4 stars</label
-                >
-                <input
-                  type="radio"
-                  id="creativity-star3"
-                  name="creativity-rating"
-                  value="3"
-                /><label for="creativity-star3" title="Good">3 stars</label>
-                <input
-                  type="radio"
-                  id="creativity-star2"
-                  name="creativity-rating"
-                  value="2"
-                /><label for="creativity-star2" title="Poor">2 stars</label>
-                <input
-                  type="radio"
-                  id="creativity-star1"
-                  name="creativity-rating"
-                  value="1"
-                /><label for="creativity-star1" title="Very Poor">1 star</label>
+                <input type="radio" id="creativity-star5" name="creativity-rating" value="5" />
+                <label for="creativity-star5" title="Outstanding">5 stars</label>
+                <input type="radio" id="creativity-star4" name="creativity-rating" value="4" />
+                <label for="creativity-star4" title="Very Good">4 stars</label>
+                <input type="radio" id="creativity-star3" name="creativity-rating" value="3" />
+                <label for="creativity-star3" title="Good">3 stars</label>
+                <input type="radio" id="creativity-star2" name="creativity-rating" value="2" />
+                <label for="creativity-star2" title="Poor">2 stars</label>
+                <input type="radio" id="creativity-star1" name="creativity-rating" value="1" />
+                <label for="creativity-star1" title="Very Poor">1 star</label>
               </fieldset>
             </div>
           </div>
-          <h4 class="card-title rating-el-title-el">
-            Any comments, questions or suggestions?
-          </h4>
+          <h4 class="card-title rating-el-title-el">Any comments, questions or suggestions?</h4>
           <textarea rows="3"></textarea>
           <div class="submit-bttn card-title">
             <input type="submit" value="Submit Story" />
@@ -255,21 +184,21 @@ export default defineComponent({
     // HelloWorld
   },
   setup() {
-    const selectedName = ref("Eden")
+    const selectedName = ref("Eden");
     const title = computed(() => `Welcome to Vue, ${selectedName.value}`);
     const nameOptions = ["Eden", "Ben", "Hen", "Jacob"];
     const api = new API();
 
     function updateTitle(name: string) {
-      selectedName.value = name
+      selectedName.value = name;
     }
 
     return {
       title,
       nameOptions,
-      updateTitle,
+      updateTitle
     };
-  },
+  }
 });
 </script>
 
