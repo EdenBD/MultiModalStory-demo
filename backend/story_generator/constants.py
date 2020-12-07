@@ -18,12 +18,6 @@ FINETUNED_GPT2_PATH = os.path.join(
 PRESET_GPT2_PATH = os.path.join(
     MAIN_DOWNLOADED_MODELS_DIR, "saved_gpt2_medium/")
 
-# Style Transfer model.
-
-STYLE_TRANSFER_MODEL_NAME = 'style_sketch.model'
-STYLE_TRANSFER_MODEL_PATH = os.path.join(
-    MAIN_DOWNLOADED_MODELS_DIR, STYLE_TRANSFER_MODEL_NAME)
-
 # Text Generation Constants.
 
 BATCH_SIZE = 1
@@ -36,10 +30,10 @@ STARTING_PROMPTS = ["The Truth is Written in the Stars\n"]
 
 # Image Retrieval.
 
-UNSPLASH_IMG_FOLDER = os.path.join("client/dist/", 'unsplash25k/')
+UNSPLASH_IMG_FOLDER = os.path.join("client/public/", 'unsplash25k/')
 IMAGE_TO_CAPTION_CSV = os.path.join(UNSPLASH_IMG_FOLDER, 'image_caption.csv')
 # Change folder according to style model
-UNSPLASH_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'sketch_images/')
+ORIGINAL_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'images')
 IMAGE_WIDTH, IMAGE_HEIGHT = 512, 512
 
 # Pipeline/ Optimization. TODO(IMPROVE constants for deployment with GPU)

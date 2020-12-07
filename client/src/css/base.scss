@@ -106,9 +106,16 @@ article {
   margin-top: 3em;
 
 }
+
+.editor {
+  width: 65%;
+  margin-top: 3em;
+}
+
 article p {
   margin: 0;
   color: #333;
+  white-space: initial;
 }
 
 // + for elements placed immdiately after
@@ -116,10 +123,10 @@ article p + p {
   margin-top: .7em;
 }
 
-article strong {
-  border-radius: 6px;
-  background-color: #d6eaf8;
-  font-weight: normal;
+// For generated text decoration
+s {
+text-decoration: solid;
+background-color: rgb(204, 224, 245);
 }
 
 code {
@@ -138,13 +145,12 @@ code {
 .story-title {
   text-align: center;
   font-weight: unset;
-  font-size: 260%;
+  margin-bottom: 0.5em;
 }
 
 
 .story-img{
   // center: top right bottom left
-  margin: .7em auto .7em auto;
   display: block;
   max-width: 80%;
 }
@@ -169,7 +175,7 @@ code {
 
 // Ratings card
 .ratings-card{
-  width: 29%;
+  width: 25%;
   position: fixed;
 }
 
@@ -219,7 +225,7 @@ textarea {
 
 .star-rating { 
   font-family: 'FontAwesome'; 
-  padding-top: .17em;
+  padding-top: 0.7em;
   float: right;
   
   > fieldset {

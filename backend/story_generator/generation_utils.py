@@ -230,14 +230,14 @@ def story_style_transfer(story, style_model, device):
     return list(map(lambda catpion_img: (catpion_img[0], _image_style_transfer(catpion_img[1], style_model, device)), story))
 
 
-def _get_image(image_id):
+def _get_image(image_id, path):
     """
     Args:
         image_id (str): id of Unsplash image
     Returns file image from given id name using image path from constants file.
     """
     image = Image.open(os.path.join(
-        constants.UNSPLASH_IMAGES_PATH, image_id+'.jpg'))
+        path, image_id+'.jpg'))
     return image.resize((constants.IMAGE_WIDTH, constants.IMAGE_HEIGHT))
 
 
@@ -257,7 +257,7 @@ def _encode_image(pil_img):
     return base64.b64encode(im_bytes)
 
 
-def retrieve_images_for_one_story(generated_text, num_images, captions_embeddings, lsa_embedder, df, nlp):
+def retrieve_images_for_one_story(generated_text, num_images, captions_embeddings, lsa_embedder, df, nlp, images_path):
     """
     Args:
         generated_text (list): one story text to generate images sequence for.
@@ -306,7 +306,7 @@ def retrieve_images_for_one_story(generated_text, num_images, captions_embedding
 
     # get PIL Image from file name. Each tuple in file_caption is (img_id, caption)
     # Convert to  [(id, PIL img)...]
-    return list(map(lambda img_caption: (img_caption[0], _get_image(img_caption[0])), file_caption))
+    return list(map(lambda img_caption: (img_caption[0], _get_image(img_caption[0], images_path)), file_caption))
 
 
 def retrieve_images_for_one_extract(generated_text, num_images, captions_embeddings, lsa_embedder, df, nlp, prev_idx=[]):
