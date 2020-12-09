@@ -1,6 +1,6 @@
 <template>
   <article>
-    <div :id="id" ref="quillContainer" v-on:keydown="handleKeyDown"></div>
+    <div :id="id" ref="quillContainer" v-on:keyup="handleKeyUp"></div>
   </article>
 </template>
 
@@ -65,9 +65,20 @@ export default defineComponent({
       this.$emit("ready", this.quill);
     },
     setupQuillEditor() {
+      const bindings = {
+        tab: {
+          key: 9,
+          handler: function(range, context) {
+            console.log("Handle tab at:", range, context);
+          }
+        }
+      };
       const editorConfig = {
         modules: {
-          toolbar: false
+          toolbar: false,
+          keyboard: {
+            bindings: bindings
+          }
         },
         theme: "bubble"
       };
@@ -113,104 +124,52 @@ export default defineComponent({
     getCursorPos() {
       return this.cursorPos;
     },
-    handleKeyDown() {
-      console.log("key down");
-      //   this.setCursorPos();
+    handleKeyUp(event) {
+      this.quill.hasFocus() &&
+        // to execute after the handler event.
+        setTimeout(() => {
+          this.setCursorPos(),
+            console.log("KeyUP this.cursorPos", this.cursorPos),
+            // Works without -1??
+            this.quill.removeFormat(this.cursorPos - 1, 1, "silent");
+        }, 1);
     },
     handleTextChange(delta, oldContents, source) {
       console.log("handleTextChange", this.quill.getSelection());
       let editorContent =
         this.quill.getHTML() === "<p><br></p>" ? "" : this.quill.getHTML();
       this.$emit("update:modelValue", editorContent);
-      const isInsertInGenerated = delta.ops.some(
-        A => A.attributes && !0 === A.attributes.strike
-      );
-      if (this.quill.hasFocus()) {
-        setTimeout(() => {
-          const insertOps = delta["ops"].filter(o => "insert" in o);
-          const retainOps = delta["ops"].filter(o => "retain" in o);
-          if (insertOps.length == 1 && retainOps.length == 1) {
-            let charIndex = retainOps[0]["retain"];
-            this.quill.setSelection(charIndex + 1, 0);
-            // Changing format changes the tag and thrrows off indexing?
-            delta2 = this.quill.removeFormat(charIndex, 1, "silent");
-            console.log("delta2", delta2);
-            if (isInsertInGenerated) {
-              console.log("charIndex", charIndex);
-            }
-          }
-        }, 1);
-      }
-      //   CHECK IF DELTA INCLUDES INSERT
-      if (this.useCustomImageHandler) {
-        this.handleImageRemoved(delta, oldContents);
-      }
-      //   if (source === "user") {
-      //     let insertEvents = delta.ops.filter(op => op.hasOwnProperty("insert"));
-      //     if (insertEvents.length === 0 || this.quill.getSelection() === null)
-      //       return;
-      //     console.log("delta", delta);
-      //     this.quill.format("strike", false);
-      //     let cursorIndex = this.quill.getSelection().index;
-      //     console.log("insert: cursorIndex", cursorIndex);
-      //     let curFormat = this.quill.getFormat(cursorIndex, 1);
-      //     if (curFormat !== null) {
-      //       console.log("curFormat.strike", curFormat.strike);
-      //   if (curFormat.strike) {
-      //     this.quill.formatText(cursorIndex, 1, "strike", false);
-      //   }
-      // }
-    },
-    // handleEditorChange(eventName, delta, oldContents, source) {
-    //   if (eventName === "text-change") {
-    //     console.log("handleEditorChange");
-    //     console.log("delta", delta);
-    //     const insertOps = delta["ops"].filter(o => "insert" in o);
-    //     if (insertOps.length == 1) {
-    //       const insert = insertOps[0]["insert"];
-    //       if (insert.length == 1 && this.quill.getSelection() !== null) {
-    //         const charIndex =
-    //           this.quill.getSelection().index - 1 >= 0
-    //             ? this.quill.getSelection().index - 1
-    //             : 0;
-    //         const curFormat = this.quill.getFormat(charIndex, 1);
-    //         if (curFormat !== null && curFormat.strike) {
-    //           console.log("insert:", insert, insert.length);
-    //           console.log("charIndex", charIndex);
-
-    //           this.quill.formatText(charIndex, 1, "strike", true);
-    //           this.quill.update();
-    //         }
-    //       }
-    //     }
-    //   }
-    // },
-    handleImageRemoved(delta, oldContents) {
-      const currrentContents = this.quill.getContents();
-      const deletedContents = currrentContents.diff(oldContents);
-      const operations = deletedContents.ops;
-      operations.map(operation => {
-        // eslint-disable-next-line no-prototype-builtins
-        if (operation.insert && operation.insert.hasOwnProperty("image")) {
-          const { image } = operation.insert;
-          this.$emit("image-removed", image);
-        }
-      });
-    },
-    customImageHandler() {
-      this.$refs.fileInput.click();
-    },
-    emitImageInfo($event) {
-      const resetUploader = function() {
-        const uploader = document.getElementById("file-upload");
-        uploader.value = "";
-      };
-      let file = $event.target.files[0];
-      let Editor = this.quill;
-      let range = Editor.getSelection();
-      let cursorLocation = range.index;
-      this.$emit("image-added", file, Editor, cursorLocation, resetUploader);
     }
+    // if (this.useCustomImageHandler) {
+    //   this.handleImageRemoved(delta, oldContents);
+    // }
+    // }
+    // handleImageRemoved(delta, oldContents) {
+    //   const currrentContents = this.quill.getContents();
+    //   const deletedContents = currrentContents.diff(oldContents);
+    //   const operations = deletedContents.ops;
+    //   operations.map(operation => {
+    //     // eslint-disable-next-line no-prototype-builtins
+    //     if (operation.insert && operation.insert.hasOwnProperty("image")) {
+    //       const { image } = operation.insert;
+    //       this.$emit("image-removed", image);
+    //     }
+    //   });
+    // },
+    // customImageHandler() {
+    //   this.$refs.fileInput.click();
+    // },
+    // emitImageInfo($event) {
+    //   const resetUploader = function() {
+    //     const uploader = document.getElementById("file-upload");
+    //     uploader.value = "";
+    //   };
+    //   let file = $event.target.files[0];
+    //   let Editor = this.quill;
+    //   let range = Editor.getSelection();
+    //   let cursorLocation = range.index;
+    //   this.$emit("image-added", file, Editor, cursorLocation, resetUploader);
+    // }
   }
 });
 </script>

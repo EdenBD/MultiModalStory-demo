@@ -66,7 +66,11 @@
     <!-- MAIN EDITOR -->
 
     <div>
-      <Editor class="editor"></Editor>
+      <Generated
+        class="editor"
+        extract="This creature, the Mighty Dragon,lived hundreds of years, rising in the clouds above the world and his great body slowly sinking beneath the earth. His power was greater than all the dragons on Mount Fuji, as his body held more power than all the dragons in the world."
+      ></Generated>
+      <EditableP></EditableP>
       <!-- TODO(ADD onClick Change story)-->
       <!-- TODO(ADD text autocompletion _sample_sequence onClick + keyboard) -->
       <!-- TODO(ADD image retrieval generate_images(texts_to_consider=1, one_image_retrival=True) onClick + keyboard) -->
@@ -79,15 +83,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch, watchEffect } from "vue";
+import { defineComponent, ref } from "vue";
 import { API } from "./ts/api/mainApi";
 import RatingForm from "./components/RatingForm.vue";
-import Editor from "./components/Editor.vue";
+import Generated from "./components/Generated.vue";
+import EditableP from "./components/EditableP.vue";
 
 export default defineComponent({
   name: "App",
   components: {
-    Editor,
+    Generated,
+    EditableP,
     RatingForm
   },
   setup() {
