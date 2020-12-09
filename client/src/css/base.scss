@@ -36,6 +36,7 @@ header .inner-heading {
   overflow: hidden;
   display: list-item;
   margin-bottom: 1em;
+  font-size: 1em;
 }
 
 // Remove black --- bottom border
@@ -56,7 +57,6 @@ summary:after {
   padding: 0; 
   text-align: center; 
   width: 20px;
-  text-align: center;
 }
 details[open] summary:after {
   content: "\f146";
@@ -96,26 +96,33 @@ details[open] summary:after {
 //  Article attributes taken from https://codepen.io/tomhodgins/pen/BKPJaN
 article {
   font-family: inherit;
-  margin: 1.2em;
-  padding: 1.2em;
+  margin: 0.7em;
+  padding: 5em;
   font-size: 110%;
-  max-width: 70%;
+  width: 100%;
   background: white;
   box-shadow: rgba(0,0,0,.05) 0 3px 15px;
   display: inline-block;
-  margin-top: 3em;
+  margin-top: 5em;
 
 }
 
 .editor {
-  width: 65%;
-  margin-top: 3em;
+  text-align: center;
 }
 
 article p {
   margin: 0;
   color: #333;
-  white-space: initial;
+  font-size: 1.7em;
+  text-align: center;
+}
+
+h2 {
+  font-size: 3.2em !important;
+  text-align: center;
+  font-weight: bolder;
+  margin-bottom: 0.5em;
 }
 
 // + for elements placed immdiately after
@@ -124,9 +131,9 @@ article p + p {
 }
 
 // For generated text decoration
-s {
+.generated {
 text-decoration: solid;
-background-color: rgb(204, 224, 245);
+background-color: #eaf2fb;
 }
 
 code {
@@ -142,17 +149,15 @@ code {
   padding: 0.5em;
 }
 
-.story-title {
-  text-align: center;
-  font-weight: unset;
-  margin-bottom: 0.5em;
-}
-
-
 .story-img{
-  // center: top right bottom left
   display: block;
-  max-width: 80%;
+    // center
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+  height: 30%;
+  margin-top: 1em;
+  margin-bottom: 2em;
 }
 
 .sticky {
@@ -174,10 +179,6 @@ code {
 }
 
 // Ratings card
-.ratings-card{
-  width: 25%;
-  position: fixed;
-}
 
 .rating-el-title-el {
   display: inline-block;
@@ -219,6 +220,11 @@ textarea {
   100% {
     transform: rotate(360deg);
   }
+}
+
+// Quill
+.ql-container {
+  font-family: inherit;
 }
 
 // from https://codepen.io/orchard/pen/Jnwvb
