@@ -1,6 +1,6 @@
 <template>
   <article>
-    <div :id="id" ref="quillContainer" v-on:keydown="handleKeyDown"></div>
+    <div :id="id" ref="quillContainer"></div>
   </article>
 </template>
 
@@ -39,8 +39,7 @@ export default defineComponent({
     }
   },
   data: () => ({
-    quill: null,
-    cursorPos: 0
+    quill: null
   }),
   watch: {
     modelValue(val) {
@@ -113,77 +112,16 @@ export default defineComponent({
     getCursorPos() {
       return this.cursorPos;
     },
-    handleKeyDown() {
-      console.log("key down");
-      //   this.setCursorPos();
-    },
     handleTextChange(delta, oldContents, source) {
       console.log("handleTextChange", this.quill.getSelection());
       let editorContent =
         this.quill.getHTML() === "<p><br></p>" ? "" : this.quill.getHTML();
       this.$emit("update:modelValue", editorContent);
-      const isInsertInGenerated = delta.ops.some(
-        A => A.attributes && !0 === A.attributes.strike
-      );
-      if (this.quill.hasFocus()) {
-        setTimeout(() => {
-          const insertOps = delta["ops"].filter(o => "insert" in o);
-          const retainOps = delta["ops"].filter(o => "retain" in o);
-          if (insertOps.length == 1 && retainOps.length == 1) {
-            let charIndex = retainOps[0]["retain"];
-            this.quill.setSelection(charIndex + 1, 0);
-            // Changing format changes the tag and thrrows off indexing?
-            this.quill.removeFormat(charIndex, 1, "silent");
-            if (isInsertInGenerated) {
-              console.log("charIndex", charIndex);
-            }
-          }
-        }, 1);
-      }
       //   CHECK IF DELTA INCLUDES INSERT
       if (this.useCustomImageHandler) {
         this.handleImageRemoved(delta, oldContents);
       }
-      //   if (source === "user") {
-      //     let insertEvents = delta.ops.filter(op => op.hasOwnProperty("insert"));
-      //     if (insertEvents.length === 0 || this.quill.getSelection() === null)
-      //       return;
-      //     console.log("delta", delta);
-      //     this.quill.format("strike", false);
-      //     let cursorIndex = this.quill.getSelection().index;
-      //     console.log("insert: cursorIndex", cursorIndex);
-      //     let curFormat = this.quill.getFormat(cursorIndex, 1);
-      //     if (curFormat !== null) {
-      //       console.log("curFormat.strike", curFormat.strike);
-      //   if (curFormat.strike) {
-      //     this.quill.formatText(cursorIndex, 1, "strike", false);
-      //   }
-      // }
     },
-    // handleEditorChange(eventName, delta, oldContents, source) {
-    //   if (eventName === "text-change") {
-    //     console.log("handleEditorChange");
-    //     console.log("delta", delta);
-    //     const insertOps = delta["ops"].filter(o => "insert" in o);
-    //     if (insertOps.length == 1) {
-    //       const insert = insertOps[0]["insert"];
-    //       if (insert.length == 1 && this.quill.getSelection() !== null) {
-    //         const charIndex =
-    //           this.quill.getSelection().index - 1 >= 0
-    //             ? this.quill.getSelection().index - 1
-    //             : 0;
-    //         const curFormat = this.quill.getFormat(charIndex, 1);
-    //         if (curFormat !== null && curFormat.strike) {
-    //           console.log("insert:", insert, insert.length);
-    //           console.log("charIndex", charIndex);
-
-    //           this.quill.formatText(charIndex, 1, "strike", true);
-    //           this.quill.update();
-    //         }
-    //       }
-    //     }
-    //   }
-    // },
     handleImageRemoved(delta, oldContents) {
       const currrentContents = this.quill.getContents();
       const deletedContents = currrentContents.diff(oldContents);

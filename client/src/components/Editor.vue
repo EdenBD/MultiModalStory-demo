@@ -53,7 +53,8 @@ export default defineComponent({
     VueEditor
   },
   data: () => ({
-    content: `<h2>The Mighty Dragon</h2><p></p><p contenteditable="false" class="generated">This creature, the Mighty Dragon, lived hundreds of years, rising in the clouds above the world and his great body slowly sinking beneath the earth. His power was greater than all the dragons on Mount Fuji, as his body held more power than all the dragons in the world.</p><img class="story-img" src="unsplash25k/sketch_images/pWzcj7wnC-c.jpg" id="pWzcj7wnC-c" /><p>CONTINUE STORY HERE/ THE END.</p>`
+    content: `<h2>The Mighty Dragon</h2><p></p><p><s>This creature, the Mighty Dragon, lived hundreds of years, rising in the clouds above the world and his great body slowly sinking beneath the earth. His power was greater than all the dragons on Mount Fuji, as his body held more power than all the dragons in the world.</s></p><img class="story-img" src="unsplash25k/sketch_images/pWzcj7wnC-c.jpg" id="pWzcj7wnC-c" /><p>CONTINUE STORY HERE/ THE END.</p>`
+    // content: `<h2>The Mighty Dragon</h2><p></p><p contenteditable="false" class="generated">This creature, the Mighty Dragon, lived hundreds of years, rising in the clouds above the world and his great body slowly sinking beneath the earth. His power was greater than all the dragons on Mount Fuji, as his body held more power than all the dragons in the world.</p><img class="story-img" src="unsplash25k/sketch_images/pWzcj7wnC-c.jpg" id="pWzcj7wnC-c" /><p>CONTINUE STORY HERE/ THE END.</p>`
   }),
 
   methods: {
