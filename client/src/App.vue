@@ -89,9 +89,6 @@ export default defineComponent({
   components: {
     Editor,
     RatingForm
-  },
-  setup() {
-    const api = new API();
   }
 });
 </script>

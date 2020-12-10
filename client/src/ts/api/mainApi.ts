@@ -17,40 +17,6 @@ export class API {
     }
 
     /**
-     * Example API call, typed with expected response
-     *
-     * @param firstname
-     */
-    getAHi(firstname: string): Promise<string> {
-        const toSend = {
-            firstname: firstname
-        };
-
-        const url = makeUrl(this.baseURL + "/get-a-hi", toSend);
-        console.log("--- GET " + url);
-
-        return d3.json(url);
-    }
-
-    /**
-     * Example POST request, typed with expected response
-     *
-     * @param firstname
-     */
-    postABye(firstname: string): Promise<string> {
-        const toSend = {
-            firstname: firstname
-        };
-
-        const url = makeUrl(this.baseURL + "/post-a-bye");
-        const payload = toPayload(toSend);
-
-        console.log("--- POST " + url, payload);
-
-        return d3.json(url, payload);
-    }
-
-    /**
      * Call MultiModal StoryGenerator to create a text-and-images story according to a given title.
      *
      * @param title

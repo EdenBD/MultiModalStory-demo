@@ -132,8 +132,9 @@ article p + p {
 
 // For generated text decoration
 .generated {
-text-decoration: solid;
 background-color: #eaf2fb;
+border-radius: 6px;
+padding: 3px 1px;
 }
 
 s {
@@ -161,8 +162,10 @@ code {
   margin-right: auto;
   width: 50%;
   height: 50%;
-  margin-top: 1em;
-  margin-bottom: 2em;
+  // margin-top: 1em;
+  // margin-bottom: 2em;
+  border-radius: 6px;
+  padding: 3px 1px;
 }
 
 .sticky {

@@ -83,21 +83,6 @@ def send_static_client(file_path: str):
 async def docs():
     return RedirectResponse(url="/docs")
 
-# GET to read data, parameters that are not partt of the path, automatically become query parameters.
-
-
-@app.get("/api/get-a-hi", response_model=str)
-async def hello(firstname: str, age: int = 45):
-    return "Hello " + firstname
-
-
-# POST yo send/ create data, response_model converts output data to its type declaration.
-@app.post("/api/post-a-bye", response_model=str)
-async def goodbye(payload: api.GoodbyePayload):
-    # Coerce into correct type. Not needed if no test written for this endpoint
-    payload = api.GoodbyePayload(**payload)
-    return "Goodbye " + payload.firstname
-
 
 @app.get("/api/get-a-story")
 async def generate_story(title: str):
@@ -115,14 +100,14 @@ async def generate_story(title: str):
 async def retreive_image(extract: str):
     # Returns new image id strs.
     storyGenerator = getGenerator()
-    return storyGenerator.retrieve_images(extract, num_images=2)
+    return storyGenerator.retrieve_images(extract, num_images=3)
 
 
 @app.get("/api/get-text")
 async def generate_text(extracts: str):
     # Return text autocomplete.
     storyGenerator = getGenerator()
-    return storyGenerator.autocomplete_text(extracts, max_length=50, num_return_sequences=2)
+    return storyGenerator.autocomplete_text(extracts, max_length=20, num_return_sequences=3)
 
 
 # @app.get("/api/update-images")

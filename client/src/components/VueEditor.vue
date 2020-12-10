@@ -1,5 +1,6 @@
 <template>
   <article>
+    <!-- Add v-on:keyup="handleKeyUp" if works! -->
     <div :id="id" ref="quillContainer" v-on:keyup="handleKeyUp"></div>
   </article>
 </template>
@@ -21,7 +22,7 @@ export default defineComponent({
     "blur",
     "input",
     "image-removed",
-    "image-added",
+    "autocoomplete-trigger",
     "update:modelValue"
   ],
   props: {
@@ -43,8 +44,10 @@ export default defineComponent({
     cursorPos: 0
   }),
   watch: {
+    // Adds content at the beggining anf keeps the child synced with Editor
     modelValue(val) {
       if (val != this.quill.root.innerHTML && !this.quill.hasFocus()) {
+        console.log("modelValue val:", val);
         this.quill.root.innerHTML = val;
       }
     }
@@ -66,10 +69,11 @@ export default defineComponent({
     },
     setupQuillEditor() {
       const bindings = {
+        // In init to overide default tab behavior.
         tab: {
           key: 9,
-          handler: function(range, context) {
-            console.log("Handle tab at:", range, context);
+          handler: (range, context) => {
+            this.$emit("autocoomplete-trigger", range);
           }
         }
       };
@@ -87,6 +91,9 @@ export default defineComponent({
     registerPrototypes() {
       Quill.prototype.getHTML = function() {
         return this.container.querySelector(".ql-editor").innerHTML;
+      };
+      Quill.prototype.getHTMLText = function() {
+        return this.container.querySelector(".ql-editor").innerText;
       };
       Quill.prototype.getWordCount = function() {
         return this.container.querySelector(".ql-editor").innerText.length;
@@ -117,59 +124,52 @@ export default defineComponent({
         this.cursorPos = focused.index;
       } else {
         this.quill.setSelection(this.quill.getLength(), 0);
-        console.log("setCursorPos()", this.quill.getLength());
+        console.log(
+          "setCursorPos used quill.getLength",
+          this.quill.getLength()
+        );
         this.cursorPos = this.quill.getLength();
       }
-    },
-    getCursorPos() {
       return this.cursorPos;
     },
     handleKeyUp(event) {
       this.quill.hasFocus() &&
         // to execute after the handler event.
         setTimeout(() => {
-          this.setCursorPos(),
-            console.log("KeyUP this.cursorPos", this.cursorPos),
-            // Works without -1??
-            this.quill.removeFormat(this.cursorPos - 1, 1, "silent");
-        }, 1);
+          this.setCursorPos();
+          console.log("KeyUP this.cursorPos", this.cursorPos);
+          //   const curFormat = this.quill.getFormat(this.cursorPos - 1, 1);
+          //   if (curFormat !== null && curFormat.strike) {
+          //     // Works without -1??
+          //     this.quill.formatText(this.cursorPos, 1, "strike", false);
+          //   }
+        }, 0);
     },
     handleTextChange(delta, oldContents, source) {
-      console.log("handleTextChange", this.quill.getSelection());
       let editorContent =
         this.quill.getHTML() === "<p><br></p>" ? "" : this.quill.getHTML();
       this.$emit("update:modelValue", editorContent);
+
+      if (this.useCustomImageHandler) {
+        this.handleImageRemoved(delta, oldContents);
+      }
+
+      if (this.useGeneratedTextHandler) {
+        this.handleGeneratedRemoved(delta, oldContents);
+      }
+    },
+    handleImageRemoved(delta, oldContents) {
+      const currrentContents = this.quill.getContents();
+      const deletedContents = currrentContents.diff(oldContents);
+      const operations = deletedContents.ops;
+      operations.map(operation => {
+        // eslint-disable-next-line no-prototype-builtins
+        if (operation.insert && operation.insert.hasOwnProperty("image")) {
+          const { image } = operation.insert;
+          this.$emit("image-removed", image);
+        }
+      });
     }
-    // if (this.useCustomImageHandler) {
-    //   this.handleImageRemoved(delta, oldContents);
-    // }
-    // }
-    // handleImageRemoved(delta, oldContents) {
-    //   const currrentContents = this.quill.getContents();
-    //   const deletedContents = currrentContents.diff(oldContents);
-    //   const operations = deletedContents.ops;
-    //   operations.map(operation => {
-    //     // eslint-disable-next-line no-prototype-builtins
-    //     if (operation.insert && operation.insert.hasOwnProperty("image")) {
-    //       const { image } = operation.insert;
-    //       this.$emit("image-removed", image);
-    //     }
-    //   });
-    // },
-    // customImageHandler() {
-    //   this.$refs.fileInput.click();
-    // },
-    // emitImageInfo($event) {
-    //   const resetUploader = function() {
-    //     const uploader = document.getElementById("file-upload");
-    //     uploader.value = "";
-    //   };
-    //   let file = $event.target.files[0];
-    //   let Editor = this.quill;
-    //   let range = Editor.getSelection();
-    //   let cursorLocation = range.index;
-    //   this.$emit("image-added", file, Editor, cursorLocation, resetUploader);
-    // }
   }
 });
 </script>
