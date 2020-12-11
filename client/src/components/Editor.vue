@@ -1,22 +1,27 @@
 <template>
   <article>
     <template>
-      <editor-content :editor="editor" />
+      <editor-content ref="editor" :editor="editor" />
     </template>
   </article>
 </template>
 
-<script>
+<script lang="ts">
 // Import the basic building blocks
 import { Editor, EditorContent } from "tiptap";
 import Doc from "../nodes/Doc";
 import Title from "../nodes/Title";
-import { Placeholder, Strike } from "tiptap-extensions";
+import { Placeholder, Strike, Image } from "tiptap-extensions";
+import { API } from "../ts/api/mainApi";
 
 export default {
   name: "Editor",
   components: {
     EditorContent
+  },
+  setup() {
+    const api = new API();
+    console.log(api);
   },
   data() {
     return {
@@ -30,6 +35,7 @@ export default {
           new Doc(),
           new Title(),
           new Strike(),
+          new Image(),
           new Placeholder({
             showOnlyCurrent: false,
             emptyNodeText: node => {
@@ -51,24 +57,29 @@ export default {
               event.preventDefault();
               const cursorPosition = view.state.selection.anchor;
               const allText = view.dom.innerText;
-              console.log("view", cursorPosition, allText);
+              console.log("cursor | text", cursorPosition, allText);
             }
+          },
+          handleTextInput: (view, from, to) => {
+            // Learned from similar code: https://gitmemory.com/issue/scrumpy/tiptap/490/565634509.
+            // For all char keys, to distinguish generated from user text.
+            const [strike] = view.state.tr.selection.$anchor.marks();
+            const isStrike = strike && strike.type.name === "strike";
+            // If user writes inside genrated text.
+            if (isStrike) {
+              view.dispatch(view.state.tr.removeMark(from - 1, to, strike));
+            }
+            // To maintain the normal behavior of user input.
+            return false;
           }
-          // handleTextInput: (view, from, to) => {
-          //   let marked = view.state.doc.rangeHasMark(from, to, "strike");
-          //   console.log("marked", marked);
-          //   if (marked) {
-          //     view.state.tr.removeMark(from, to, "strike");
-          //   }
-          //   return false;
-          // }
         }
       })
     };
   },
   beforeDestroy() {
     this.editor.destroy();
-  }
+  },
+  methods: {}
 };
 
 // this.editor.commands to insert images/ text.
