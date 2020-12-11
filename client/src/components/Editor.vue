@@ -6,13 +6,13 @@
   </article>
 </template>
 
-<script lang="ts">
+<script lang="js">
 // Import the basic building blocks
 import { Editor, EditorContent } from "tiptap";
 import Doc from "../nodes/Doc";
 import Title from "../nodes/Title";
 import { Placeholder, Strike, Image } from "tiptap-extensions";
-import { API } from "../ts/api/mainApi";
+import { API } from "../js/api/mainApi";
 
 export default {
   name: "Editor",
@@ -60,14 +60,17 @@ export default {
               console.log("cursor | text", cursorPosition, allText);
             }
           },
-          handleTextInput: (view, from, to) => {
+          handleTextInput: (view, from, to, text) => {
             // Learned from similar code: https://gitmemory.com/issue/scrumpy/tiptap/490/565634509.
             // For all char keys, to distinguish generated from user text.
             const [strike] = view.state.tr.selection.$anchor.marks();
             const isStrike = strike && strike.type.name === "strike";
             // If user writes inside genrated text.
+            console.log("isStrike",isStrike,"text",text,from, to)
             if (isStrike) {
-              view.dispatch(view.state.tr.removeMark(from - 1, to, strike));
+              // Add a space before the inserted char
+              setTimeout(()=> {view.dispatch(view.state.tr.insertText(' ', from));})
+              setTimeout(()=> {view.dispatch(view.state.tr.removeMark(from, to+2, strike));})
             }
             // To maintain the normal behavior of user input.
             return false;
@@ -79,7 +82,14 @@ export default {
   beforeDestroy() {
     this.editor.destroy();
   },
-  methods: {}
+  methods: {
+    insertImage(command, imgId = "__CmMNKO4nw") {
+      if (imgId !== null) {
+        const src = `unsplash25k/sketch_images/${imgId}.jpg`;
+        command({ src });
+      }
+    }
+  }
 };
 
 // this.editor.commands to insert images/ text.

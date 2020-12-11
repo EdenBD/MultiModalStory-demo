@@ -1,12 +1,13 @@
 /**
  * Convert a JS object into GET URL parameters
- *
+ * Returns string. 
+ * 
  * @param base Base URL atop which to add GET parameters
  * @param params Object to insert into a URL string
  */
-export function makeUrl(base: string, params?: object): string {
+export function makeUrl(base, params = {}) {
   if (params) {
-    let out: string = base + "?";
+    let out = base + "?";
 
     Object.keys(params).forEach(k => {
       out += k;

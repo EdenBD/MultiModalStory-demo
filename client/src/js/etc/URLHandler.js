@@ -17,7 +17,7 @@ export class URLHandler {
    * Read all URL parameters into a map.
    * @returns {Map} the url parameters as a key-value store (ES6 map)
    */
-  static get parameters(): object {
+  static get parameters() {
     // Adapted from:  http://stackoverflow.com/questions/2090551/parse-query-string-in-javascript
     const query = window.location.search.substring(1);
     const vars = query.split("&");
@@ -72,7 +72,7 @@ export class URLHandler {
    * @returns {string} - an URI string
    *
    */
-  static urlString(urlParameters: object) {
+  static urlString(urlParameters) {
     const attr = [];
     Object.keys(urlParameters).forEach(k => {
       const v = urlParameters[k];
@@ -96,8 +96,8 @@ export class URLHandler {
   }
 
   static updateURLParam(
-    key: string,
-    value: string | any[],
+    key,
+    value,
     addToBrowserHistory = true
   ) {
     const currentParams = URLHandler.parameters;
@@ -115,7 +115,7 @@ export class URLHandler {
   //     return currentParams;
   // }
 
-  static updateUrl(urlParameters: object, addToBrowserHistory = true) {
+  static updateUrl(urlParameters, addToBrowserHistory = true) {
     if (addToBrowserHistory) {
       window.history.pushState(
         urlParameters,

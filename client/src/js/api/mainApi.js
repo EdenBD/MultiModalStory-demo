@@ -1,27 +1,24 @@
 import * as d3 from "d3";
-import { makeUrl, toPayload } from "../etc/apiHelpers";
+import { makeUrl } from "../etc/apiHelpers";
 import { URLHandler } from "../etc/URLHandler";
 
-const baseurl = URLHandler.basicURL();
 
-export interface Story {
-    texts: string[];
-    images: any[];
-}
 
 export class API {
-    constructor(private baseURL: string | null = null) {
+    constructor(baseURL = null) {
+        this.baseURL = baseURL;
         if (this.baseURL == null) {
+            const baseurl = URLHandler.basicURL();
             this.baseURL = baseurl + "/api";
         }
     }
 
     /**
      * Call MultiModal StoryGenerator to create a text-and-images story according to a given title.
-     *
+     * Returns Promise<Array<string>, Array<string>>
      * @param title
      */
-    generateStoryByTitle(title: string): Promise<Story> {
+    generateStoryByTitle(title) {
         const toSend = {
             title: title
         };
@@ -36,11 +33,11 @@ export class API {
 
     /**
      * Call MultiModal StoryGenerator to retreive non-duplicate images according to given extract and current images ids.
-     *
+     * Returns: Promise<Array<string>>
      * @param extract
-     * @param currentImgs
+     * @param currentImgs: Array<string> = []
      */
-    retreiveImagesByExtract(extract: string, currentImgs: Array<string> = []): Promise<Array<string>> {
+    retreiveImagesByExtract(extract, currentImgs = []) {
         const toSend = {
             extract: extract,
             currentImgs: currentImgs
@@ -54,10 +51,10 @@ export class API {
 
     /**
      * Call MultiModal StoryGenerator to generate text from given extracts (simple generation wihtout re-ranking).
-     *
+     * Returns  Promise<Array<string>>
      * @param extracts
      */
-    autocompleteTextByAllExtracts(extracts: string): Promise<Array<string>> {
+    autocompleteTextByAllExtracts(extracts) {
         const toSend = {
             extracts: extracts
         };
