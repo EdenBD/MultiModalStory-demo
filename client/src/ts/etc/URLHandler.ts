@@ -1,6 +1,7 @@
 /**
  * Created by hen on 5/15/17.
  */
+/* eslint-disable */
 
 export class URLHandler {
   static basicURL() {

@@ -4,7 +4,7 @@
     <header class="sticky">
       <div class="inner-heading">
         <div class="header-el">
-          <img class="logo" src="img/elephant.png" />
+          <img class="logo" src="elephant.png" />
         </div>
         <div class="header-el">
           <h1>Graphic Story Generator</h1>
@@ -72,25 +72,22 @@
       <!-- TODO(ADD image retrieval generate_images(texts_to_consider=1, one_image_retrival=True) onClick + keyboard) -->
       <!-- TODO(FORM submission database + free text form submission security issues) -->
       <!-- TODO(Loading symbol, progresss according to total time? Completed steps?) -->
-      <!-- TODO(BEN - Q | MAURO - Q) -->
       <RatingForm></RatingForm>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed, watch, watchEffect } from "vue";
-import { API } from "./ts/api/mainApi";
-import RatingForm from "./components/RatingForm.vue";
+<script>
 import Editor from "./components/Editor.vue";
+import RatingForm from "./components/RatingForm.vue";
 
-export default defineComponent({
+export default {
   name: "App",
   components: {
     Editor,
     RatingForm
   }
-});
+};
 </script>
 
 <style lang="scss">
@@ -98,7 +95,7 @@ export default defineComponent({
 @import "./fonts/plex_sans.css";
 @import "./css/base.scss";
 
-// Add additional custom css in either the files above or here
+/* // Add additional custom css in either the files above or here */
 
 body {
   background-color: #eee;
@@ -115,5 +112,3 @@ body {
   border-radius: 2px;
 }
 </style>
-
-

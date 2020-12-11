@@ -130,6 +130,10 @@ article p + p {
   margin-top: .7em;
 }
 
+[contenteditable] {
+  outline: 0px solid transparent;
+}
+
 // For generated text decoration
 .generated {
 background-color: #eaf2fb;
@@ -157,13 +161,10 @@ code {
 
 .story-img{
   display: block;
-    // center
   margin-left: auto;
   margin-right: auto;
   width: 50%;
   height: 50%;
-  // margin-top: 1em;
-  // margin-bottom: 2em;
   border-radius: 6px;
   padding: 3px 1px;
 }
