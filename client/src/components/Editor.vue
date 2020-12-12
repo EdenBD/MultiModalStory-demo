@@ -11,7 +11,7 @@
 import { Editor, EditorContent } from "tiptap";
 import Doc from "../nodes/Doc";
 import Title from "../nodes/Title";
-import { Placeholder, Strike, Image } from "tiptap-extensions";
+import { Placeholder, Strike, Image,  TrailingNode } from "tiptap-extensions";
 import { API } from "../js/api/mainApi";
 
 export default {
@@ -29,6 +29,7 @@ export default {
       editor: new Editor({
         autofocus: true,
         disableInputRules: ["strike"],
+        // Update handleKeyDown.currentImgs in case of adding new images tags. 
         content:
           "<h2>The Mighty Dragon</h2><p>I was blind, <s>That's generated.</s></p>",
         extensions: [
@@ -36,6 +37,10 @@ export default {
           new Title(),
           new Strike(),
           new Image(),
+          new TrailingNode({
+            node: 'paragraph',
+            notAfter: ['paragraph'],
+          }),
           new Placeholder({
             showOnlyCurrent: false,
             emptyNodeText: node => {
@@ -46,53 +51,74 @@ export default {
             }
           })
         ],
-        // onUpdate: ({ getHTML }) => {
-        //   // get new content on update
-        //   console.log("getHTML()", getHTML());
-        // },
+        onUpdate: ({ getJSON }) => {
+          // Update json that represents data.
+          this.json = getJSON()
+        },
         editorProps: {
           // Open options menu.
           handleKeyDown: (view, event) => {
             if (event.key === "Tab") {
+              // Get info for auto-complete pop-up menu.
               event.preventDefault();
               const cursorPosition = view.state.selection.anchor;
               const allText = view.dom.innerText;
-              console.log("cursor | text", cursorPosition, allText);
+              // Preset value of current imgs. 
+              let currentImgs  = [];
+              if (this.json.content){
+                currentImgs = this.json.content.filter(obj =>  obj.type === "paragraph")[0].content.filter(obj =>  obj.type === "image").map(img => img.attrs.title);
+              }
+              this.handleOptions(cursorPosition, view, allText, currentImgs);
             }
           },
-          handleTextInput: (view, from, to, text) => {
+          handleTextInput: (view, from, to) => {
             // Learned from similar code: https://gitmemory.com/issue/scrumpy/tiptap/490/565634509.
             // For all char keys, to distinguish generated from user text.
             const [strike] = view.state.tr.selection.$anchor.marks();
             const isStrike = strike && strike.type.name === "strike";
             // If user writes inside genrated text.
-            console.log("isStrike",isStrike,"text",text,from, to)
             if (isStrike) {
-              // Add a space before the inserted char
-              setTimeout(()=> {view.dispatch(view.state.tr.insertText(' ', from));})
-              setTimeout(()=> {view.dispatch(view.state.tr.removeMark(from, to+2, strike));})
+              // Timeout to execute after the handler event.
+              setTimeout(()=> {view.dispatch(view.state.tr.removeMark(from, to+1, strike));})
             }
             // To maintain the normal behavior of user input.
             return false;
           }
         }
-      })
-    };
+      }),
+      json : {},
+    }
   },
   beforeDestroy() {
     this.editor.destroy();
   },
   methods: {
-    insertImage(command, imgId = "__CmMNKO4nw") {
-      if (imgId !== null) {
-        const src = `unsplash25k/sketch_images/${imgId}.jpg`;
-        command({ src });
-      }
-    }
-  }
+    getEditor(){
+      return this.$refs.editor;
+    },
+    handleOptions(cursorPosition, view, allText, currentImgs){
+      console.log("handleOptions: cursor | text | currentImgs",cursorPosition, allText, currentImgs);
+      // Call two async api methods to autocomplete text and imgs,  in the meanwhile show loader bar.
+      // this.handleImageInsert(cursorPosition, view); 
+      this.handleTextInsert(cursorPosition, view); 
+
+    },
+    handleImageInsert(cursorPosition, view, imgId = "__CmMNKO4nw") {
+      const node = view.state.schema.nodes.image.create({
+        src: `unsplash25k/sketch_images/${imgId}.jpg`, 
+        title: imgId});
+    view.dispatch(view.state.tr.insert(cursorPosition, node));
+    },
+    handleTextInsert(cursorPosition,view, text="New text"){
+      // Idea from https://www.gitmemory.com/issue/scrumpy/tiptap/385/515334522.
+        const mark = view.state.schema.marks.strike.create();
+        const transaction = view.state.tr.insertText(text + ' ');
+        transaction.addMark(cursorPosition, cursorPosition + text.length, mark);
+        view.dispatch(transaction);
+    },
+  },
 };
 
-// this.editor.commands to insert images/ text.
 </script>
 
 

@@ -23,6 +23,11 @@ header .inner-heading {
   height: 3em;
   position: fixed;
   top: 2em;
+  border: 0;
+  display: block;
+  margin: 0;
+  width: auto;
+  padding: 0;
 }
 
 // Collapsible description
@@ -159,7 +164,7 @@ code {
   padding: 0.5em;
 }
 
-.story-img{
+img {
   display: block;
   margin-left: auto;
   margin-right: auto;
