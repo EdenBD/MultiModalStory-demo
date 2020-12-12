@@ -112,7 +112,7 @@ export default {
     handleTextInsert(cursorPosition,view, text="New text"){
       // Idea from https://www.gitmemory.com/issue/scrumpy/tiptap/385/515334522.
         const mark = view.state.schema.marks.strike.create();
-        const transaction = view.state.tr.insertText(text + ' ');
+        const transaction = view.state.tr.insertText(text+ ' ');
         transaction.addMark(cursorPosition, cursorPosition + text.length, mark);
         view.dispatch(transaction);
     },
