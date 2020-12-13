@@ -2,6 +2,7 @@
   <article>
     <template>
       <editor-content ref="editor" :editor="editor" />
+      <!-- <Options :isOpen :texts :imgs></Options> -->
     </template>
   </article>
 </template>
@@ -9,6 +10,7 @@
 <script lang="js">
 // Import the basic building blocks
 import { Editor, EditorContent } from "tiptap";
+import Options from "./Options.vue"
 import Doc from "../nodes/Doc";
 import Title from "../nodes/Title";
 import { Placeholder, Strike, Image,  TrailingNode } from "tiptap-extensions";
@@ -17,7 +19,8 @@ import { API } from "../js/api/mainApi";
 export default {
   name: "Editor",
   components: {
-    EditorContent
+    EditorContent,
+    Options,
   },
   setup() {
     const api = new API();
