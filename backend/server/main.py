@@ -12,7 +12,7 @@ import server.api as api
 import path_fixes as pf
 
 # BROKEN IMPORT
-# from story_generator.pipeline import Pipeline
+from pipeline import Pipeline
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -97,10 +97,10 @@ async def generate_story(title: str):
 
 
 @app.get("/api/get-image")
-async def retreive_image(extract: str):
+async def retreive_image(extract: str, img_ids=list):
     # Returns new image id strs.
     storyGenerator = getGenerator()
-    return storyGenerator.retrieve_images(extract, num_images=3)
+    return storyGenerator.retrieve_images(extract, num_images=3, current_images_ids=img_ids)
 
 
 @app.get("/api/get-text")

@@ -1,16 +1,23 @@
 <template>
   <article>
-    <template>
-      <editor-content ref="editor" :editor="editor" />
-      <!-- <Options :isOpen :texts :imgs></Options> -->
-    </template>
+    <editor-content ref="editor" :editor="editor" />
+    <Options
+      :isOpen="this.isOpen"
+      :isLoading="this.isLoading"
+      :top="this.top"
+      :left="this.left"
+      :texts="this.texts"
+      :imgs="this.imgs"
+      @text-insert="handleTextInsert"
+      @img-insert="handleImageInsert"
+    ></Options>
   </article>
 </template>
 
 <script lang="js">
 // Import the basic building blocks
 import { Editor, EditorContent } from "tiptap";
-import Options from "./Options.vue"
+import Options from "./Options.vue";
 import Doc from "../nodes/Doc";
 import Title from "../nodes/Title";
 import { Placeholder, Strike, Image,  TrailingNode } from "tiptap-extensions";
@@ -64,14 +71,23 @@ export default {
             if (event.key === "Tab") {
               // Get info for auto-complete pop-up menu.
               event.preventDefault();
-              const cursorPosition = view.state.selection.anchor;
+              this.cursorPosition = view.state.selection.anchor;
+              this.view = view;
               const allText = view.dom.innerText;
+              // Get screen coordinates
+              const absolutePosition = view.coordsAtPos(this.cursorPosition);
+              // Add card size to open mrenu below text.
+              const cardSize = 200;
+              this.top = absolutePosition.top + cardSize, this.left = absolutePosition.left;
               // Preset value of current imgs. 
               let currentImgs  = [];
               if (this.json.content){
                 currentImgs = this.json.content.filter(obj =>  obj.type === "paragraph")[0].content.filter(obj =>  obj.type === "image").map(img => img.attrs.title);
               }
-              this.handleOptions(cursorPosition, view, allText, currentImgs);
+              this.handleOptions(allText, currentImgs);
+            }
+            else if (event.key == "Escape") {
+              this.isOpen = false;
             }
           },
           handleTextInput: (view, from, to) => {
@@ -89,7 +105,17 @@ export default {
           }
         }
       }),
+      // To get current imgs, and avoid duplicates in retreival. 
       json : {},
+      view: {},
+      cursorPosition: 0,
+      // For Options - optional text and imgs.
+      texts: ["1st Choice","2nd Choice","3rd Choice"],
+      imgs: ["__G2yFuW7jQ", "ZzqM2YmqZ-o", "zZzKLzKP24o"],
+      isLoading: false,
+      isOpen: false,
+      top: 0,
+      left:0,
     }
   },
   beforeDestroy() {
@@ -99,25 +125,32 @@ export default {
     getEditor(){
       return this.$refs.editor;
     },
-    handleOptions(cursorPosition, view, allText, currentImgs){
-      console.log("handleOptions: cursor | text | currentImgs",cursorPosition, allText, currentImgs);
-      // Call two async api methods to autocomplete text and imgs,  in the meanwhile show loader bar.
-      // this.handleImageInsert(cursorPosition, view); 
-      this.handleTextInsert(cursorPosition, view); 
-
+    async handleOptions(allText, currentImgs){
+      this.isOpen = true;
+      this.isLoading = true;
+      console.log("handleOptions: text | currentImgs",allText, currentImgs);
+      // Get last two senteces
+      // const extract = allText;
+      // this.imgs = await api.retreiveImagesByExtract(extract , currentImgs);
+      // this.texts = await api.autocompleteTextByAllExtracts(allText);
+      // finished Loading
+      this.isLoading = false;
+      return false;
     },
-    handleImageInsert(cursorPosition, view, imgId = "__CmMNKO4nw") {
-      const node = view.state.schema.nodes.image.create({
+    handleImageInsert(imgId) {
+      this.isOpen = false;
+      const node = this.view.state.schema.nodes.image.create({
         src: `unsplash25k/sketch_images/${imgId}.jpg`, 
         title: imgId});
-    view.dispatch(view.state.tr.insert(cursorPosition, node));
+    this.view.dispatch(this.view.state.tr.insert(this.cursorPosition, node));
     },
-    handleTextInsert(cursorPosition,view, text="New text"){
-      // Idea from https://www.gitmemory.com/issue/scrumpy/tiptap/385/515334522.
-        const mark = view.state.schema.marks.strike.create();
-        const transaction = view.state.tr.insertText(text+ ' ');
-        transaction.addMark(cursorPosition, cursorPosition + text.length, mark);
-        view.dispatch(transaction);
+    handleTextInsert(text){
+        this.isOpen = false;
+        // Idea from https://www.gitmemory.com/issue/scrumpy/tiptap/385/515334522.
+        const mark = this.view.state.schema.marks.strike.create();
+        const transaction = this.view.state.tr.insertText(text+ ' ');
+        transaction.addMark(this.cursorPosition, this.cursorPosition + text.length, mark);
+        this.view.dispatch(transaction);
     },
   },
 };

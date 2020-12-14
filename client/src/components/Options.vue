@@ -1,35 +1,52 @@
 <template>
-  <v-card max-width="400" class="mx-auto" v-show="isOpen">
-    <v-list>
-      <v-list-item-group>
-        <!--     Text Row     -->
-        <v-list-item v-for="(text, index) in texts" :key="index" @click="$emit('text-insert', text)">
-          <v-list-item-icon>
-            <v-icon>mdi-star</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title v-text="text"></v-list-item-title>
-        </v-list-item>
+  <div v-show="isOpen" class="options" v-bind:style="{'top': top + 'px', 'left': left +'px'}">
+    <v-progress-circular indeterminate color="primary" v-show="isLoading"></v-progress-circular>
+    <v-card max-width="22em" class="mx-auto" v-show="!isLoading">
+      <v-list>
+        <v-list-item-group>
+          <!--     Text Row     -->
+          <v-list-item
+            v-for="(text, index) in texts"
+            :key="index"
+            @click="$emit('text-insert', text)"
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-text</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title v-text="text"></v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
         <!--     Images Row     -->
-        <v-list-item>
-        <v-list-item-icon>
-          <v-icon>mdi-star</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title v-for="(img, index) in imgs" :key="index" @click="$emit('img-insert', img)">
-          <v-img :src="img"></v-img>
-        </v-list-item-title>
-        </v-list-item>
-      <v-list-item-group>
-    </v-list>
-  </v-card>
+        <v-list-item-group class="options-imgs">
+          <v-list-item-icon>
+            <v-icon class="options-imgs-icon">mdi-image</v-icon>
+          </v-list-item-icon>
+          <v-list-item
+            v-for="(img, index) in imgs"
+            :key="index+texts.length"
+            @click="$emit('img-insert', img)"
+            class="options-img"
+          >
+            <v-list-item-title>
+              <v-img :src="'unsplash25k/sketch_images/' + img +'.jpg'"></v-img>
+            </v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-card>
+  </div>
 </template>
 
 <script lang="js">
 export default {
   name: "Options",
-  props: [
+  props: {
     isOpen: Boolean,
+    isLoading: Boolean,
+    top: Number,
+    left: Number,
     texts: Array,
-    imgs: Array],
+    imgs: Array},
 };
 </script>
 
