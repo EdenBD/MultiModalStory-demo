@@ -143,6 +143,7 @@ export default {
         src: `unsplash25k/sketch_images/${imgId}.jpg`, 
         title: imgId});
     this.view.dispatch(this.view.state.tr.insert(this.cursorPosition, node));
+    this.view.focus('end');
     },
     handleTextInsert(text){
         this.isOpen = false;
@@ -151,6 +152,8 @@ export default {
         const transaction = this.view.state.tr.insertText(text+ ' ');
         transaction.addMark(this.cursorPosition, this.cursorPosition + text.length, mark);
         this.view.dispatch(transaction);
+        this.view.focus('end');
+
     },
   },
 };
