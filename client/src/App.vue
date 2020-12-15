@@ -9,32 +9,26 @@
         <div class="header-el">
           <h1>Graphic Story Generator</h1>
           <!-- Tooltip with this info: -->
-          <!-- The
-          <a href="https://github.com/EdenBD/multimodal-storytelling-gan">framework</a>
-          uses a guided fine-tuned
-          <a href="https://huggingface.co/gpt2">GPT-2</a> text generations and
-          <a href="https://github.com/unsplash/datasets">Unsplash</a> Image
-          Retreival.-->
           <a
             class="info-icon"
             target="_blank"
             href="https://github.com/EdenBD/multimodal-storytelling-gan"
+            data-title="Uses hugginface, fine-tuned GPT-2 model & Unsplash Images"
           >
             <i class="fa fa-info-circle" style="color: #6d6d6d"></i>
           </a>
           <div class="options">
             <div class="options-el">
-              <a>
-                <i class="fa fa-refresh" aria-hidden="true"></i> Generate story
-                from title
+              <a @click.prevent="shuffleStory">
+                <i class="fa fa-random" aria-hidden="true"></i> Shuffle Story
               </a>
             </div>
             <div class="options-el">
-              <a>
-                <i class="fa fa-magic" aria-hidden="true"></i> Autocomplete
-              </a>
-              or
-              <code>tab</code>
+              <span>
+                <i class="fa fa-magic" aria-hidden="true"></i>
+                <code>tab</code> to
+                <strong>Autocomplete</strong>
+              </span>
             </div>
           </div>
         </div>
@@ -46,9 +40,9 @@
       <details open>
         <summary></summary>
         <div class="desciption-txt">
-          <b>Step 1:</b> Change title and Generate a Story.
+          <b>Step 1:</b> Choose a preset or start your own story.
           <br />
-          <b>Step 2:</b> continue writing and autocomplete text and images.
+          <b>Step 2:</b> Autocomplete text and images.
           <br />
           <b>Step 3:</b> Give feedback and submit your story.
         </div>
@@ -58,26 +52,36 @@
     <!-- MAIN EDITOR -->
 
     <div>
-      <Editor class="editor"></Editor>
-      <!-- TODO(ADD onClick Change story)-->
-      <!-- TODO(ADD text autocompletion _sample_sequence onClick + keyboard) -->
-      <!-- TODO(ADD image retrieval generate_images(texts_to_consider=1, one_image_retrival=True) onClick + keyboard) -->
+      <Editor class="editor" ref="childEditor"></Editor>
       <!-- TODO(FORM submission database + free text form submission security issues) -->
-      <!-- TODO(Loading symbol, progresss according to total time? Completed steps?) -->
-      <RatingForm></RatingForm>
+      <RatingStory></RatingStory>
     </div>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import Editor from "./components/Editor.vue";
-import RatingForm from "./components/RatingForm.vue";
+import RatingStory from "./components/RatingStory.vue";
+import Footer from "./components/Footer.vue";
 
 export default {
   name: "App",
   components: {
     Editor,
-    RatingForm
+    RatingStory,
+    Footer
+  },
+  mounted: function() {
+    this.$nextTick(function() {
+      // Runs after all children have been rendered as well.
+      this.$refs.childEditor.focus();
+    });
+  },
+  methods: {
+    shuffleStory: function() {
+      this.$refs.childEditor.shuffleStory();
+    }
   }
 };
 </script>
@@ -93,9 +97,10 @@ body {
   background-color: #eee;
   font-family: "IBM Plex Sans", sans-serif;
   font-weight: 400;
-  margin: 5em;
-  margin-top: 12em;
+  // top | right | bottom | left
+  margin: 12em 5em 0 5em;
   font-size: larger;
+  min-height: 100%;
 }
 
 .name-option {

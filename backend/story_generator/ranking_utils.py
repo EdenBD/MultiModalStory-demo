@@ -101,6 +101,10 @@ def _sentiment_polarity(filtered_words):
     Args:
         filtered_words (set): set of non-stop, non-punctuation words. 
     """
+    # If  empty
+    if not filtered_words:
+        return 0
+
     POS_TAG_TO_WN = {'J': wn.ADJ, 'N': wn.NOUN, 'R': wn.ADV, 'V': wn.VERB}
     lemmatizer = WordNetLemmatizer()
 
@@ -205,7 +209,6 @@ def score_text(text, lsa_embedder, tokenizer, preset_model, finetuned_model):
     filtered_words = list(filter(
         lambda word: word not in constants.STOP_WORDS, split_words(text.lower().strip())))
     filtered_words_set = set(filtered_words)
-
     # Sentiment.
     scores[2] = _sentiment_polarity(filtered_words)
 

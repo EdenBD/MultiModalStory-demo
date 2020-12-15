@@ -6,7 +6,7 @@
  * @param params Object to insert into a URL string
  */
 export function makeUrl(base, params = {}) {
-  if (params) {
+  if (Object.keys(params).length > 0) {
     let out = base + "?";
 
     Object.keys(params).forEach(k => {

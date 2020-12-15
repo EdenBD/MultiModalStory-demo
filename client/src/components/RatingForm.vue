@@ -1,6 +1,6 @@
 <template>
   <article class="ratings-card">
-    <h3 class="card-title">Score Auto-Generated Story</h3>
+    <h3>Score Auto-Generated Story</h3>
     <form id="scores" action="#" method="post">
       <!-- CLARITY: readability, simplicity, coherence -->
       <div>

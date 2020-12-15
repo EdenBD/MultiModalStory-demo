@@ -1,7 +1,7 @@
-import constants
+import story_generator.constants as constants
 
 # Text Generation
-from ranking_utils import score_text, sort_scores
+from story_generator.ranking_utils import score_text, sort_scores
 import torch
 from math import ceil
 
@@ -16,11 +16,11 @@ import spacy
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
-from helper_functions import generate_prompt
+from story_generator.helper_functions import generate_prompt
 
 # Image style transfer
 from torchvision import transforms
-from style_transfer.transformer_net import TransformerNet
+from story_generator.style_transfer.transformer_net import TransformerNet
 
 
 def _last_stop_token(tokenizer, tokens_output):
@@ -58,7 +58,8 @@ def _sample_sequence(model, tokenizer, prompts, max_length, num_return_sequences
     With tokenizer.padding size = left, otherwise generation is random (issue https://github.com/huggingface/transformers/issues/3021)
     """
 
-    encodings_dict = tokenizer(prompts, padding='longest')
+    encodings_dict = tokenizer(
+        prompts, padding='longest', truncation=True, max_length=constants.MAX_SEQ_LEN)
     prompts_ids = torch.tensor(
         encodings_dict['input_ids'], device=device, dtype=torch.long)
     attantion_masks = torch.tensor(
@@ -71,7 +72,7 @@ def _sample_sequence(model, tokenizer, prompts, max_length, num_return_sequences
         prompts_ids,  # Long tensor of size (batch_size, max_prompt_length)
         do_sample=True,  # activate top-k, top-p sampling
         max_length=max_length+first_idx,
-        min_length=max_length if first_idx else 10,
+        min_length=first_idx + max_length//2 if first_idx else 10,
         top_k=constants.TOP_K,
         top_p=constants.TOP_P,
         temperature=constants.TEMPERATURE,
@@ -80,7 +81,6 @@ def _sample_sequence(model, tokenizer, prompts, max_length, num_return_sequences
         attention_mask=attantion_masks,
         pad_token_id=tokenizer.pad_token_id,
     )  # returns tensor of shape (len(prompts)*num_return_sequences x max_length)
-
     indices_last_eos = map(
         lambda sample: _last_stop_token(tokenizer, sample), sample_outputs)
     generated = np.array(list(map(lambda sample, idx: tokenizer.decode(

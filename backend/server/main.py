@@ -12,7 +12,7 @@ import server.api as api
 import path_fixes as pf
 
 # BROKEN IMPORT
-from pipeline import Pipeline
+from story_generator.pipeline import Pipeline
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -84,44 +84,25 @@ async def docs():
     return RedirectResponse(url="/docs")
 
 
-@app.get("/api/get-a-story")
-async def generate_story(title: str):
-    # Update prompt according to title
-    storyGenerator = getGenerator()
-    storyGenerator.update_prompt(title)
-    storyGenerator.clear_prev_story()
-    # Generate story of ONE top story
-    # texts: [extract1, extract2] | images: [base64_JPEG1, base64_JPEG2]
-    texts, images = storyGenerator.generate_graphic_story()
-    return Story(texts, images)
+# POST to send/ create Object data, response_model converts output data to its type declaration.
 
 
-@app.get("/api/get-image")
-async def retreive_image(extract: str, img_ids=list):
+@app.post("/api/post-autocomplete-img", response_model=List[str])
+async def retreive_image(payload: api.ImagePayload):
     # Returns new image id strs.
+    payload = api.ImagePayload(**payload)
+    current_imgs = [] if payload.current is None else payload.current
     storyGenerator = getGenerator()
-    return storyGenerator.retrieve_images(extract, num_images=3, current_images_ids=img_ids)
+    return storyGenerator.retrieve_images(payload.extract, num_images=3, current_images_ids=current_imgs)
 
 
-@app.get("/api/get-text")
-async def generate_text(extracts: str):
-    # Return text autocomplete.
+@app.post("/api/post-autocomplete-text", response_model=List[str])
+async def autocomplete_text(payload: api.TextPayload):
+    # Coerce into correct type. Not needed if no test written for this endpoint
+    payload = api.TextPayload(**payload)
     storyGenerator = getGenerator()
-    return storyGenerator.autocomplete_text(extracts, max_length=20, num_return_sequences=3)
-
-
-# @app.get("/api/update-images")
-# async def update_used_images(img_id: str, delete: bool):
-#     # Update current used img ids
-#     storyGenerator = getGenerator()
-#     return storyGenerator.update_current_story_images(img_id, delete)
-
-
-# @app.get("/api/update-extracts")
-# async def update_used_extracts(extract: str):
-#     # Update current used img ids
-#     storyGenerator = getGenerator()
-#     return storyGenerator.update_extracts(extract)
+    # If extracts are too long, truncation will be taken care of by the tokenizer.
+    return storyGenerator.autocomplete_text(payload.extracts, max_length=30, num_return_sequences=3, re_ranking=0)
 
 
 if __name__ == "__main__":

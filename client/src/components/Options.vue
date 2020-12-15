@@ -1,5 +1,5 @@
 <template>
-  <div v-show="isOpen" class="options" v-bind:style="{'top': top + 'px', 'left': left +'px'}">
+  <div v-show="isOpen" class="options-popup" v-bind:style="{'top': top + 'px', 'left': left +'px'}">
     <v-progress-circular indeterminate color="primary" v-show="isLoading"></v-progress-circular>
     <v-card max-width="22em" class="mx-auto" v-show="!isLoading">
       <v-list>
@@ -13,7 +13,7 @@
             <v-list-item-icon>
               <v-icon>mdi-text</v-icon>
             </v-list-item-icon>
-            <v-list-item-title v-text="text"></v-list-item-title>
+            <v-list-item-title v-text="text" style="{'padding-left': '0.1em';}"></v-list-item-title>
           </v-list-item>
         </v-list-item-group>
         <!--     Images Row     -->

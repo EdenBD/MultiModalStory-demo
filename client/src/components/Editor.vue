@@ -1,10 +1,10 @@
 <template>
   <article>
-    <editor-content ref="editor" :editor="editor" />
+    <editor-content ref="editorRef" :editor="editor" />
     <Options
       :isOpen="this.isOpen"
       :isLoading="this.isLoading"
-      :top="this.top"
+      :bottom="this.bottom"
       :left="this.left"
       :texts="this.texts"
       :imgs="this.imgs"
@@ -22,6 +22,7 @@ import Doc from "../nodes/Doc";
 import Title from "../nodes/Title";
 import { Placeholder, Strike, Image,  TrailingNode } from "tiptap-extensions";
 import { API } from "../js/api/mainApi";
+const api = new API();
 
 export default {
   name: "Editor",
@@ -30,8 +31,7 @@ export default {
     Options,
   },
   setup() {
-    const api = new API();
-    console.log(api);
+    this.api = new API();
   },
   data() {
     return {
@@ -61,6 +61,10 @@ export default {
             }
           })
         ],
+        onInit: ({ view }) => {
+          // Log view once the editor is initialized.
+          this.view = view;
+        },
         onUpdate: ({ getJSON }) => {
           // Update json that represents data.
           this.json = getJSON()
@@ -78,7 +82,7 @@ export default {
               const absolutePosition = view.coordsAtPos(this.cursorPosition);
               // Add card size to open mrenu below text.
               const cardSize = 200;
-              this.top = absolutePosition.top + cardSize, this.left = absolutePosition.left;
+              this.bottom = absolutePosition.bottom + cardSize, this.left = absolutePosition.left;
               // Preset value of current imgs. 
               let currentImgs  = [];
               if (this.json.content){
@@ -114,7 +118,7 @@ export default {
       imgs: ["__G2yFuW7jQ", "ZzqM2YmqZ-o", "zZzKLzKP24o"],
       isLoading: false,
       isOpen: false,
-      top: 0,
+      bottom: 0,
       left:0,
     }
   },
@@ -123,16 +127,27 @@ export default {
   },
   methods: {
     getEditor(){
-      return this.$refs.editor;
+      return this.editor;
+    },
+    focus(){
+      if (this.view.length) {     
+        console.log("focus");
+        this.editor.focus('end')
+      }
+    },
+    shuffleStory(){
+      this.editor.setContent("text", true);
     },
     async handleOptions(allText, currentImgs){
       this.isOpen = true;
       this.isLoading = true;
-      console.log("handleOptions: text | currentImgs",allText, currentImgs);
-      // Get last two senteces
-      // const extract = allText;
-      // this.imgs = await api.retreiveImagesByExtract(extract , currentImgs);
-      // this.texts = await api.autocompleteTextByAllExtracts(allText);
+      // Get last numSenteces
+      const numSenteces = 2;
+      const extracts = allText.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
+      const imagesExtract = extracts.slice(-numSenteces).join(" ");
+      // Call backend
+      this.texts = await api.postAutocompleteText(allText);
+      this.imgs = await api.postRetreiveImage(imagesExtract , currentImgs);
       // finished Loading
       this.isLoading = false;
       return false;

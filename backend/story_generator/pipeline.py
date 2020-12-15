@@ -1,8 +1,8 @@
 # Local imports
-import constants
-from generation_utils import sample_stories_texts, retrieve_images_for_one_story, retrieve_images_for_one_extract, get_retreival_info, load_style_transfer_model, story_style_transfer, _sample_sequence
-from ranking_utils import score_text, images_coherency, KLDIV_error_per_text
-from helper_functions import split_to_extracts
+import story_generator.constants as constants
+from story_generator.generation_utils import sample_stories_texts, retrieve_images_for_one_story, retrieve_images_for_one_extract, get_retreival_info, load_style_transfer_model, story_style_transfer, _sample_sequence
+from story_generator.ranking_utils import score_text, images_coherency, KLDIV_error_per_text, sort_scores
+from story_generator.helper_functions import split_to_extracts
 
 # ML imports
 import torch
@@ -28,12 +28,14 @@ class Pipeline():
     Attributes:
         top: Number of top stories to output, after generation and ranking. 
         text_ranking: Number of topgenerated texts to keep during re-ranking.
+        load_all_model: Load all models, needed for story generation, but not minimal image/ text retreival. 
 
     To output one default style graphical story with your prompt run:
         $ python pipline.py [free_prompts = 'The Wonders of the Sun\n']
     """
 
-    def __init__(self, top: int = constants.NUM_GENREATED_STORIES, text_ranking: int = 10):
+    def __init__(self, top: int = constants.NUM_GENREATED_STORIES, text_ranking: int = 10, load_all_model=False):
+        start_time = time.time()
         # Used to return the top number of stories
         self.top = top
         # To control results speed.
@@ -55,14 +57,6 @@ class Pipeline():
         self._gpt2 = self._gpt2.to(self._device)
         # print(f'Loaded GPT2 fine-tuned Model: {constants.FINETUNED_GPT2_PATH}')
 
-        # Image style transfer.
-        self._original_images_path = constants.ORIGINAL_IMAGES_PATH
-        self._styled_images_path = constants.STYLED_IMAGES_PATH
-
-        # Image re-ranking by Torchvision classification model
-        self._resnet152 = models.resnet152(pretrained=True)
-        self._resnet152 = self._resnet152.to(self._device)
-
         # LSA TF-IDF word embeddings for image retrieval.
         self._captions_embedding, self._lsa_embedder, self._caption_image_df, self._nlp = get_retreival_info(
             captions=constants.IMAGE_TO_CAPTION_CSV)
@@ -71,6 +65,18 @@ class Pipeline():
         self._preset_model = GPT2LMHeadModel.from_pretrained(
             constants.PRESET_GPT2_PATH)
         self._preset_model = self._preset_model.to(self._device)
+
+        if load_all_model:
+            # Image style transfer.
+            self._original_images_path = constants.ORIGINAL_IMAGES_PATH
+            self._styled_images_path = constants.STYLED_IMAGES_PATH
+
+            # Image re-ranking by Torchvision classification model
+            self._resnet152 = models.resnet152(pretrained=True)
+            self._resnet152 = self._resnet152.to(self._device)
+
+        print(
+            f"Loading models Time : {round((time.time() - start_time), 2)}s \n")
 
     def generate_text(self, title, num_samples):
         """
@@ -122,19 +128,38 @@ class Pipeline():
         return retrieve_images_for_one_extract(
             extract, num_images, self._captions_embedding, self._lsa_embedder, self._caption_image_df, self._nlp, current_images_ids)
 
-    def autocomplete_text(self, extracts, max_length, num_return_sequences):
+    def autocomplete_text(self, extracts, max_length, num_return_sequences, re_ranking=0):
         """
         Args:
             extracts (str): given text to continue. 
             max_length (int): generated text/s max length.
             num_return_sequences (int): number of generated texts to return. 
+            re_ranking (int): number of texts to generate to be able to re-rank. 
 
         Returns num_return_sequences list of generated texts, each of max_length according to given extracts.
 
         """
+        start_time = time.time()
+        if re_ranking > num_return_sequences:
+            generated = _sample_sequence(
+                self._gpt2, self._tokenizer, [extracts], max_length, re_ranking, self._device, first_idx=True)
+            print(
+                f"Generation Time : {round((time.time() - start_time), 2)}s \n")
+            # Re-rank generated stories.
+            stories_scores = np.array(list(map(lambda text: score_text(
+                text, self._lsa_embedder, self._tokenizer, self._preset_model, self._gpt2), generated)))
+            sorted_idx = sort_scores(stories_scores)
+            print("autocomplete_text: sorted_idx", sorted_idx)
+            # Apply ranking and Keep best <num_return_sequences>.
+            print(
+                f"Ranking Time : {round((time.time() - start_time), 2)}s \n")
+            return list(generated[sorted_idx])[:num_return_sequences]
 
-        return list(_sample_sequence(
+        generated = list(_sample_sequence(
             self._gpt2, self._tokenizer, [extracts], max_length, num_return_sequences, self._device, first_idx=True))
+        print(
+            f"Generation Time : {round((time.time() - start_time), 2)}s \n")
+        return generated
 
     def send_first_story(self, texts, images):
         """

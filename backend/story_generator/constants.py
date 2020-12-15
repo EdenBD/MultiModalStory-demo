@@ -27,6 +27,8 @@ TEMPERATURE = 1.05
 TOP_K = 70
 TOP_P = 0.95
 STARTING_PROMPTS = ["The Truth is Written in the Stars\n"]
+# Max number of tokens to take into account during inference.
+MAX_SEQ_LEN = 550
 
 # Image Retrieval.
 
@@ -34,6 +36,7 @@ UNSPLASH_IMG_FOLDER = os.path.join("client/public/", 'unsplash25k/')
 IMAGE_TO_CAPTION_CSV = os.path.join(UNSPLASH_IMG_FOLDER, 'image_caption.csv')
 # Change folder according to style model
 ORIGINAL_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'images')
+STYLED_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'sketch_images')
 IMAGE_WIDTH, IMAGE_HEIGHT = 512, 512
 
 # Pipeline/ Optimization. TODO(IMPROVE constants for deployment with GPU)

@@ -31,6 +31,33 @@ header .inner-heading {
   padding: 0;
 }
 
+// Icon Tooltip
+[data-title]:hover:after {
+  opacity: 1;
+  transition: all 0.1s ease 0.5s;
+  visibility: visible;
+}
+[data-title]:after {
+  content: attr(data-title);
+  background-color: #27272c;
+  color: whitesmoke;
+  font-size: 90%;
+  position: absolute;
+  padding: 1px 5px 2px 5px;
+  // bottom: -0.05em;
+  left: 100%;
+  white-space: nowrap;
+  box-shadow: 1px 1px 3px #222222;
+  opacity: 0;
+  border: 1px solid #111111;
+  z-index: 99999;
+  visibility: hidden;
+  text-decoration: none
+}
+[data-title] {
+  position: relative;
+}
+
 // Collapsible description
 .description {
   width: 100%;
@@ -50,26 +77,6 @@ summary {
   outline: none;
 }
 
-summary::-webkit-details-marker {
-  display: none;
-  margin: 0;
-}
-
-summary:after {
-  content: "\f0fe";
-  font-family: FontAwesome;
-  font-size: 1em; 
-  font-weight: bold; 
-  padding: 0; 
-  text-align: center; 
-  width: 20px;
-}
-details[open] summary:after {
-  content: "\f146";
-  font-family: FontAwesome;
-  font-weight: lighter; 
-}
-
 .desciption-txt {
   margin: 0;
   padding: 0;
@@ -81,7 +88,6 @@ details[open] summary:after {
 .options {
   margin-top: 0.5em;
   font-size: 105%;
-  color: #6d6d6d;
 }
 
 .options-el {
@@ -100,7 +106,7 @@ article {
   font-family: inherit;
   margin: 0.7em;
   padding: 5em;
-  font-size: 110%;
+  font-size: 100%;
   width: 100%;
   background: white;
   box-shadow: rgba(0,0,0,.05) 0 3px 15px;
@@ -165,6 +171,15 @@ code {
   padding: 0.5em;
 }
 
+.options a,
+.options a label {
+    cursor: pointer;
+}
+
+.options span {
+  cursor: default;
+}
+
 img {
   display: block;
   margin-left: auto;
@@ -195,7 +210,7 @@ img {
 
 // Options
 
-.options{
+.options-popup{
   position: absolute;
 }
 
@@ -214,14 +229,21 @@ img {
 }
 
 .options-imgs-icon{
-  padding: 1.7em 0.3em;
+  padding: 1em 0.3em;
   outline: white;
+}
+
+.v-card {
+  text-align: left;
 }
 
 .v-list-item {
   padding: 0 0.4em;
 }
 
+.v-list-item__title {
+  white-space: normal;
+}
 // Ratings card
 
 .rating-el-title-el {
@@ -229,22 +251,60 @@ img {
   margin-right: 0.1em;
 }
 
-output {
+.card-title {
+  font-weight: bolder;
+  padding: 0;
+  margin: 0;
+}
+
+.card-main-title {
+  font-size: 180%;
+  font-weight: bolder;
+  text-align: center;
+  padding-bottom: 1em;
+}
+
+.v-rating .v-icon {
+  color: orange;
+}
+
+// Validation errors
+.v-messages__message {
+  color: red;
+  font-size: medium;
+}
+
+.v-btn {
+  background-color: #57ce5b  !important;
+  border-color: #4caf50  !important;
+  font-weight: bolder;
+}
+
+.container {
+  border-style: dotted;
+  border-color: gray;
+}
+
+// Footer
+.footer {
+  display: block;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  background-color: #eee;
+  margin-top: 2em;
+  font-size: 70%;
+}
+
+.footer-txt{
+  margin: 0.5em;
   padding: 0;
 }
 
-.card-title {
-  font-variant-caps: all-petite-caps;
-}
-
-.submit-bttn {
-  padding: 1.5em;
-  padding-bottom: 0.5em;
-  text-align: center;
-}
-
-textarea {
-  width: 99%;
+.seperator {
+  color: #ebe5e5;
+  border-top: 0.25em solid;
 }
 
 /* Safari */
