@@ -4,7 +4,7 @@
     <Options
       :isOpen="this.isOpen"
       :isLoading="this.isLoading"
-      :bottom="this.bottom"
+      :top="this.top"
       :left="this.left"
       :texts="this.texts"
       :imgs="this.imgs"
@@ -45,8 +45,9 @@ export default {
         autofocus: true,
         disableInputRules: ["strike"],
         // Update handleKeyDown.currentImgs in case of adding new images tags. 
+        // All content must be within the first <p> to handle this.curerntImg correctly.
         content:
-          "<h2>The Mighty Dragon</h2><p><s>If you wish to follow my instructions, you must call the Dragon by name. The Dragon, you see, is the ruler of all Dragons. He is the ablest of all the living creatures, and because he is so strong, he has no doubt thought of taking pleasure in his beauty.</s></p><img src='unsplash25k/sketch_images/PAVvPPzBKJQ.jpg' id='PAVvPPzBKJQ' draggable='false' contenteditable='false'><span>However, </span>",
+          "<h2>The Mighty Dragon</h2><p><s>If you wish to follow my instructions, you must call the Dragon by name. The Dragon, you see, is the ruler of all Dragons. He is the ablest of all the living creatures, and because he is so strong, he has no doubt thought of taking pleasure in his beauty.</s><img src='unsplash25k/sketch_images/2THFkVFcIzE.jpg' id='2THFkVFcIzE'>However, </p>",
         extensions: [
           new Doc(),
           new Title(),
@@ -74,7 +75,6 @@ export default {
         onUpdate: ({ getJSON }) => {
           // Update json that represents data.
           this.json = getJSON();
-          console.log("onUpdate: THIS.JSON", this.json.content);
         },
         editorProps: {
           // Open options menu.
@@ -84,15 +84,19 @@ export default {
               event.preventDefault();
               this.cursorPosition = view.state.selection.anchor;
               this.view = view;
-              const allText = view.dom.innerText;
-              // Get screen coordinates
-              const absolutePosition = view.coordsAtPos(this.cursorPosition);
-              // Add card size to open mrenu below text.
-              const cardSize = 200;
-              this.bottom = absolutePosition.bottom + cardSize, this.left = absolutePosition.left;
+              // Get all text before the current cursor position.
+              const allText = view.dom.innerText.substring(0, this.cursorPosition);
+              // Find the screen coordinates (relative to top left corner of the window) of the given document position.
+              const relativePosition = view.coordsAtPos(this.cursorPosition);
+              // To avoid overflowing the Options menu and negative top values. 
+              const cardWidth = 400; const presetHeight = 300;
+              // To open card below text.
+              const lineHeight = 40;
+              this.top = Math.max(relativePosition.top + lineHeight, presetHeight), this.left = Math.min(relativePosition.left, window.innerWidth-cardWidth);
               // Preset value of current imgs. 
               let currentImgs  = this.presetImgs;
-              // Every image tag is inside a p tag.
+              // All content is inside the first p tag. 
+              // this.json.content is undefined for the first image insert, when this.presetImgs is used.
               if (this.json.content){
                 currentImgs = this.json.content.filter(obj =>  obj.type === "paragraph")[0].content.filter(obj =>  obj.type === "image").map(img => img.attrs.id);
               }
@@ -102,7 +106,7 @@ export default {
               this.isOpen = false;
             }
           },
-          handleTextInput: (view, from, to) => {
+          handleTextInput: (view, from) => {
             // Learned from similar code: https://gitmemory.com/issue/scrumpy/tiptap/490/565634509.
             // For all char keys, to distinguish generated from user text.
             const [strike] = view.state.tr.selection.$anchor.marks();
@@ -110,7 +114,7 @@ export default {
             // If user writes inside genrated text.
             if (isStrike) {
               // Timeout to execute after the handler event.
-              setTimeout(()=> {view.dispatch(view.state.tr.removeMark(from, to+1, strike));})
+              setTimeout(()=> {view.dispatch(view.state.tr.removeMark(from, from+1, strike));})
             }
             // To maintain the normal behavior of user input.
             return false;
@@ -124,10 +128,10 @@ export default {
       // For Options - optional text and imgs.
       texts: ["1st Choice","2nd Choice","3rd Choice"],
       imgs: ["__G2yFuW7jQ", "ZzqM2YmqZ-o", "zZzKLzKP24o"],
-      presetImgs: ["9W0TTWlZELY"],
+      presetImgs: ["2THFkVFcIzE"],
       isLoading: false,
       isOpen: false,
-      bottom: 0,
+      top: 0,
       left:0,
     }
   },

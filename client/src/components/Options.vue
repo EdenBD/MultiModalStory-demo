@@ -1,7 +1,8 @@
 <template>
-  <div v-show="isOpen" class="options-popup" v-bind:style="{'left': left +'px'}">
+  <div v-show="isOpen" class="options-popup" v-bind:style="{'left': left +'px', 'top': top + 'px'}">
     <v-progress-circular indeterminate color="primary" v-show="isLoading"></v-progress-circular>
-    <v-card max-width="22em" class="mx-auto" v-show="!isLoading">
+    <!-- Update Editor: cardWidth in case of changing max-width.-->
+    <v-card max-width="400px" class="mx-auto" v-show="!isLoading">
       <v-list>
         <v-list-item-group>
           <!--     Text Row     -->
@@ -43,7 +44,7 @@ export default {
   props: {
     isOpen: Boolean,
     isLoading: Boolean,
-    // bottom: Number,
+    top: Number,
     left: Number,
     texts: Array,
     imgs: Array},

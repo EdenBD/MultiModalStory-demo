@@ -182,7 +182,7 @@ a label {
 
 img {
   display: block;
-  margin: 0 auto 2em auto;
+  margin: 1em auto 2em auto;
   width: 40%;
   height: 40%;
   border-radius: 6px;
@@ -210,7 +210,7 @@ img {
 // Options
 
 .options-popup{
-  position: absolute;
+  position: fixed;
   z-index: 1000;
 }
 
