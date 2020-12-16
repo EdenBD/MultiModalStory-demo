@@ -104,14 +104,13 @@ summary {
 //  Article attributes taken from https://codepen.io/tomhodgins/pen/BKPJaN
 article {
   font-family: inherit;
-  margin: 0.7em;
+  margin: 3em auto 3em auto;
   padding: 5em;
   font-size: 100%;
   width: 100%;
   background: white;
   box-shadow: rgba(0,0,0,.05) 0 3px 15px;
   display: inline-block;
-  margin-top: 3em;
 
 }
 
@@ -139,7 +138,7 @@ h2 {
 
 // + for elements placed immdiately after
 article p + p {
-  margin-top: .7em;
+  margin-top: 1em;
 }
 
 [contenteditable] {
@@ -171,9 +170,10 @@ code {
   padding: 0.5em;
 }
 
-.options a,
-.options a label {
+a,
+a label {
     cursor: pointer;
+    z-index: 100
 }
 
 .options span {
@@ -182,12 +182,11 @@ code {
 
 img {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-  height: 50%;
+  margin: 0 auto 2em auto;
+  width: 40%;
+  height: 40%;
   border-radius: 6px;
-  padding: 3px 1px;
+  cursor: pointer;
 }
 
 .sticky {
@@ -212,6 +211,7 @@ img {
 
 .options-popup{
   position: absolute;
+  z-index: 1000;
 }
 
 .options-imgs{

@@ -13,7 +13,7 @@
             class="info-icon"
             target="_blank"
             href="https://github.com/EdenBD/multimodal-storytelling-gan"
-            data-title="Uses hugginface, fine-tuned GPT-2 model & Unsplash Images"
+            data-title="Uses huggingface, fine-tuned GPT-2 model & Unsplash Images"
           >
             <i class="fa fa-info-circle" style="color: #6d6d6d"></i>
           </a>

@@ -9,7 +9,7 @@
             v-model="clarity"
             background-color="orange lighten-3"
             color="orange"
-            x-large
+            large
             :rules="ratingRules"
             half-increments
           ></v-rating>
@@ -21,7 +21,7 @@
             v-model="coherence"
             background-color="orange lighten-3"
             color="orange"
-            x-large
+            large
             :rules="ratingRules"
             half-increments
           ></v-rating>
@@ -33,7 +33,7 @@
             v-model="creativity"
             background-color="orange lighten-3"
             color="orange"
-            x-large
+            large
             :rules="ratingRules"
             half-increments
           ></v-rating>

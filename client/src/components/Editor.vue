@@ -18,10 +18,15 @@
 // Import the basic building blocks
 import { Editor, EditorContent } from "tiptap";
 import Options from "./Options.vue";
+
 import Doc from "../nodes/Doc";
 import Title from "../nodes/Title";
-import { Placeholder, Strike, Image,  TrailingNode } from "tiptap-extensions";
+import Image from "../nodes/Image";
+
+import { Placeholder, Strike,  TrailingNode, Link } from "tiptap-extensions";
 import { API } from "../js/api/mainApi";
+
+
 const api = new API();
 
 export default {
@@ -41,12 +46,13 @@ export default {
         disableInputRules: ["strike"],
         // Update handleKeyDown.currentImgs in case of adding new images tags. 
         content:
-          "<h2>The Mighty Dragon</h2><p>I was blind, <s>That's generated.</s></p>",
+          "<h2>The Mighty Dragon</h2><p><s>If you wish to follow my instructions, you must call the Dragon by name. The Dragon, you see, is the ruler of all Dragons. He is the ablest of all the living creatures, and because he is so strong, he has no doubt thought of taking pleasure in his beauty.</s></p><img src='unsplash25k/sketch_images/PAVvPPzBKJQ.jpg' id='PAVvPPzBKJQ' draggable='false' contenteditable='false'><span>However, </span>",
         extensions: [
           new Doc(),
           new Title(),
           new Strike(),
           new Image(),
+          new Link(),
           new TrailingNode({
             node: 'paragraph',
             notAfter: ['paragraph'],
@@ -67,7 +73,8 @@ export default {
         },
         onUpdate: ({ getJSON }) => {
           // Update json that represents data.
-          this.json = getJSON()
+          this.json = getJSON();
+          console.log("onUpdate: THIS.JSON", this.json.content);
         },
         editorProps: {
           // Open options menu.
@@ -84,9 +91,10 @@ export default {
               const cardSize = 200;
               this.bottom = absolutePosition.bottom + cardSize, this.left = absolutePosition.left;
               // Preset value of current imgs. 
-              let currentImgs  = [];
+              let currentImgs  = this.presetImgs;
+              // Every image tag is inside a p tag.
               if (this.json.content){
-                currentImgs = this.json.content.filter(obj =>  obj.type === "paragraph")[0].content.filter(obj =>  obj.type === "image").map(img => img.attrs.title);
+                currentImgs = this.json.content.filter(obj =>  obj.type === "paragraph")[0].content.filter(obj =>  obj.type === "image").map(img => img.attrs.id);
               }
               this.handleOptions(allText, currentImgs);
             }
@@ -106,7 +114,7 @@ export default {
             }
             // To maintain the normal behavior of user input.
             return false;
-          }
+          },
         }
       }),
       // To get current imgs, and avoid duplicates in retreival. 
@@ -116,6 +124,7 @@ export default {
       // For Options - optional text and imgs.
       texts: ["1st Choice","2nd Choice","3rd Choice"],
       imgs: ["__G2yFuW7jQ", "ZzqM2YmqZ-o", "zZzKLzKP24o"],
+      presetImgs: ["9W0TTWlZELY"],
       isLoading: false,
       isOpen: false,
       bottom: 0,
@@ -136,7 +145,9 @@ export default {
       }
     },
     shuffleStory(){
-      this.editor.setContent("text", true);
+      this.editor.setContent("<h2>A new Tittle</h2><p><s>Generated text</s></p>", true);
+      // Update if addding imgs
+      this.presetImgs = [];
     },
     async handleOptions(allText, currentImgs){
       this.isOpen = true;
@@ -156,7 +167,7 @@ export default {
       this.isOpen = false;
       const node = this.view.state.schema.nodes.image.create({
         src: `unsplash25k/sketch_images/${imgId}.jpg`, 
-        title: imgId});
+        id: imgId});
     this.view.dispatch(this.view.state.tr.insert(this.cursorPosition, node));
     this.view.focus('end');
     },

@@ -1,5 +1,5 @@
 <template>
-  <div v-show="isOpen" class="options-popup" v-bind:style="{'top': top + 'px', 'left': left +'px'}">
+  <div v-show="isOpen" class="options-popup" v-bind:style="{'left': left +'px'}">
     <v-progress-circular indeterminate color="primary" v-show="isLoading"></v-progress-circular>
     <v-card max-width="22em" class="mx-auto" v-show="!isLoading">
       <v-list>
@@ -43,7 +43,7 @@ export default {
   props: {
     isOpen: Boolean,
     isLoading: Boolean,
-    top: Number,
+    // bottom: Number,
     left: Number,
     texts: Array,
     imgs: Array},
