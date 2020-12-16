@@ -143,16 +143,13 @@ class Pipeline():
         if re_ranking > num_return_sequences:
             generated = _sample_sequence(
                 self._gpt2, self._tokenizer, [extracts], max_length, re_ranking, self._device, first_idx=True)
-            print(
-                f"Generation Time : {round((time.time() - start_time), 2)}s \n")
             # Re-rank generated stories.
             stories_scores = np.array(list(map(lambda text: score_text(
                 text, self._lsa_embedder, self._tokenizer, self._preset_model, self._gpt2), generated)))
             sorted_idx = sort_scores(stories_scores)
-            print("autocomplete_text: sorted_idx", sorted_idx)
             # Apply ranking and Keep best <num_return_sequences>.
             print(
-                f"Ranking Time : {round((time.time() - start_time), 2)}s \n")
+                f"Total Genration time with Re-Ranking Time : {round((time.time() - start_time), 2)}s \n")
             return list(generated[sorted_idx])[:num_return_sequences]
 
         generated = list(_sample_sequence(

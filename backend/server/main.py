@@ -102,7 +102,8 @@ async def autocomplete_text(payload: api.TextPayload):
     payload = api.TextPayload(**payload)
     storyGenerator = getGenerator()
     # If extracts are too long, truncation will be taken care of by the tokenizer.
-    return storyGenerator.autocomplete_text(payload.extracts, max_length=30, num_return_sequences=3, re_ranking=0)
+    re_ranking = 10 if payload.quality else 0
+    return storyGenerator.autocomplete_text(payload.extracts, max_length=30, num_return_sequences=3, re_ranking=re_ranking)
 
 
 if __name__ == "__main__":

@@ -79,7 +79,7 @@ export default {
         editorProps: {
           // Open options menu.
           handleKeyDown: (view, event) => {
-            if (event.key === "Tab") {
+            if (event.key === "Tab" || event.key === "Shift") {
               // Get info for auto-complete pop-up menu.
               event.preventDefault();
               this.cursorPosition = view.state.selection.anchor;
@@ -100,7 +100,10 @@ export default {
               if (this.json.content){
                 currentImgs = this.json.content.filter(obj =>  obj.type === "paragraph")[0].content.filter(obj =>  obj.type === "image").map(img => img.attrs.id);
               }
-              this.handleOptions(allText, currentImgs);
+              // If Shift,  perform slower text generation with re-ranking
+              const quality = event.key === "Shift";
+              console.log("handleKeyDown:event.key| quality", event.key, quality);
+              this.handleOptions(allText, currentImgs, quality);
             }
             else if (event.key == "Escape") {
               this.isOpen = false;
@@ -153,7 +156,7 @@ export default {
       // Update if addding imgs
       this.presetImgs = [];
     },
-    async handleOptions(allText, currentImgs){
+    async handleOptions(allText, currentImgs, quality){
       this.isOpen = true;
       this.isLoading = true;
       // Get last numSenteces
@@ -161,7 +164,7 @@ export default {
       const extracts = allText.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
       const imagesExtract = extracts.slice(-numSenteces).join(" ");
       // Call backend
-      this.texts = await api.postAutocompleteText(allText);
+      this.texts = await api.postAutocompleteText(allText, quality);
       this.imgs = await api.postRetreiveImage(imagesExtract , currentImgs);
       // finished Loading
       this.isLoading = false;

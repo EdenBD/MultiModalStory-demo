@@ -102,7 +102,7 @@ def _sentiment_polarity(filtered_words):
         filtered_words (set): set of non-stop, non-punctuation words. 
     """
     # If  empty
-    if not filtered_words:
+    if len(filtered_words) < 2:
         return 0
 
     POS_TAG_TO_WN = {'J': wn.ADJ, 'N': wn.NOUN, 'R': wn.ADV, 'V': wn.VERB}
@@ -164,6 +164,10 @@ def KLDIV_error_per_text(tokenizer, preset_model, finetuned_model, text):
     # Text is divided to extracts e.g. start, middle, end.
     if isinstance(text, (list, np.ndarray)):
         text = ' '.join(text)
+
+    # if too short return 0
+    if len(text) < 10:
+        return 0
 
     # Prepare text to forward pass.
     encodings_dict = tokenizer(text)

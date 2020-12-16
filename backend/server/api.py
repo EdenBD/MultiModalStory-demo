@@ -18,6 +18,7 @@ class GoodbyePayload(HashableBaseModel):
 
 class TextPayload(HashableBaseModel):
     extracts: str
+    quality: bool
 
 
 class ImagePayload(HashableBaseModel):

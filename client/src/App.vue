@@ -26,8 +26,15 @@
             <div class="options-el">
               <span>
                 <i class="fa fa-magic" aria-hidden="true"></i>
-                <code>tab</code> to
+                <code>tab</code> for
                 <strong>Autocomplete</strong>
+              </span>
+            </div>
+            <div class="options-el">
+              <span>
+                <i class="fa fa-level-up" aria-hidden="true"></i>
+                <code>shift</code> for
+                <strong>Quality Autocomplete</strong>
               </span>
             </div>
           </div>
@@ -42,7 +49,7 @@
         <div class="desciption-txt">
           <b>Step 1:</b> Choose a preset or start your own story.
           <br />
-          <b>Step 2:</b> Autocomplete text and images.
+          <b>Step 2:</b> Autocomplete text and images (5-15 sec).
           <br />
           <b>Step 3:</b> Give feedback and submit your story.
         </div>

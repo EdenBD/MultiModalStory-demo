@@ -36,13 +36,16 @@ export class API {
     }
 
     /**
-     * Call MultiModal StoryGenerator to generate text from given extracts (simple generation wihtout re-ranking).
+     * Call MultiModal StoryGenerator to generate text from given extracts 
+     * (simple generation with/out one re-ranking round depending on quality true/false).
      * Returns  Promise<Array<string>>
      * @param extracts
+     * @param quality
      */
-    postAutocompleteText(extracts) {
+    postAutocompleteText(extracts, quality) {
         const toSend = {
             extracts: extracts,
+            quality: quality,
         }
 
         const url = makeUrl(this.baseURL + '/post-autocomplete-text');
