@@ -116,7 +116,7 @@ async def submit_form(payload: api.FormPayload):
     if _verify_form(payload):
         try:
             file_path = os.path.join(
-                os.getcwd(), 'backend/formSubmission/story.txt')
+                os.getcwd(), 'backend/outputs/story.txt')
             print('file_path: ', file_path)
             # Append file to existing files.
             with open(file_path, 'a') as outfile:

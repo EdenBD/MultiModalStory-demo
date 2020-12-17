@@ -74,3 +74,5 @@ client/public/unsplash25k/**
 
 # DVC 
 .dvc/config
+backend/outputs/**
+client/public/unsplash25k/**
