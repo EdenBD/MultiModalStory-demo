@@ -71,3 +71,6 @@ Temporary Items
 backend/story_generator/downloaded/**
 backend/story_generator/style_transfer/**
 client/public/unsplash25k/**
+
+# DVC 
+.dvc/config
