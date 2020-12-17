@@ -27,7 +27,7 @@
             class="options-img"
           >
             <v-list-item-title>
-              <v-img :src="'unsplash25k/sketch_images/' + img +'.jpg'"></v-img>
+              <v-img :src="'unsplash25k/sketch_images1024/' + img +'.jpg'"></v-img>
             </v-list-item-title>
           </v-list-item>
         </v-list-item-group>
