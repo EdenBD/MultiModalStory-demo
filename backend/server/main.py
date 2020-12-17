@@ -2,6 +2,9 @@ from functools import lru_cache
 import argparse
 from typing import *
 import numpy as np
+# For form submission
+import json
+import os
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, RedirectResponse
@@ -11,7 +14,6 @@ import uvicorn
 import server.api as api
 import path_fixes as pf
 
-# BROKEN IMPORT
 from story_generator.pipeline import Pipeline
 
 parser = argparse.ArgumentParser(
@@ -31,14 +33,15 @@ app.add_middleware(
 )
 
 
-class Story:
-    """
-    Generated MultiModal story representation.
-    """
+def _in_bounds(value, min_bound, max_bound):
+    return value >= min_bound and value <= max_bound
 
-    def __init__(self, texts, images):
-        self.texts = texts
-        self.images = images
+
+def _verify_form(form_payload):
+    MAX_STORY_LENGTH, MAX_COMMENTS_LENGTH, MAX_RATING = 30000, 150, 5
+    return (_in_bounds(form_payload.coherence, 0, MAX_RATING) and _in_bounds(form_payload.clarity, 0, MAX_RATING)
+            and _in_bounds(form_payload.creativity, 0, MAX_RATING) and _in_bounds(len(form_payload.freeForm), 0, MAX_COMMENTS_LENGTH)
+            and _in_bounds(len(form_payload.html), 0, MAX_STORY_LENGTH))
 
 
 @lru_cache
@@ -105,6 +108,27 @@ async def autocomplete_text(payload: api.TextPayload):
     re_ranking = 10 if payload.quality else 0
     return storyGenerator.autocomplete_text(payload.extracts, max_length=25, num_return_sequences=3, re_ranking=re_ranking)
 
+
+@app.post("/api/post-form-submission", response_model=bool)
+async def submit_form(payload: api.FormPayload):
+    # Coerce into correct type. Not needed if no test written for this endpoint
+    payload = api.FormPayload(**payload)
+    if _verify_form(payload):
+        try:
+            file_path = os.path.join(
+                os.getcwd(), 'backend/formSubmission/story.txt')
+            print('file_path: ', file_path)
+            # Append file to existing files.
+            with open(file_path, 'a') as outfile:
+                json.dump(dict(payload), outfile, sort_keys=True, indent=4,
+                          ensure_ascii=False)
+        except Exception as e:
+            print(type(e), " Exception occurred")
+            print("Excetopn Args:", e.args)
+        # If there are no exceptions
+        else:
+            return True
+    return False
 
 if __name__ == "__main__":
     # This file is not run as __main__ in the uvicorn environment

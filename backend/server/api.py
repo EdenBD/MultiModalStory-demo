@@ -24,3 +24,11 @@ class TextPayload(HashableBaseModel):
 class ImagePayload(HashableBaseModel):
     extract: str
     current: Optional[List[str]]
+
+
+class FormPayload(HashableBaseModel):
+    coherence: float
+    clarity: float
+    creativity: float
+    freeForm: str
+    html: str

@@ -55,4 +55,33 @@ export class API {
 
         return d3.json(url, payload)
     }
+
+
+
+    /**
+     * Call MultiModal StoryGenerator to generate text from given extracts 
+     * (simple generation with/out one re-ranking round depending on quality true/false).
+     * Returns  Promise<Array<string>>
+     * @param coherence
+     * @param clarity
+     * @param creativity
+     * @param freeForm
+     * @param html
+     */
+    postFormSubmission(coherence, clarity, creativity, freeForm, html) {
+        const toSend = {
+            coherence: coherence,
+            clarity: clarity,
+            creativity: creativity,
+            freeForm: freeForm,
+            html: html,
+        }
+
+        const url = makeUrl(this.baseURL + '/post-form-submission');
+        const payload = toPayload(toSend)
+
+        console.log("--- POST " + url, payload);
+
+        return d3.json(url, payload)
+    }
 }

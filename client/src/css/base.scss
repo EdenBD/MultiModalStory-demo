@@ -292,6 +292,16 @@ img {
   border-color: gray;
 }
 
+.v-alert__icon {
+  align-self: auto;
+}
+
+.alert {
+  background-color: #72e476  !important;
+  border-color: #4caf50  !important;
+  font-weight: bolder;
+}
+
 // Footer
 .footer {
   display: block;

@@ -14,7 +14,7 @@
       ></Options>
     </article>
     <!-- TODO(FORM submission database + free text form submission security issues) -->
-    <RatingStory></RatingStory>
+    <RatingStory :isFormSubmitted="this.isFormSubmitted" @form-submit="hanndleFormSubmission"></RatingStory>
   </div>
 </template>
 
@@ -79,9 +79,10 @@ export default {
           // Log view once the editor is initialized.
           this.view = view;
         },
-        onUpdate: ({ getJSON }) => {
+        onUpdate: ({ getJSON, getHTML }) => {
           // Update json that represents data.
           this.json = getJSON();
+          this.html = getHTML();
         },
         editorProps: {
           // Open options menu.
@@ -133,6 +134,7 @@ export default {
       }),
       // To get current imgs, and avoid duplicates in retreival. 
       json : {},
+      html: "",
       view: {},
       cursorPosition: 0,
       // For Options - optional text and imgs.
@@ -143,6 +145,7 @@ export default {
       isOpen: false,
       top: 0,
       left:0,
+      isFormSubmitted: false
     }
   },
   beforeDestroy() {
@@ -195,6 +198,11 @@ export default {
         this.view.focus('end');
 
     },
+    async hanndleFormSubmission(coherence, clarity, creativity, freeForm){
+      // Send info from editor and form
+      this.isFormSubmitted = false;
+      this.isFormSubmitted = await api.postFormSubmission(coherence, clarity, creativity, freeForm, this.html)
+    }
   },
 };
 

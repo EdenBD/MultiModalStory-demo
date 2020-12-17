@@ -41,7 +41,12 @@
       </v-row>
       <v-row>
         <v-col cols="12" md="12">
-          <v-text-field v-model="free" label="Any Comments, Questions or Suggestions"></v-text-field>
+          <v-text-field
+            v-model="free"
+            label="Any Comments, Questions or Suggestions"
+            maxlength="150"
+            counter
+          ></v-text-field>
         </v-col>
       </v-row>
       <v-row>
@@ -56,6 +61,10 @@
       </v-row>
       <v-row>
         <v-col cols="12" md="4">
+          <v-alert v-show="isFormSubmitted" dense outlined dismissible type="success" class="alert">
+            Thank you!
+            <br />Form Submitted Successfully :D
+          </v-alert>
           <v-btn :disabled="!valid" class="mr-4" @click="submit">Submit Story</v-btn>
         </v-col>
       </v-row>
@@ -69,6 +78,9 @@ export default {
   emits: [
     "form-submit",
   ],
+  props: {
+    isFormSubmitted: Boolean,
+  },
   data: () => ({
   valid: false,
   coherence: 2.5,
