@@ -28,13 +28,15 @@
                 <i class="fa fa-magic" aria-hidden="true"></i>
                 <code>tab</code> for
                 <strong>Autocomplete</strong>
+                <span class="timing">(10 sec)</span>
               </span>
             </div>
             <div class="options-el">
               <span>
                 <i class="fa fa-level-up" aria-hidden="true"></i>
                 <code>shift</code> for
-                <strong>Quality Autocomplete</strong>
+                <strong>High-Quality Autocomplete</strong>
+                <span class="timing">(20 sec)</span>
               </span>
             </div>
           </div>
@@ -49,7 +51,7 @@
         <div class="desciption-txt">
           <b>Step 1:</b> Choose a preset or start your own story.
           <br />
-          <b>Step 2:</b> Autocomplete text and images (5-15 sec).
+          <b>Step 2:</b> Autocomplete text and images.
           <br />
           <b>Step 3:</b> Give feedback and submit your story.
         </div>
@@ -60,8 +62,6 @@
 
     <div>
       <Editor class="editor" ref="childEditor"></Editor>
-      <!-- TODO(FORM submission database + free text form submission security issues) -->
-      <RatingStory></RatingStory>
     </div>
     <Footer></Footer>
   </div>
@@ -69,14 +69,12 @@
 
 <script>
 import Editor from "./components/Editor.vue";
-import RatingStory from "./components/RatingStory.vue";
 import Footer from "./components/Footer.vue";
 
 export default {
   name: "App",
   components: {
     Editor,
-    RatingStory,
     Footer
   },
   mounted: function() {

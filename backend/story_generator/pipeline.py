@@ -1,6 +1,6 @@
 # Local imports
 import story_generator.constants as constants
-from story_generator.generation_utils import sample_stories_texts, retrieve_images_for_one_story, retrieve_images_for_one_extract, get_retreival_info, load_style_transfer_model, story_style_transfer, _sample_sequence
+from story_generator.generation_utils import sample_stories_texts, retrieve_images_for_one_story, retrieve_images_for_one_extract, get_retreival_info, load_style_transfer_model, story_style_transfer, _sample_demo_sequence
 from story_generator.ranking_utils import score_text, images_coherency, KLDIV_error_per_text, sort_scores
 from story_generator.helper_functions import split_to_extracts
 
@@ -141,7 +141,7 @@ class Pipeline():
         """
         start_time = time.time()
         if re_ranking > num_return_sequences:
-            generated = _sample_sequence(
+            generated = _sample_demo_sequence(
                 self._gpt2, self._tokenizer, [extracts], max_length, re_ranking, self._device, first_idx=True)
             # Re-rank generated stories.
             stories_scores = np.array(list(map(lambda text: score_text(
@@ -152,7 +152,7 @@ class Pipeline():
                 f"Total Genration time with Re-Ranking Time : {round((time.time() - start_time), 2)}s \n")
             return list(generated[sorted_idx])[:num_return_sequences]
 
-        generated = list(_sample_sequence(
+        generated = list(_sample_demo_sequence(
             self._gpt2, self._tokenizer, [extracts], max_length, num_return_sequences, self._device, first_idx=True))
         print(
             f"Generation Time : {round((time.time() - start_time), 2)}s \n")

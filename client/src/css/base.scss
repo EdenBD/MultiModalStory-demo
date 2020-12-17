@@ -56,6 +56,7 @@ header .inner-heading {
 }
 [data-title] {
   position: relative;
+  padding-left: 0.2em;
 }
 
 // Collapsible description
@@ -80,7 +81,6 @@ summary {
 .desciption-txt {
   margin: 0;
   padding: 0;
-  font-size: 1.1em;
 }
 
 
@@ -93,6 +93,12 @@ summary {
 .options-el {
   display: inline-block;
   margin-right: 2em;
+}
+
+// sec after options
+.timing{
+  font-size: smaller;
+  padding-left: 0.2em;
 }
 
 .header-el {
@@ -114,8 +120,9 @@ article {
 
 }
 
-details summary::marker {
-  display:none;
+details[open] summary::after {
+  content: "Help";
+  font-weight: bolder;
 }
 
 .editor {
@@ -183,8 +190,8 @@ a label {
 img {
   display: block;
   margin: 1em auto 2em auto;
-  width: 40%;
-  height: 40%;
+  width:60%;
+  height: 60%;
   border-radius: 6px;
   cursor: pointer;
 }

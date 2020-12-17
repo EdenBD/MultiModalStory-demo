@@ -66,6 +66,9 @@
 <script lang="js">
 export default {
   name: "RatingStory",
+  emits: [
+    "form-submit",
+  ],
   data: () => ({
   valid: false,
   coherence: 2.5,
@@ -80,7 +83,8 @@ export default {
 methods: {
       submit () {
         // Get all form data and editor JSON and save in directory.
-        this.$refs.form.validate()
+        this.$refs.form.validate();
+        this.$emit("form-submit", this.coherence, this.clarity, this.creativity, this.free);
       },
     },
 };

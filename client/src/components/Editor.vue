@@ -1,27 +1,33 @@
 <template>
-  <article>
-    <editor-content ref="editorRef" :editor="editor" />
-    <Options
-      :isOpen="this.isOpen"
-      :isLoading="this.isLoading"
-      :top="this.top"
-      :left="this.left"
-      :texts="this.texts"
-      :imgs="this.imgs"
-      @text-insert="handleTextInsert"
-      @img-insert="handleImageInsert"
-    ></Options>
-  </article>
+  <div>
+    <article>
+      <editor-content ref="editorRef" :editor="editor" />
+      <Options
+        :isOpen="this.isOpen"
+        :isLoading="this.isLoading"
+        :top="this.top"
+        :left="this.left"
+        :texts="this.texts"
+        :imgs="this.imgs"
+        @text-insert="handleTextInsert"
+        @img-insert="handleImageInsert"
+      ></Options>
+    </article>
+    <!-- TODO(FORM submission database + free text form submission security issues) -->
+    <RatingStory></RatingStory>
+  </div>
 </template>
 
 <script lang="js">
 // Import the basic building blocks
 import { Editor, EditorContent } from "tiptap";
 import Options from "./Options.vue";
+import RatingStory from "./RatingStory.vue";
 
 import Doc from "../nodes/Doc";
 import Title from "../nodes/Title";
 import Image from "../nodes/Image";
+
 
 import { Placeholder, Strike,  TrailingNode, Link } from "tiptap-extensions";
 import { API } from "../js/api/mainApi";
@@ -34,6 +40,7 @@ export default {
   components: {
     EditorContent,
     Options,
+    RatingStory,
   },
   setup() {
     this.api = new API();
@@ -47,7 +54,7 @@ export default {
         // Update handleKeyDown.currentImgs in case of adding new images tags. 
         // All content must be within the first <p> to handle this.curerntImg correctly.
         content:
-          "<h2>The Mighty Dragon</h2><p><s>If you wish to follow my instructions, you must call the Dragon by name. The Dragon, you see, is the ruler of all Dragons. He is the ablest of all the living creatures, and because he is so strong, he has no doubt thought of taking pleasure in his beauty.</s><img src='unsplash25k/sketch_images/2THFkVFcIzE.jpg' id='2THFkVFcIzE'>However, </p>",
+          "<h2>The Mighty Dragon</h2><p><s>If you wish to follow my instructions, you must call the Dragon by name. The Dragon, you see, is the ruler of all Dragons. He is the ablest of all the living creatures, and because he is so strong, he has no doubt thought of taking pleasure in his beauty.</s><img src='unsplash25k/sketch_images1024/01zdIpN6uHU.jpg' id='01zdIpN6uHU'>However, </p>",
         extensions: [
           new Doc(),
           new Title(),
@@ -89,7 +96,7 @@ export default {
               // Find the screen coordinates (relative to top left corner of the window) of the given document position.
               const relativePosition = view.coordsAtPos(this.cursorPosition);
               // To avoid overflowing the Options menu and negative top values. 
-              const cardWidth = 400; const presetHeight = 300;
+              const cardWidth = 400; const presetHeight = 350;
               // To open card below text.
               const lineHeight = 40;
               this.top = Math.max(relativePosition.top + lineHeight, presetHeight), this.left = Math.min(relativePosition.left, window.innerWidth-cardWidth);
@@ -131,7 +138,7 @@ export default {
       // For Options - optional text and imgs.
       texts: ["1st Choice","2nd Choice","3rd Choice"],
       imgs: ["__G2yFuW7jQ", "ZzqM2YmqZ-o", "zZzKLzKP24o"],
-      presetImgs: ["2THFkVFcIzE"],
+      presetImgs: ["01zdIpN6uHU"],
       isLoading: false,
       isOpen: false,
       top: 0,
@@ -173,7 +180,7 @@ export default {
     handleImageInsert(imgId) {
       this.isOpen = false;
       const node = this.view.state.schema.nodes.image.create({
-        src: `unsplash25k/sketch_images/${imgId}.jpg`, 
+        src: `unsplash25k/sketch_images1024/${imgId}.jpg`, 
         id: imgId});
     this.view.dispatch(this.view.state.tr.insert(this.cursorPosition, node));
     this.view.focus('end');

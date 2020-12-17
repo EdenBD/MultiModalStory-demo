@@ -6,16 +6,14 @@
       <v-list>
         <v-list-item-group>
           <!--     Text Row     -->
-          <v-list-item
-            v-for="(text, index) in texts"
-            :key="index"
-            @click="$emit('text-insert', text)"
-          >
-            <v-list-item-icon>
-              <v-icon>mdi-text</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title v-text="text" style="{'padding-left': '0.1em';}"></v-list-item-title>
-          </v-list-item>
+          <div v-for="(text, index) in texts" :key="index">
+            <v-list-item v-if="text.length" @click="$emit('text-insert', text)">
+              <v-list-item-icon>
+                <v-icon>mdi-text</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title v-text="text" style="{'padding-left': '0.1em';}"></v-list-item-title>
+            </v-list-item>
+          </div>
         </v-list-item-group>
         <!--     Images Row     -->
         <v-list-item-group class="options-imgs">

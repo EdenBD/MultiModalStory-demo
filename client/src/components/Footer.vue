@@ -8,8 +8,8 @@
       class="footer-txt"
     >Collaborative work of Eden Bensaid, Hendrik Strobelt, Jacob Andreas, Benjamin Hoover and Mauro Martino.</div>
     <div class="footer-txt">
-      {{ new Date().getFullYear() }} —
       <strong>Visual AI Lab @ IBM | Language & Intelligence @ MIT</strong>
+      - {{ new Date().getFullYear() }}
     </div>
   </div>
 </template>

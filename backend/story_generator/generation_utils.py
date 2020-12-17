@@ -39,14 +39,14 @@ def _last_stop_token(tokenizer, tokens_output):
     return index_last_eos
 
 
-def _sample_sequence(model, tokenizer, prompts, max_length, num_return_sequences, device, first_idx=False):
+def _sample_demo_sequence(model, tokenizer, prompts, max_length, num_return_sequences, device, first_idx=False):
     """
     One forward pass generation that ends at end of sentence mark. 
 
     Args:
         model (PyTorch): Fine-tuned GPT2 model for generation.
         tokenizer (PyTorch): GPT2 tokenizer for generation.
-        prompts (list): List of starting sentences e.g [title 1, title 2].
+        prompts (list): For demo purposes, list of one string representing the current story.
         max_length (int): How long the generated text should be. 
         num_return_sequences (int): Number of generated texts to return per prompt. 
         first_idx (bool): True if want to remove given prompt from the returned generation.
@@ -59,14 +59,10 @@ def _sample_sequence(model, tokenizer, prompts, max_length, num_return_sequences
     """
 
     encodings_dict = tokenizer(
-        prompts, padding='longest', truncation=True, max_length=constants.MAX_SEQ_LEN)
+        prompts, truncation=True, max_length=constants.MAX_SEQ_LEN)
     prompts_ids = torch.tensor(
         encodings_dict['input_ids'], device=device, dtype=torch.long)
-    attantion_masks = torch.tensor(
-        encodings_dict['attention_mask'], device=device, dtype=torch.long)
     first_idx = len(prompts_ids[0]) if first_idx else 0
-    # assert any(mask == 0 for mask in attantion_masks[:, -1]
-    #            ) is False, "Attention masks are on the right, add tokenizer.padding_side = 'left' to fix."
 
     sample_outputs = model.generate(
         prompts_ids,  # Long tensor of size (batch_size, max_prompt_length)
@@ -78,13 +74,10 @@ def _sample_sequence(model, tokenizer, prompts, max_length, num_return_sequences
         temperature=constants.TEMPERATURE,
         repetition_penalty=1.0,  # no penalty
         num_return_sequences=num_return_sequences,
-        attention_mask=attantion_masks,
         pad_token_id=tokenizer.pad_token_id,
     )  # returns tensor of shape (len(prompts)*num_return_sequences x max_length)
-    indices_last_eos = map(
-        lambda sample: _last_stop_token(tokenizer, sample), sample_outputs)
-    generated = np.array(list(map(lambda sample, idx: tokenizer.decode(
-        sample[first_idx:idx + 1], skip_special_tokens=True), sample_outputs, indices_last_eos)))
+    generated = np.array(list(map(lambda sample: tokenizer.decode(
+        sample[first_idx:], skip_special_tokens=True), sample_outputs)))
     return generated
 
 
