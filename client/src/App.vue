@@ -72,8 +72,22 @@
 import Editor from "./components/Editor.vue";
 import Footer from "./components/Footer.vue";
 
+const NUM_PRESET_STORIES = 5;
+
 export default {
   name: "App",
+  props: {
+    routeStoryID: {
+      type: String,
+      // Starts with default story.
+      default: "1"
+    }
+  },
+  data: function() {
+    return {
+      storyID: this.routeStoryID
+    };
+  },
   components: {
     Editor,
     Footer
@@ -86,7 +100,15 @@ export default {
   },
   methods: {
     shuffleStory: function() {
-      this.$refs.childEditor.shuffleStory();
+      // User called shuffle story
+      if (this.storyID.length === 1) {
+        if (Number(this.storyID) <= NUM_PRESET_STORIES) {
+          this.storyID = (Number(this.storyID) + 1).toString();
+        } else {
+          this.storyID = "1";
+        }
+      }
+      this.$refs.childEditor.shuffleStory(this.storyID);
     }
   }
 };

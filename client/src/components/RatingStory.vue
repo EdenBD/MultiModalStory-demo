@@ -25,7 +25,7 @@
             :rules="ratingRules"
             half-increments
           ></v-rating>
-        </v-col>z
+        </v-col>
         <v-col cols="12" md="4">
           <h4 class="card-title rating-el-title-el">Creativity</h4>
           <v-rating

@@ -56,6 +56,23 @@ export class API {
         return d3.json(url, payload)
     }
 
+    // Story Forms. 
+
+    /**
+     * If exists, get story HTML according to given filename. 
+     * Returns Promise<string> 
+     * @param filename
+     */
+    getStory(filename) {
+        const toSend = {
+            filename: filename
+        }
+
+        const url = makeUrl(this.baseURL + "/story", toSend)
+        console.log("--- GET " + url);
+
+        return d3.json(url)
+    }
 
 
     /**

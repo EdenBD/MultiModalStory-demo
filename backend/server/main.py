@@ -5,16 +5,21 @@ import numpy as np
 # For form submission
 import json
 import os
+import uuid
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
 import uvicorn
 import server.api as api
 import path_fixes as pf
 
 from story_generator.pipeline import Pipeline
+
+OUTPUT_PATH = os.path.join(
+    os.getcwd(), 'backend/outputs/')
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -87,6 +92,26 @@ async def docs():
     return RedirectResponse(url="/docs")
 
 
+@app.get("/api/story", response_model=str)
+async def get_story(filename: str):
+    """
+    Fetch a story HTML string if exists, otherwise returns empty string. 
+    """
+    file_path = os.path.join(OUTPUT_PATH, f'{filename}.txt')
+    if os.path.exists(file_path):
+        try:
+            with open(file_path) as infile:
+                data = json.load(infile)
+                print("Story found! sending data: ", data)
+        except Exception as e:
+            print(type(e), " Exception occurred")
+            print("Exception Args:", e.args)
+        else:
+            return data['html']
+    print("Story not found")
+    return ""
+
+
 # POST to send/ create Object data, response_model converts output data to its type declaration.
 
 
@@ -115,11 +140,12 @@ async def submit_form(payload: api.FormPayload):
     payload = api.FormPayload(**payload)
     if _verify_form(payload):
         try:
-            file_path = os.path.join(
-                os.getcwd(), 'backend/outputs/story.txt')
-            print('file_path: ', file_path)
-            # Append file to existing files.
-            with open(file_path, 'a') as outfile:
+            # Generate a unique filename.
+            filename = uuid.uuid4().hex
+            file_path = os.path.join(OUTPUT_PATH, f'{filename}.txt')
+            print('main.py POST FORM: file_path:', file_path)
+            # Write new file.
+            with open(file_path, 'w') as outfile:
                 json.dump(dict(payload), outfile, sort_keys=True, indent=4,
                           ensure_ascii=False)
         except Exception as e:
