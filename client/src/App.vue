@@ -34,7 +34,8 @@
             <div class="options-el">
               <span>
                 <i class="fa fa-level-up" aria-hidden="true"></i>
-                <code>shift</code> for
+                <code>alt</code> or
+                <code>option</code> for
                 <strong>High-Quality Autocomplete</strong>
                 <span class="timing">(20 sec)</span>
               </span>

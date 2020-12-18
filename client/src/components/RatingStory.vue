@@ -25,8 +25,7 @@
             :rules="ratingRules"
             half-increments
           ></v-rating>
-        </v-col>
-
+        </v-col>z
         <v-col cols="12" md="4">
           <h4 class="card-title rating-el-title-el">Creativity</h4>
           <v-rating
@@ -53,8 +52,8 @@
         <v-col cols="12" md="12">
           <v-checkbox
             v-model="checkbox"
-            :rules="[v => !!v || 'You must agree to continue!']"
-            label="Do you agree to submit your feedback and story for research?"
+            :rules="[v => !!v || 'You must agree to submit!']"
+            label="Do you agree to submit your feedback and story?"
             required
           ></v-checkbox>
         </v-col>
@@ -63,7 +62,7 @@
         <v-col cols="12" md="4">
           <v-alert v-show="isFormSubmitted" dense outlined dismissible type="success" class="alert">
             Thank you!
-            <br />Form Submitted Successfully :D
+            <br />You can share your story with the URL :D
           </v-alert>
           <v-btn :disabled="!valid" class="mr-4" @click="submit">Submit Story</v-btn>
         </v-col>

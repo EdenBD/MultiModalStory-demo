@@ -86,8 +86,10 @@ export default {
         },
         editorProps: {
           // Open options menu.
-          handleKeyDown: (view, event) => {
-            if (event.key === "Tab" || event.key === "Shift") {
+          handleKeyDown: (view, event) => { 
+            // Check isLoading to prevent multiple keypresses from sending extra requests. 
+            console.log("key",event.key, "isLoading",this.isLoading)
+            if ((event.key === "Tab" || event.key === "Alt") && !this.isLoading) {
               // Get info for auto-complete pop-up menu.
               event.preventDefault();
               this.cursorPosition = view.state.selection.anchor;
@@ -108,8 +110,8 @@ export default {
               if (this.json.content){
                 currentImgs = this.json.content.filter(obj =>  obj.type === "paragraph")[0].content.filter(obj =>  obj.type === "image").map(img => img.attrs.id);
               }
-              // If Shift,  perform slower text generation with re-ranking
-              const quality = event.key === "Shift";
+              // If Alt,  perform slower text generation with re-ranking
+              const quality = event.key === "Alt";
               console.log("handleKeyDown:event.key| quality", event.key, quality);
               this.handleOptions(allText, currentImgs, quality);
             }
@@ -122,6 +124,8 @@ export default {
             // For all char keys, to distinguish generated from user text.
             const [strike] = view.state.tr.selection.$anchor.marks();
             const isStrike = strike && strike.type.name === "strike";
+            // Update cursorPosition to insert text/ image in correct position.
+            this.cursorPosition = view.state.selection.anchor + 1;
             // If user writes inside genrated text.
             if (isStrike) {
               // Timeout to execute after the handler event.
@@ -145,7 +149,7 @@ export default {
       isOpen: false,
       top: 0,
       left:0,
-      isFormSubmitted: false
+      isFormSubmitted: false,
     }
   },
   beforeDestroy() {
