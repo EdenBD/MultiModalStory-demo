@@ -53,7 +53,7 @@
           <v-checkbox
             v-model="checkbox"
             :rules="[v => !!v || 'You must agree to submit!']"
-            label="Do you agree to submit your feedback and story?"
+            label="Do you agree to submit your feedback and publish your story?"
             required
           ></v-checkbox>
         </v-col>

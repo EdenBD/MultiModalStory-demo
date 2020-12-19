@@ -149,7 +149,7 @@ export default {
   watch: {
     $route() {
       const routeStoryId = this.$route.params.storyid;
-      // If route is defined and was not just updated by submitting a form
+      // If route is defined and was not just updated by submitting a form.
       if (routeStoryId && routeStoryId!==this.submittedFormID){
         this.shuffleStory(routeStoryId);
       }

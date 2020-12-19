@@ -93,6 +93,11 @@ summary {
   margin-right: 2em;
 }
 
+.options a {
+  color: #2780e3;
+  text-decoration: none;
+}
+
 // sec after options
 .timing{
   font-size: smaller;
@@ -314,6 +319,11 @@ img {
 .footer-txt{
   margin: 0.5em;
   padding: 0;
+}
+
+.footer a {
+  color: inherit;
+  text-decoration: underline;
 }
 
 .seperator {
