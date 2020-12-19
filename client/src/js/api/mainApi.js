@@ -61,11 +61,11 @@ export class API {
     /**
      * If exists, get story HTML according to given filename. 
      * Returns Promise<string> 
-     * @param filename
+     * @param storyid
      */
-    getStory(filename) {
+    getStory(storyid) {
         const toSend = {
-            filename: filename
+            storyid: storyid
         }
 
         const url = makeUrl(this.baseURL + "/story", toSend)
@@ -78,7 +78,7 @@ export class API {
     /**
      * Call MultiModal StoryGenerator to generate text from given extracts 
      * (simple generation with/out one re-ranking round depending on quality true/false).
-     * Returns  Promise<Array<string>>
+     * Returns  Promise<String>
      * @param coherence
      * @param clarity
      * @param creativity

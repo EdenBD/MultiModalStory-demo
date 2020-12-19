@@ -76,16 +76,9 @@ const NUM_PRESET_STORIES = 5;
 
 export default {
   name: "App",
-  props: {
-    routeStoryID: {
-      type: String,
-      // Starts with default story.
-      default: "1"
-    }
-  },
   data: function() {
     return {
-      storyID: this.routeStoryID
+      storyID: this.$route.params.storyid
     };
   },
   components: {
@@ -102,13 +95,14 @@ export default {
     shuffleStory: function() {
       // User called shuffle story
       if (this.storyID.length === 1) {
-        if (Number(this.storyID) <= NUM_PRESET_STORIES) {
+        if (Number(this.storyID) < NUM_PRESET_STORIES) {
           this.storyID = (Number(this.storyID) + 1).toString();
         } else {
           this.storyID = "1";
         }
+        // UUpdate  the route, this will call Editor
+        this.$router.push({ name: "story", params: { storyid: this.storyID } });
       }
-      this.$refs.childEditor.shuffleStory(this.storyID);
     }
   }
 };

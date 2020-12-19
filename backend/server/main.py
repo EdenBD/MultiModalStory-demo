@@ -93,16 +93,15 @@ async def docs():
 
 
 @app.get("/api/story", response_model=str)
-async def get_story(filename: str):
+async def get_story(storyid: str):
     """
     Fetch a story HTML string if exists, otherwise returns empty string. 
     """
-    file_path = os.path.join(OUTPUT_PATH, f'{filename}.txt')
+    file_path = os.path.join(OUTPUT_PATH, f'{storyid}.txt')
     if os.path.exists(file_path):
         try:
             with open(file_path) as infile:
                 data = json.load(infile)
-                print("Story found! sending data: ", data)
         except Exception as e:
             print(type(e), " Exception occurred")
             print("Exception Args:", e.args)
@@ -134,7 +133,7 @@ async def autocomplete_text(payload: api.TextPayload):
     return storyGenerator.autocomplete_text(payload.extracts, max_length=25, num_return_sequences=3, re_ranking=re_ranking)
 
 
-@app.post("/api/post-form-submission", response_model=bool)
+@app.post("/api/post-form-submission", response_model=str)
 async def submit_form(payload: api.FormPayload):
     # Coerce into correct type. Not needed if no test written for this endpoint
     payload = api.FormPayload(**payload)
@@ -143,7 +142,6 @@ async def submit_form(payload: api.FormPayload):
             # Generate a unique filename.
             filename = uuid.uuid4().hex
             file_path = os.path.join(OUTPUT_PATH, f'{filename}.txt')
-            print('main.py POST FORM: file_path:', file_path)
             # Write new file.
             with open(file_path, 'w') as outfile:
                 json.dump(dict(payload), outfile, sort_keys=True, indent=4,
@@ -153,8 +151,8 @@ async def submit_form(payload: api.FormPayload):
             print("Excetopn Args:", e.args)
         # If there are no exceptions
         else:
-            return True
-    return False
+            return filename
+    return ""
 
 if __name__ == "__main__":
     # This file is not run as __main__ in the uvicorn environment

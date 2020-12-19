@@ -14,7 +14,7 @@
       ></Options>
     </article>
     <!-- TODO(FORM submission database + free text form submission security issues) -->
-    <RatingStory :isFormSubmitted="this.isFormSubmitted" @form-submit="hanndleFormSubmission"></RatingStory>
+    <RatingStory :submittedFormID="this.submittedFormID" @form-submit="hanndleFormSubmission"></RatingStory>
   </div>
 </template>
 
@@ -140,11 +140,20 @@ export default {
       isOpen: false,
       top: 0,
       left:0,
-      isFormSubmitted: false,
+      submittedFormID: "",
     }
   },
   beforeDestroy() {
     this.editor.destroy();
+  },
+  watch: {
+    $route() {
+      const routeStoryId = this.$route.params.storyid;
+      // If route is defined and was not just updated by submitting a form
+      if (routeStoryId && routeStoryId!==this.submittedFormID){
+        this.shuffleStory(routeStoryId);
+      }
+    }
   },
   methods: {
     getEditor(){
@@ -157,7 +166,9 @@ export default {
       }
     },
     async shuffleStory(storyID){
+
       const storyHTML = await api.getStory(storyID);
+      // If file not found, api returns "".
       if (storyHTML.length){
         this.editor.setContent(storyHTML, true);
       }
@@ -196,8 +207,10 @@ export default {
     },
     async hanndleFormSubmission(coherence, clarity, creativity, freeForm){
       // Send info from editor and form
-      this.isFormSubmitted = false;
-      this.isFormSubmitted = await api.postFormSubmission(coherence, clarity, creativity, freeForm, this.html)
+      this.submittedFormID = "";
+      this.submittedFormID = await api.postFormSubmission(coherence, clarity, creativity, freeForm, this.html)
+      // Update URL according to submitted form URL
+      this.$router.push({ name: "story", params: { storyid: this.submittedFormID } });
     },
     getImgFromHTML(html){
       const el = document.createElement( 'html' );

@@ -60,7 +60,14 @@
       </v-row>
       <v-row>
         <v-col cols="12" md="4">
-          <v-alert v-show="isFormSubmitted" dense outlined dismissible type="success" class="alert">
+          <v-alert
+            v-show="submittedFormID && submittedFormID.length !== 0"
+            dense
+            outlined
+            dismissible
+            type="success"
+            class="alert"
+          >
             Thank you!
             <br />You can share your story with the URL :D
           </v-alert>
@@ -78,7 +85,7 @@ export default {
     "form-submit",
   ],
   props: {
-    isFormSubmitted: Boolean,
+    submittedFormID: String,
   },
   data: () => ({
   valid: false,
