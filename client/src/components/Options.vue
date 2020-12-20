@@ -11,7 +11,7 @@
               <v-list-item-icon>
                 <v-icon>mdi-text</v-icon>
               </v-list-item-icon>
-              <v-list-item-title v-text="text.trim()" style="{'padding-left': '0.1em';}"></v-list-item-title>
+              <v-list-item-title v-text="text" style="{'padding-left': '0.1em';}"></v-list-item-title>
             </v-list-item>
           </div>
         </v-list-item-group>

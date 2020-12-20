@@ -250,45 +250,6 @@ def sort_scores(stories_scores):
     return np.argsort(np.mean(stories_scores_normalized, axis=1))[::-1]
 
 
-def images_coherency(resnet_model, nouns_images):
-    """
-    Checks how different all the images of one story are.
-    Args:
-        nouns_images (list): list of (corresponding_caption, PIL image array) pairs.
-    Returns:
-        Accumulated difference of all images pairs. The higher - more different and less coherent images.
-        Difference mertric is based on KL diveregence of Pre-trained ResNet logits prediction of images. 
-    """
-    images_difference_score = 0
-
-    # Load loss functions, model
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    kldiv_loss, softmax, logSoftmax = _load_KLDIV_loss_function(device)
-    resnet_model.eval()
-
-    # Normalize and convert PIL to tensor in [0,1) range
-    content_transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                             std=[0.229, 0.224, 0.225])
-    ])
-
-    stacked_tensors = torch.stack(list(map(lambda noun_img: content_transform(
-        noun_img[1]), nouns_images)), dim=0).to(device)
-    # Compute logits of all images using ResNet, shape (1 x 1000)
-    prob_scores = torch.unbind(resnet_model(stacked_tensors), dim=0)
-    prob_scores = [tensor.unsqueeze(0) for tensor in prob_scores]
-
-    # For each pair of images in story.
-    for i in range(len(prob_scores)-1):
-        for j in range(i + 1, len(prob_scores)):
-
-            images_difference_score += abs(kldiv_loss(
-                logSoftmax(prob_scores[i].to(device)), softmax(prob_scores[j].to(device))).item())
-
-    return images_difference_score
-
-
 if __name__ == "__main__":
     text = "The Special Frog\n\nKite in the River Water\n\nHorn\n\nThe Old Toad\n\nToad at End of a Night\n\nTHE STORY OF THE TIGER AND THE CRUISER"
     texts_sentences = split_to_sentences(text)

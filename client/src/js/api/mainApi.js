@@ -56,12 +56,29 @@ export class API {
         return d3.json(url, payload)
     }
 
+    // Story Forms. 
+
+    /**
+     * If exists, get story HTML according to given filename. 
+     * Returns Promise<string> 
+     * @param storyid
+     */
+    getStory(storyid) {
+        const toSend = {
+            storyid: storyid
+        }
+
+        const url = makeUrl(this.baseURL + "/story", toSend)
+        console.log("--- GET " + url);
+
+        return d3.json(url)
+    }
 
 
     /**
      * Call MultiModal StoryGenerator to generate text from given extracts 
      * (simple generation with/out one re-ranking round depending on quality true/false).
-     * Returns  Promise<Array<string>>
+     * Returns  Promise<String>
      * @param coherence
      * @param clarity
      * @param creativity

@@ -5,16 +5,21 @@ import numpy as np
 # For form submission
 import json
 import os
+import uuid
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
 import uvicorn
 import server.api as api
 import path_fixes as pf
 
 from story_generator.pipeline import Pipeline
+
+OUTPUT_PATH = os.path.join(
+    os.getcwd(), 'backend/outputs/')
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -87,6 +92,25 @@ async def docs():
     return RedirectResponse(url="/docs")
 
 
+@app.get("/api/story", response_model=str)
+async def get_story(storyid: str):
+    """
+    Fetch a story HTML string if exists, otherwise returns empty string. 
+    """
+    file_path = os.path.join(OUTPUT_PATH, f'{storyid}.txt')
+    if os.path.exists(file_path):
+        try:
+            with open(file_path) as infile:
+                data = json.load(infile)
+        except Exception as e:
+            print(type(e), " Exception occurred")
+            print("Exception Args:", e.args)
+        else:
+            return data['html']
+    print("Story not found")
+    return ""
+
+
 # POST to send/ create Object data, response_model converts output data to its type declaration.
 
 
@@ -109,17 +133,17 @@ async def autocomplete_text(payload: api.TextPayload):
     return storyGenerator.autocomplete_text(payload.extracts, max_length=25, num_return_sequences=3, re_ranking=re_ranking)
 
 
-@app.post("/api/post-form-submission", response_model=bool)
+@app.post("/api/post-form-submission", response_model=str)
 async def submit_form(payload: api.FormPayload):
     # Coerce into correct type. Not needed if no test written for this endpoint
     payload = api.FormPayload(**payload)
     if _verify_form(payload):
         try:
-            file_path = os.path.join(
-                os.getcwd(), 'backend/outputs/story.txt')
-            print('file_path: ', file_path)
-            # Append file to existing files.
-            with open(file_path, 'a') as outfile:
+            # Generate a unique filename.
+            filename = uuid.uuid4().hex
+            file_path = os.path.join(OUTPUT_PATH, f'{filename}.txt')
+            # Write new file.
+            with open(file_path, 'w') as outfile:
                 json.dump(dict(payload), outfile, sort_keys=True, indent=4,
                           ensure_ascii=False)
         except Exception as e:
@@ -127,8 +151,8 @@ async def submit_form(payload: api.FormPayload):
             print("Excetopn Args:", e.args)
         # If there are no exceptions
         else:
-            return True
-    return False
+            return filename
+    return ""
 
 if __name__ == "__main__":
     # This file is not run as __main__ in the uvicorn environment

@@ -34,7 +34,8 @@
             <div class="options-el">
               <span>
                 <i class="fa fa-level-up" aria-hidden="true"></i>
-                <code>shift</code> for
+                <code>alt</code> or
+                <code>option</code> for
                 <strong>High-Quality Autocomplete</strong>
                 <span class="timing">(20 sec)</span>
               </span>
@@ -71,8 +72,15 @@
 import Editor from "./components/Editor.vue";
 import Footer from "./components/Footer.vue";
 
+const NUM_PRESET_STORIES = 5;
+
 export default {
   name: "App",
+  data: function() {
+    return {
+      storyID: this.$route.params.storyid
+    };
+  },
   components: {
     Editor,
     Footer
@@ -85,7 +93,16 @@ export default {
   },
   methods: {
     shuffleStory: function() {
-      this.$refs.childEditor.shuffleStory();
+      // User called shuffle story
+      if (this.storyID.length === 1) {
+        if (Number(this.storyID) < NUM_PRESET_STORIES) {
+          this.storyID = (Number(this.storyID) + 1).toString();
+        } else {
+          this.storyID = "1";
+        }
+        // UUpdate  the route, this will call Editor
+        this.$router.push({ name: "story", params: { storyid: this.storyID } });
+      }
     }
   }
 };

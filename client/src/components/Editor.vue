@@ -14,7 +14,7 @@
       ></Options>
     </article>
     <!-- TODO(FORM submission database + free text form submission security issues) -->
-    <RatingStory :isFormSubmitted="this.isFormSubmitted" @form-submit="hanndleFormSubmission"></RatingStory>
+    <RatingStory :submittedFormID="this.submittedFormID" @form-submit="hanndleFormSubmission"></RatingStory>
   </div>
 </template>
 
@@ -42,17 +42,15 @@ export default {
     Options,
     RatingStory,
   },
-  setup() {
-    this.api = new API();
-  },
+  // setup() {
+  //   this.api = new API();
+  // },
   data() {
     return {
       // Default content. Editor is passed to `EditorContent` component as a `prop`.
       editor: new Editor({
         autofocus: true,
         disableInputRules: ["strike"],
-        // Update handleKeyDown.currentImgs in case of adding new images tags. 
-        // All content must be within the first <p> to handle this.curerntImg correctly.
         content:
           "<h2>The Mighty Dragon</h2><p><s>If you wish to follow my instructions, you must call the Dragon by name. The Dragon, you see, is the ruler of all Dragons. He is the ablest of all the living creatures, and because he is so strong, he has no doubt thought of taking pleasure in his beauty.</s><img src='unsplash25k/sketch_images1024/01zdIpN6uHU.jpg' id='01zdIpN6uHU'>However, </p>",
         extensions: [
@@ -86,12 +84,14 @@ export default {
         },
         editorProps: {
           // Open options menu.
-          handleKeyDown: (view, event) => {
-            if (event.key === "Tab" || event.key === "Shift") {
+          handleKeyDown: (view, event) => { 
+            // Check isLoading to prevent multiple keypresses from sending extra requests. 
+            if ((event.key === "Tab" || event.key === "Alt") && !this.isLoading) {
               // Get info for auto-complete pop-up menu.
               event.preventDefault();
               this.cursorPosition = view.state.selection.anchor;
               this.view = view;
+              this.html = view.dom.innerHTML;
               // Get all text before the current cursor position.
               const allText = view.dom.innerText.substring(0, this.cursorPosition);
               // Find the screen coordinates (relative to top left corner of the window) of the given document position.
@@ -101,16 +101,10 @@ export default {
               // To open card below text.
               const lineHeight = 40;
               this.top = Math.max(relativePosition.top + lineHeight, presetHeight), this.left = Math.min(relativePosition.left, window.innerWidth-cardWidth);
-              // Preset value of current imgs. 
-              let currentImgs  = this.presetImgs;
-              // All content is inside the first p tag. 
-              // this.json.content is undefined for the first image insert, when this.presetImgs is used.
-              if (this.json.content){
-                currentImgs = this.json.content.filter(obj =>  obj.type === "paragraph")[0].content.filter(obj =>  obj.type === "image").map(img => img.attrs.id);
-              }
-              // If Shift,  perform slower text generation with re-ranking
-              const quality = event.key === "Shift";
-              console.log("handleKeyDown:event.key| quality", event.key, quality);
+              // Get img from current HTML.
+              const currentImgs  = this.getImgFromHTML(this.html);
+              // If Alt,  perform slower text generation with re-ranking
+              const quality = event.key === "Alt";
               this.handleOptions(allText, currentImgs, quality);
             }
             else if (event.key == "Escape") {
@@ -122,6 +116,8 @@ export default {
             // For all char keys, to distinguish generated from user text.
             const [strike] = view.state.tr.selection.$anchor.marks();
             const isStrike = strike && strike.type.name === "strike";
+            // Update cursorPosition to insert text/ image in correct position.
+            this.cursorPosition = view.state.selection.anchor + 1;
             // If user writes inside genrated text.
             if (isStrike) {
               // Timeout to execute after the handler event.
@@ -140,16 +136,24 @@ export default {
       // For Options - optional text and imgs.
       texts: ["1st Choice","2nd Choice","3rd Choice"],
       imgs: ["__G2yFuW7jQ", "ZzqM2YmqZ-o", "zZzKLzKP24o"],
-      presetImgs: ["01zdIpN6uHU"],
       isLoading: false,
       isOpen: false,
       top: 0,
       left:0,
-      isFormSubmitted: false
+      submittedFormID: "",
     }
   },
   beforeDestroy() {
     this.editor.destroy();
+  },
+  watch: {
+    $route() {
+      const routeStoryId = this.$route.params.storyid;
+      // If route is defined and was not just updated by submitting a form.
+      if (routeStoryId && routeStoryId!==this.submittedFormID){
+        this.shuffleStory(routeStoryId);
+      }
+    }
   },
   methods: {
     getEditor(){
@@ -157,14 +161,17 @@ export default {
     },
     focus(){
       if (this.view.length) {     
-        console.log("focus");
-        this.editor.focus('end')
+        console.log("Editor FOCUS");
+        this.editor.focus('end');
       }
     },
-    shuffleStory(){
-      this.editor.setContent("<h2>A new Tittle</h2><p><s>Generated text</s></p>", true);
-      // Update if addding imgs
-      this.presetImgs = [];
+    async shuffleStory(storyID){
+
+      const storyHTML = await api.getStory(storyID);
+      // If file not found, api returns "".
+      if (storyHTML.length){
+        this.editor.setContent(storyHTML, true);
+      }
     },
     async handleOptions(allText, currentImgs, quality){
       this.isOpen = true;
@@ -200,8 +207,16 @@ export default {
     },
     async hanndleFormSubmission(coherence, clarity, creativity, freeForm){
       // Send info from editor and form
-      this.isFormSubmitted = false;
-      this.isFormSubmitted = await api.postFormSubmission(coherence, clarity, creativity, freeForm, this.html)
+      this.submittedFormID = "";
+      this.submittedFormID = await api.postFormSubmission(coherence, clarity, creativity, freeForm, this.html)
+      // Update URL according to submitted form URL
+      this.$router.push({ name: "story", params: { storyid: this.submittedFormID } });
+    },
+    getImgFromHTML(html){
+      const el = document.createElement( 'html' );
+      el.innerHTML = html;
+      const imgTags = el.getElementsByTagName( 'img' ); 
+      return Array.prototype.map.call(imgTags, obj => obj.id)
     }
   },
 };
