@@ -85,12 +85,6 @@ export default {
     Editor,
     Footer
   },
-  mounted: function() {
-    this.$nextTick(function() {
-      // Runs after all children have been rendered as well.
-      this.$refs.childEditor.focus();
-    });
-  },
   methods: {
     shuffleStory: function() {
       // User called shuffle story

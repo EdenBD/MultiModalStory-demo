@@ -14,7 +14,7 @@
       ></Options>
     </article>
     <!-- TODO(FORM submission database + free text form submission security issues) -->
-    <RatingStory :submittedFormID="this.submittedFormID" @form-submit="hanndleFormSubmission"></RatingStory>
+    <RatingStory :submittedFormID="this.submittedFormID" @form-submit="handleFormSubmission"></RatingStory>
   </div>
 </template>
 
@@ -49,7 +49,7 @@ export default {
     return {
       // Default content. Editor is passed to `EditorContent` component as a `prop`.
       editor: new Editor({
-        autofocus: true,
+        autofocus: 'end',
         disableInputRules: ["strike"],
         content:
           "<h2>The Mighty Dragon</h2><p><s>If you wish to follow my instructions, you must call the Dragon by name. The Dragon, you see, is the ruler of all Dragons. He is the ablest of all the living creatures, and because he is so strong, he has no doubt thought of taking pleasure in his beauty.</s><img src='unsplash25k/sketch_images1024/01zdIpN6uHU.jpg' id='01zdIpN6uHU'>However, </p>",
@@ -109,6 +109,7 @@ export default {
             }
             else if (event.key == "Escape") {
               this.isOpen = false;
+              this.isLoading = false;
             }
           },
           handleTextInput: (view, from) => {
@@ -159,14 +160,7 @@ export default {
     getEditor(){
       return this.editor;
     },
-    focus(){
-      if (this.view.length) {     
-        console.log("Editor FOCUS");
-        this.editor.focus('end');
-      }
-    },
     async shuffleStory(storyID){
-
       const storyHTML = await api.getStory(storyID);
       // If file not found, api returns "".
       if (storyHTML.length){
@@ -192,8 +186,10 @@ export default {
       const node = this.view.state.schema.nodes.image.create({
         src: `unsplash25k/sketch_images1024/${imgId}.jpg`, 
         id: imgId});
-    this.view.dispatch(this.view.state.tr.insert(this.cursorPosition, node));
-    this.view.focus('end');
+      const transaction = this.view.state.tr.insert(this.cursorPosition, node);
+      transaction.insertText(' ');
+      this.view.dispatch(transaction);
+      setTimeout(()=> {this.view.focus('end');});
     },
     handleTextInsert(text){
         this.isOpen = false;
@@ -201,11 +197,12 @@ export default {
         const mark = this.view.state.schema.marks.strike.create();
         const transaction = this.view.state.tr.insertText(text+ ' ');
         transaction.addMark(this.cursorPosition, this.cursorPosition + text.length, mark);
+        // transaction.setSelection(new TextSelection(this.cursorPosition + text.length));
         this.view.dispatch(transaction);
-        this.view.focus('end');
+        setTimeout(()=> {this.view.focus('end');});
 
     },
-    async hanndleFormSubmission(coherence, clarity, creativity, freeForm){
+    async handleFormSubmission(coherence, clarity, creativity, freeForm){
       // Send info from editor and form
       this.submittedFormID = "";
       this.submittedFormID = await api.postFormSubmission(coherence, clarity, creativity, freeForm, this.html)
