@@ -85,18 +85,28 @@ export default {
     Editor,
     Footer
   },
+  watch: {
+    $route() {
+      this.storyID = this.$route.params.storyid;
+    }
+  },
   methods: {
     shuffleStory: function() {
-      // User called shuffle story
+      // User called shuffle story from default story
       if (this.storyID.length === 1) {
-        if (Number(this.storyID) < NUM_PRESET_STORIES) {
-          this.storyID = (Number(this.storyID) + 1).toString();
-        } else {
-          this.storyID = "1";
-        }
-        // Update  the route, this will call Editor
-        this.$router.push({ name: "story", params: { storyid: this.storyID } });
+        // Once tried all default stories, return to default storyID=1.
+        this.storyID = (
+          (Number(this.storyID) % NUM_PRESET_STORIES) +
+          1
+        ).toString();
+        // User called shuffle after submitting a form
+      } else {
+        this.storyID = "2";
       }
+      // Update the route.
+      this.$router.push({ name: "story", params: { storyid: this.storyID } });
+      // Update the editor content.
+      this.$refs.childEditor.shuffleStory(this.storyID);
     }
   }
 };

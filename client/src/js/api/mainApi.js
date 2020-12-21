@@ -70,7 +70,6 @@ export class API {
 
         const url = makeUrl(this.baseURL + "/story", toSend)
         console.log("--- GET " + url);
-
         return d3.json(url)
     }
 

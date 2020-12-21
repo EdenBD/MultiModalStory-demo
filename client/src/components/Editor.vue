@@ -149,15 +149,6 @@ export default {
   beforeDestroy() {
     this.editor.destroy();
   },
-  watch: {
-    $route() {
-      const routeStoryId = this.$route.params.storyid;
-      // If route is defined and was not just updated by submitting a form.
-      if (routeStoryId && routeStoryId!==this.submittedFormID){
-        this.shuffleStory(routeStoryId);
-      }
-    }
-  },
   methods: {
     getEditor(){
       return this.editor;
