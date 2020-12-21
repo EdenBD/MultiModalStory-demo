@@ -87,7 +87,7 @@ export default {
           // Open options menu.
           handleKeyDown: (view, event) => { 
             // Check isLoading to prevent multiple keypresses from sending extra requests. 
-            if ((event.key === "Tab" || event.key === "Alt") && !this.isLoading) {
+            if (event.key === "Tab" && !this.isLoading) {
               // Get info for auto-complete pop-up menu.
               event.preventDefault();
               this.cursorPosition = view.state.selection.anchor;
@@ -100,12 +100,13 @@ export default {
               // To avoid overflowing the Options menu and negative top values. 
               const cardWidth = 400; const presetHeight = 350;
               // To open card below text.
-              const lineHeight = 20;
+              const lineHeight = 10;
               this.top = Math.max(relativePosition.top + lineHeight, presetHeight), this.left = Math.min(relativePosition.left, window.innerWidth-cardWidth);
               // Get img from current HTML.
               const currentImgs  = this.getImgFromHTML(this.html);
               // If Alt,  perform slower text generation with re-ranking
-              const quality = event.key === "Alt";
+              const quality = event.shiftKey;
+              console.log("quality",quality);
               this.handleOptions(allText, currentImgs, quality);
             }
             else if (event.key == "Escape") {

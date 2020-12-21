@@ -28,16 +28,16 @@
                 <i class="fa fa-magic" aria-hidden="true"></i>
                 <code>tab</code> for
                 <strong>Autocomplete</strong>
-                <span class="timing">(10 sec)</span>
+                <span class="timing">(2 sec)</span>
               </span>
             </div>
             <div class="options-el">
               <span>
                 <i class="fa fa-level-up" aria-hidden="true"></i>
-                <code>alt</code> or
-                <code>option</code> for
+                <code>shift</code> +
+                <code>tab</code> for
                 <strong>High-Quality Autocomplete</strong>
-                <span class="timing">(20 sec)</span>
+                <span class="timing">(5 sec)</span>
               </span>
             </div>
           </div>
