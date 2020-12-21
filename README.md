@@ -22,6 +22,13 @@ npm run serve
 uvicorn backend.server:app --reload
 ```
 
+- After installing the environment run:
+```
+python -m spacy download en_core_web_sm
+nltk.download('wordnet')
+nltk.download('sentiwordnet')
+```
+
 ## Large Data Management
 We use a tool called [dvc](https://dvc.org/) which to version control large data files like git version controls code. 
 
