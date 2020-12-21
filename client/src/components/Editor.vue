@@ -51,8 +51,7 @@ export default {
       editor: new Editor({
         autofocus: 'end',
         disableInputRules: ["strike"],
-        content:
-          "<h2>The Mighty Dragon</h2><p><s>If you wish to follow my instructions, you must call the Dragon by name. The Dragon, you see, is the ruler of all Dragons. He is the ablest of all the living creatures, and because he is so strong, he has no doubt thought of taking pleasure in his beauty.</s><img src='unsplash25k/sketch_images1024/01zdIpN6uHU.jpg' id='01zdIpN6uHU'>However, </p>",
+        content: "<h2>The Mighty Dragon</h2><p><s>If you wish to follow my instructions, you must call the Dragon by name. The Dragon, you see, is the ruler of all Dragons. He is the ablest of all the living creatures, and because he is so strong, he has no doubt thought of taking pleasure in his beauty.</s><img src='unsplash25k/sketch_images1024/01zdIpN6uHU.jpg' id='01zdIpN6uHU'>However, </p>",
         extensions: [
           new Doc(),
           new Title(),
@@ -76,6 +75,8 @@ export default {
         onInit: ({ view }) => {
           // Log view once the editor is initialized.
           this.view = view;
+          // Change default story if route includes user's story id. 
+          this.getInitialStory();
         },
         onUpdate: ({ getJSON, getHTML }) => {
           // Update json that represents data.
@@ -165,6 +166,13 @@ export default {
       // If file not found, api returns "".
       if (storyHTML.length){
         this.editor.setContent(storyHTML, true);
+      }
+    },
+    async getInitialStory() {
+      const routeStoryId = this.$route.params.storyid;
+      if (routeStoryId && routeStoryId !== "1"){
+        // Get routeStoryId HTML from server.
+        this.shuffleStory(routeStoryId)
       }
     },
     async handleOptions(allText, currentImgs, quality){

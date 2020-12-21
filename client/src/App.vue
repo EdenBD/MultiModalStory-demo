@@ -94,7 +94,7 @@ export default {
         } else {
           this.storyID = "1";
         }
-        // UUpdate  the route, this will call Editor
+        // Update  the route, this will call Editor
         this.$router.push({ name: "story", params: { storyid: this.storyID } });
       }
     }
