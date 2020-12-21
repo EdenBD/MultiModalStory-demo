@@ -16,13 +16,8 @@ npm run serve
 
 ## Backend
 
-(development)
 
-```
-uvicorn backend.server:app --reload
-```
-
-- After installing the environment run:
+After installing the environment run:
 ```
 python -m spacy download en_core_web_sm
 ```
@@ -30,6 +25,11 @@ In python terminal:
 ```
 nltk.download('wordnet')
 nltk.download('sentiwordnet')
+```
+
+To run the server during development:
+```
+uvicorn backend.server:app --reload
 ```
 
 ## Large Data Management
