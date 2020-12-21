@@ -25,6 +25,9 @@ uvicorn backend.server:app --reload
 - After installing the environment run:
 ```
 python -m spacy download en_core_web_sm
+```
+In python terminal:
+```
 nltk.download('wordnet')
 nltk.download('sentiwordnet')
 ```
