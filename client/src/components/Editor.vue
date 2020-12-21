@@ -99,7 +99,7 @@ export default {
               // To avoid overflowing the Options menu and negative top values. 
               const cardWidth = 400; const presetHeight = 350;
               // To open card below text.
-              const lineHeight = 40;
+              const lineHeight = 20;
               this.top = Math.max(relativePosition.top + lineHeight, presetHeight), this.left = Math.min(relativePosition.left, window.innerWidth-cardWidth);
               // Get img from current HTML.
               const currentImgs  = this.getImgFromHTML(this.html);

@@ -6,9 +6,9 @@
 export class URLHandler {
   static basicURL() {
     const url_path = window.location.pathname
-      // .split("/")
-      // .slice(0, -2)
-      // .join("/"); // We don't reroute through `/client/` anymore
+      .split("/")
+      .slice(0, -2)
+      .join("/"); // We don't reroute through `/client/` anymore
 
     return window.location.origin + (url_path.length ? url_path : "");
   }

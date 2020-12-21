@@ -78,7 +78,7 @@ export default {
   name: "App",
   data: function() {
     return {
-      storyID: this.$route.params.storyid
+      storyID: this.$route.params.storyid || "1"
     };
   },
   components: {
