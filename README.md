@@ -25,6 +25,7 @@ In python terminal:
 ```
 nltk.download('wordnet')
 nltk.download('sentiwordnet')
+nltk.download('averaged_perceptron_tagger')
 ```
 
 To run the server during development:
