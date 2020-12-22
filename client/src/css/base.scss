@@ -283,9 +283,9 @@ img {
   font-size: medium;
 }
 
-.v-btn {
-  background-color: #57ce5b  !important;
-  border-color: #4caf50  !important;
+.story-submit{
+  background-color: #57ce5b !important;
+  border-color: #4caf50 !important;
   font-weight: bolder;
 }
 
@@ -298,10 +298,21 @@ img {
   align-self: auto;
 }
 
+// Submission alert & share
+
 .alert {
   background-color: #72e476  !important;
   border-color: #4caf50  !important;
   font-weight: bolder;
+  text-decoration: none !important;
+}
+
+.v-speed-dial--top {
+  top: 8px;
+}
+
+.theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+  background-color: deepskyblue;
 }
 
 // Footer
@@ -347,68 +358,5 @@ img {
   }
   100% {
     transform: rotate(360deg);
-  }
-}
-
-// Quill
-.ql-container {
-  font-family: inherit;
-}
-
-// from https://codepen.io/orchard/pen/Jnwvb
-
-.star-rating { 
-  font-family: 'FontAwesome'; 
-  padding-top: 0.7em;
-  float: right;
-  
-  > fieldset {
-    border: none;
-    display: inline-block;
-    
-    &:not(:checked) {
-      > input {
-        position: absolute;
-        top: -9999px;
-        clip: rect(0,0,0,0);
-      }
-
-      > label {
-        float: right;
-        width: 1em;
-        padding: 0 .05em;
-        overflow: hidden;
-        white-space: nowrap;
-        cursor: pointer;
-        font-size: 120%;
-        color: #ecd34c;
-        
-        &:before {
-          content: '\f006  ';
-        }
-        
-        &:hover,
-        &:hover ~ label {
-          color: #FFD700;
-          text-shadow: 0 0 3px #FFD700;
-          &:before {
-            content: '\f005  ';
-          }
-        }
-      }
-    }
-    
-    > input:checked {
-      & ~ label {
-        &:before {
-          content: '\f005  ';
-        }
-      }    
-    }    
-
-    > label:active {
-      position: relative;
-      top: 2px;
-    }
   }
 }

@@ -59,19 +59,25 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="8">
           <v-alert
             v-show="submittedFormID && submittedFormID.length !== 0"
             dense
             outlined
             dismissible
-            type="success"
             class="alert"
           >
-            Thank you!
-            <br />You can share your story with the URL :D
+            <span>
+              Thank you!
+              <br />Successfully Published Story :D
+            </span>
+            <ShareStory></ShareStory>
           </v-alert>
-          <v-btn :disabled="!valid" class="mr-4" @click="submit">Submit Story</v-btn>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" md="4">
+          <v-btn :disabled="!valid" class="story-submit" @click="submit">Submit Story</v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -79,8 +85,13 @@
 </template>
 
 <script lang="js">
+import ShareStory from "./ShareStory.vue";
+
 export default {
   name: "RatingStory",
+    components: {
+    ShareStory,
+  },
   emits: [
     "form-submit",
   ],
