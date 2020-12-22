@@ -124,8 +124,8 @@ def retrieve_images_for_one_extract(generated_text, num_images, captions_embeddi
         unique_idx = retreived_img_idx[:num_images]
     # Found duplicates, retrieve images from buffer_images in order.
     else:
-        print(
-            f'Retrieved a duplicate images: {duplicate_images}, trying others.')
+        # print(
+        #     f'Retrieved a duplicate images: {duplicate_images}, trying others.')
         unique_idx = []
         for idx in retreived_img_idx:
             if idx not in prev_idx_set:

@@ -91,14 +91,14 @@ class Pipeline():
                 text, self._lsa_embedder, self._tokenizer, self._preset_model, self._gpt2), generated)))
             sorted_idx = sort_scores(stories_scores)
             # Apply ranking and Keep best <num_return_sequences>.
-            print(
-                f"Total Genration time with Re-Ranking Time : {round((time.time() - start_time), 2)}s \n")
+            # print(
+            #     f"Total Genration time with Re-Ranking Time : {round((time.time() - start_time), 2)}s \n")
             return list(generated[sorted_idx])[:num_return_sequences]
 
         generated = list(_sample_demo_sequence(
             self._gpt2, self._tokenizer, [extracts], max_length, num_return_sequences, self._device, first_idx=True))
-        print(
-            f"Generation Time : {round((time.time() - start_time), 2)}s \n")
+        # print(
+        #     f"Generation Time : {round((time.time() - start_time), 2)}s \n")
         return generated
 
 

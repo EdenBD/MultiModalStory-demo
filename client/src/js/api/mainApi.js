@@ -30,7 +30,7 @@ export class API {
         const url = makeUrl(this.baseURL + '/post-autocomplete-img');
         const payload = toPayload(toSend)
 
-        console.log("--- POST " + url, payload);
+        // console.log("--- POST " + url, payload);
 
         return d3.json(url, payload)
     }
@@ -51,7 +51,7 @@ export class API {
         const url = makeUrl(this.baseURL + '/post-autocomplete-text');
         const payload = toPayload(toSend)
 
-        console.log("--- POST " + url, payload);
+        // console.log("--- POST " + url, payload);
 
         return d3.json(url, payload)
     }
@@ -69,7 +69,7 @@ export class API {
         }
 
         const url = makeUrl(this.baseURL + "/story", toSend)
-        console.log("--- GET " + url);
+        // console.log("--- GET " + url);
         return d3.json(url)
     }
 
@@ -96,7 +96,7 @@ export class API {
         const url = makeUrl(this.baseURL + '/post-form-submission');
         const payload = toPayload(toSend)
 
-        console.log("--- POST " + url, payload);
+        // console.log("--- POST " + url, payload);
 
         return d3.json(url, payload)
     }
