@@ -27,7 +27,7 @@
             class="options-img"
           >
             <v-list-item-title>
-              <v-img :src="'unsplash25k/sketch_images1024/' + img +'.jpg'"></v-img>
+              <v-img :src="`${images_path}${img}.jpg`"></v-img>
             </v-list-item-title>
           </v-list-item>
         </v-list-item-group>
@@ -37,6 +37,8 @@
 </template>
 
 <script lang="js">
+import Constants from "./Constants";
+
 export default {
   name: "Options",
   props: {
@@ -46,6 +48,9 @@ export default {
     left: Number,
     texts: Array,
     imgs: Array},
+  data: () => ({
+    images_path: Constants.IMAGE_PATH,
+  }),
 };
 </script>
 

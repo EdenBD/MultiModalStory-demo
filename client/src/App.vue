@@ -8,15 +8,22 @@
         </div>
         <div class="header-el">
           <h1>Graphic Story Generator</h1>
-          <!-- Tooltip with this info: -->
-          <a
+          <!-- Tooltip + Github Link-->
+          <!-- <a
             class="info-icon"
             target="_blank"
-            href="https://github.com/EdenBD/multimodal-storytelling-gan"
-            data-title="Uses huggingface, fine-tuned GPT-2 model & Unsplash Images"
+            href="https://github.com/EdenBD/MultiModalStory-demo"
+            data-title="Uses GPT-2 & Unsplash Images to generate text-and-images stories"
           >
             <i class="fa fa-info-circle" style="color: #6d6d6d"></i>
-          </a>
+          </a>-->
+          <span class="info-icon">
+            <i
+              class="fa fa-info-circle"
+              style="color: #6d6d6d"
+              data-title="Uses GPT-2 & Unsplash Images to generate text-and-images stories"
+            ></i>
+          </span>
           <div class="options">
             <div class="options-el">
               <a @click.prevent="shuffleStory">

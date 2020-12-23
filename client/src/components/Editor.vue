@@ -27,13 +27,26 @@ import RatingStory from "./RatingStory.vue";
 import Doc from "../nodes/Doc";
 import Title from "../nodes/Title";
 import Image from "../nodes/Image";
-
+import Constants from "./Constants";
 
 import { Placeholder, Strike,  TrailingNode, Link } from "tiptap-extensions";
 import { API } from "../js/api/mainApi";
 
-
 const api = new API();
+
+// Taken from https://stackoverflow.com/questions/11935175/sampling-a-random-subset-from-an-array/19631135
+function sample(array, size) {
+  const results = [],
+    sampled = {};
+  while(results.length<size && results.length<array.length) {
+    const index = Math.trunc(Math.random() * array.length);
+    if(!sampled[index]) {
+      results.push(array[index]);
+      sampled[index] = true;
+    }
+  }
+  return results;
+}
 
 export default {
   name: "Editor",
@@ -42,16 +55,13 @@ export default {
     Options,
     RatingStory,
   },
-  // setup() {
-  //   this.api = new API();
-  // },
   data() {
     return {
       // Default content. Editor is passed to `EditorContent` component as a `prop`.
       editor: new Editor({
         autofocus: 'end',
         disableInputRules: ["strike"],
-        content: "<h2>The Mighty Dragon</h2><p><s>If you wish to follow my instructions, you must call the Dragon by name. The Dragon, you see, is the ruler of all Dragons. He is the ablest of all the living creatures, and because he is so strong, he has no doubt thought of taking pleasure in his beauty.</s><img src='unsplash25k/sketch_images1024/01zdIpN6uHU.jpg' id='01zdIpN6uHU'>However, </p>",
+        content: `<h2>The Mighty Dragon</h2><p><s>If you wish to follow my instructions, you must call the Dragon by name. The Dragon, you see, is the ruler of all Dragons. He is the ablest of all the living creatures, and because he is so strong, he has no doubt thought of taking pleasure in his beauty.</s><img src='${Constants.IMAGE_PATH}01zdIpN6uHU.jpg' id='01zdIpN6uHU'>However, </p>`,
         extensions: [
           new Doc(),
           new Title(),
@@ -106,7 +116,6 @@ export default {
               const currentImgs  = this.getImgFromHTML(this.html);
               // If Alt,  perform slower text generation with re-ranking
               const quality = event.shiftKey;
-              console.log("quality",quality);
               this.handleOptions(allText, currentImgs, quality);
             }
             else if (event.key == "Escape") {
@@ -170,13 +179,20 @@ export default {
     async handleOptions(allText, currentImgs, quality){
       this.isOpen = true;
       this.isLoading = true;
-      // Get last numSenteces
-      const numSenteces = 2;
-      const extracts = allText.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
-      const imagesExtract = extracts.slice(-numSenteces).join(" ");
-      // Call backend
-      this.texts = await api.postAutocompleteText(allText, quality);
-      this.imgs = await api.postRetreiveImage(imagesExtract , currentImgs);
+      if (allText.trim().length){
+        // Get last numSenteces
+        const numSenteces = 2;
+        const extracts = allText.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
+        const imagesExtract = extracts.slice(-numSenteces).join(" ");
+        // Call backend
+        this.texts = await api.postAutocompleteText(allText, quality);
+        this.imgs = await api.postRetreiveImage(imagesExtract , currentImgs);
+      }
+      // If editor is empty, return preset titles and images.
+      else {
+        this.texts = sample(Constants.PRESET_TITLES, 3);
+        this.img = sample(Constants.PRESET_IMG_IDS, 3);
+      }
       // finished Loading
       this.isLoading = false;
       return false;
@@ -184,7 +200,7 @@ export default {
     handleImageInsert(imgId) {
       this.isOpen = false;
       const node = this.view.state.schema.nodes.image.create({
-        src: `unsplash25k/sketch_images1024/${imgId}.jpg`, 
+        src: `${Constants.IMAGE_PATH}${imgId}.jpg`, 
         id: imgId});
       const transaction = this.view.state.tr.insert(this.cursorPosition, node);
       transaction.insertText(' ');
