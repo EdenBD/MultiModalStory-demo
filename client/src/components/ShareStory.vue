@@ -24,7 +24,7 @@
         bottom
         color="blue"
         small
-        :href="`https://twitter.com/share?url=${pageUrl}`"
+        :href="`https://twitter.com/intent/tweet?text=${pageUrl}`"
         target="_blank"
       >
         <v-icon>mdi-twitter</v-icon>
@@ -57,7 +57,7 @@
         bottom
         color="tertiary"
         small
-        :href="`mailto:?subject=fairytAIlor story generator!&amp;body=Checkout this AI Story!<a href='${pageUrl}'>${pageUrl}</a>`"
+        :href="`mailto:?subject=fairytAIlor story generator!&amp;body=Checkout this generated story!<a href='${pageUrl}'>${pageUrl}</a>`"
         target="_blank"
       >
         <v-icon>mdi-email</v-icon>
@@ -67,15 +67,23 @@
 </template>
 
 <script lang="js">
-// Slightly Modified from https://techformist.com/social-share-vuetify/
+// Modified from https://techformist.com/social-share-vuetify/
 export default {
   name: "ShareStory",
-    data() {
+  data() {
     return {
       dialShare: false,
-      pageUrl: window.location.href
+      pageUrl: window.location.href,
     }
-  }
+  },
+  watch: {
+    $route() {
+      // Change the current story-id in case of a route change.
+      const lastSlash = window.location.href.lastIndexOf("/");
+      const root = window.location.href.substring(0, lastSlash + 1);
+      this.pageUrl = root + this.$route.params.storyid;
+    }
+  },
 };
 </script>
 
