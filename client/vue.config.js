@@ -2,7 +2,7 @@ module.exports = {
   "transpileDependencies": [
     "vuetify"
   ],
-  publicPath: "/",
+  // publicPath: "/storygen/",
   devServer: {
     proxy: {
       "^/api": {
