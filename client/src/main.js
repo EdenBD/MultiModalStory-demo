@@ -11,6 +11,9 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     { path: '/:storyid', name: 'story', component: Editor },
+    {
+      path: '*'
+    }
   ]
 })
 
