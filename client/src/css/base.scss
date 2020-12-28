@@ -17,7 +17,17 @@ header h1{
 }
 
 header .inner-heading {
-  padding: 1.5em;
+  padding: 1em;
+}
+
+.title-logo {
+  height: 4em;
+  border: 0;
+  display: block;
+  margin: 0;
+  margin-left: 0.3em;
+  padding: 0;
+  width: auto;
 }
 
 .logo {
@@ -27,34 +37,20 @@ header .inner-heading {
   margin: 0;
   width: auto;
   padding: 0;
+  position: relative;
+  top: -1em;
 }
 
-// Icon Tooltip
-[data-title]:hover:after {
-  opacity: 1;
-  transition: all 0.1s ease 0.5s;
-  visibility: visible;
-}
-[data-title]:after {
+// Logo Tooltip
+a[data-title]:hover::after {
   content: attr(data-title);
   background-color: #27272c;
   color: whitesmoke;
   font-size: 90%;
   position: absolute;
   padding: 1px 5px 2px 5px;
-  // bottom: -0.05em;
-  left: 100%;
-  white-space: nowrap;
-  box-shadow: 1px 1px 3px #222222;
-  opacity: 0;
-  border: 1px solid #111111;
-  z-index: 99999;
-  visibility: hidden;
   text-decoration: none
-}
-[data-title] {
-  position: relative;
-  padding-left: 0.2em;
+
 }
 
 // Collapsible description
@@ -64,10 +60,9 @@ header .inner-heading {
   background-color: #D0D0D0;
   text-align: center;
   position: absolute;
-  top: 7.2em;
+  top: 8em;
   overflow: hidden;
   display: list-item;
-  margin-bottom: 1em;
   font-size: 1em;
 }
 
@@ -85,6 +80,7 @@ summary {
 // Interactive header options
 .options {
   margin-top: 0.5em;
+  margin-left: 0.3em;
   font-size: 105%;
 }
 
@@ -112,14 +108,14 @@ summary {
 //  Article attributes taken from https://codepen.io/tomhodgins/pen/BKPJaN
 article {
   font-family: inherit;
-  margin: 3em auto 3em auto;
+  // top | right | bottom | left
+  margin: 5em auto 3em auto;
   padding: 5em;
   font-size: 100%;
   width: 100%;
   background: white;
   box-shadow: rgba(0,0,0,.05) 0 3px 15px;
   display: inline-block;
-
 }
 
 details[open] summary::after {

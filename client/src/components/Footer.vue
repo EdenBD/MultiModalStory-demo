@@ -3,7 +3,7 @@
     <div class="footer-txt">Disclaimers</div>
     <div
       class="footer-txt"
-    >By pressing the submit story button you provide all the information given in the form, and publish the existing story. All submitted stories are visible to everyone with the link. The feedbacks are anonymous and no specific user identification information is saved. The website uses Google Analytics, but no other cookies.</div>
+    >By pressing the submit story button you provide all the information given in the form, and publish the existing story. All submitted stories are visible to anyone with the link. The feedbacks are anonymous and no specific user identification information is saved. The website uses Google Analytics, but no other cookies.</div>
     <div class="footer-txt">
       Stories are generated using a fine-tuned GPT-2 Medium model provided by
       <a

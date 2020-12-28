@@ -7,23 +7,12 @@
           <img class="logo" src="elephant.png" />
         </div>
         <div class="header-el">
-          <h1>Graphic Story Generator</h1>
-          <!-- Tooltip + Github Link-->
-          <!-- <a
-            class="info-icon"
-            target="_blank"
+          <a
             href="https://github.com/EdenBD/MultiModalStory-demo"
             data-title="Uses GPT-2 & Unsplash Images to generate text-and-images stories"
           >
-            <i class="fa fa-info-circle" style="color: #6d6d6d"></i>
-          </a>-->
-          <span class="info-icon">
-            <i
-              class="fa fa-info-circle"
-              style="color: #6d6d6d"
-              data-title="Uses GPT-2 & Unsplash Images to generate text-and-images stories"
-            ></i>
-          </span>
+            <img class="title-logo" src="logo2.png" />
+          </a>
           <div class="options">
             <div class="options-el">
               <a @click.prevent="shuffleStory">
