@@ -5,6 +5,9 @@ from story_generator.ranking_utils import score_text, sort_scores
 import torch
 from math import ceil
 
+# Text pre-processing
+
+import re
 # Image retrieval
 import os
 import pandas as pd
@@ -17,6 +20,13 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
 from story_generator.helper_functions import generate_prompt
+
+
+def _preprocess_generated_text(sample, tokenizer):
+    decoded = tokenizer.decode(
+        sample, skip_special_tokens=True).strip()
+    # filtering #&*+-<=>@^_{|}~ globally
+    return re.sub("[#&*\+\-<=>@^_{|}~]", '', decoded)
 
 
 def _sample_demo_sequence(model, tokenizer, prompts, max_length, num_return_sequences, device, first_idx=False):
@@ -56,8 +66,8 @@ def _sample_demo_sequence(model, tokenizer, prompts, max_length, num_return_sequ
         num_return_sequences=num_return_sequences,
         pad_token_id=tokenizer.pad_token_id,
     )  # returns tensor of shape (len(prompts)*num_return_sequences x max_length)
-    generated = np.array(list(map(lambda sample: tokenizer.decode(
-        sample[first_idx:], skip_special_tokens=True).strip(), sample_outputs)))
+    generated = np.array(list(map(lambda sample: _preprocess_generated_text(
+        sample[first_idx:], tokenizer), sample_outputs)))
     return generated
 
 
