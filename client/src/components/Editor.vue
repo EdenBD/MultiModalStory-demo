@@ -108,10 +108,12 @@ export default {
               // Find the screen coordinates (relative to top left corner of the window) of the given document position.
               const relativePosition = view.coordsAtPos(this.cursorPosition);
               // To avoid overflowing the Options menu and negative top values. 
-              const cardWidth = 400; const presetHeight = 350;
+              const presetHeight = 350; 
               // To open card below text.
-              const lineHeight = 10;
-              this.top = Math.max(relativePosition.top + lineHeight, presetHeight), this.left = Math.min(relativePosition.left, window.innerWidth-cardWidth);
+              const lineHeight = 10; const loadingHeight = 40;
+              // To show loading sign even if pressed below current window. 
+              this.top = Math.min(Math.max(relativePosition.top + lineHeight, presetHeight), window.innerHeight-loadingHeight);
+              this.left = relativePosition.left;
               // Get img from current HTML.
               const currentImgs  = this.getImgFromHTML(this.html);
               // If Alt,  perform slower text generation with re-ranking
@@ -195,6 +197,10 @@ export default {
       }
       // finished Loading
       this.isLoading = false;
+      // Fix card position if beyond window borders.
+      const cardHeight = 300; const cardWidth = 400; 
+      this.top = Math.min(this.left, window.innerHeight-cardHeight);
+      this.left = Math.min(this.left, window.innerWidth-cardWidth); 
       return false;
     },
     handleImageInsert(imgId) {
