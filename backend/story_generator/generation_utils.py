@@ -25,8 +25,8 @@ from story_generator.helper_functions import generate_prompt
 def _preprocess_generated_text(sample, tokenizer):
     decoded = tokenizer.decode(
         sample, skip_special_tokens=True).strip()
-    # filtering #&*+-<=>@^_{|}~ globally
-    return re.sub("[#&*\+\-<=>@^_{|}~]", '', decoded)
+    # filtering � globally
+    return re.sub(u'\uFFFD', '', decoded)
 
 
 def _sample_demo_sequence(model, tokenizer, prompts, max_length, num_return_sequences, device, first_idx=False):
