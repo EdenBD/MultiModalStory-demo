@@ -9,6 +9,7 @@
         <div class="header-el">
           <a
             href="https://github.com/EdenBD/MultiModalStory-demo"
+            target="_blank"
             data-title="Uses GPT-2 & Unsplash Images to generate text-and-images stories"
           >
             <img class="title-logo shadow" src="logo2.png" />
