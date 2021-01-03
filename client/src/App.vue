@@ -11,30 +11,32 @@
             href="https://github.com/EdenBD/MultiModalStory-demo"
             data-title="Uses GPT-2 & Unsplash Images to generate text-and-images stories"
           >
-            <img class="title-logo" src="logo2.png" />
+            <img class="title-logo shadow" src="logo2.png" />
           </a>
           <div class="options">
-            <div class="options-el">
+            <div class="options-el clickable">
               <a @click.prevent="shuffleStory">
                 <i class="fa fa-random" aria-hidden="true"></i> Shuffle Story
               </a>
             </div>
-            <div class="options-el">
-              <span>
+            <div class="options-el shadow clean-format">
+              <a data-title="Generates up to three text completions and images">
                 <i class="fa fa-magic" aria-hidden="true"></i>
                 <code>tab</code> for
                 <strong>Autocomplete</strong>
                 <span class="timing">(2 sec)</span>
-              </span>
+              </a>
             </div>
-            <div class="options-el">
-              <span>
+            <div class="options-el shadow clean-format">
+              <a
+                data-title="Returns top-ranked texts according to creativity, readability, coherency, and positivity measures"
+              >
                 <i class="fa fa-level-up" aria-hidden="true"></i>
                 <code>shift</code> +
                 <code>tab</code> for
                 <strong>High-Quality Autocomplete</strong>
                 <span class="timing">(5 sec)</span>
-              </span>
+              </a>
             </div>
           </div>
         </div>

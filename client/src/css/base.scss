@@ -49,9 +49,14 @@ a[data-title]:hover::after {
   font-size: 90%;
   position: absolute;
   padding: 1px 5px 2px 5px;
-  text-decoration: none
-
+  text-decoration: none;
 }
+
+.shadow:hover{
+  // Shadow on hover
+  box-shadow: 0 0 10px rgba(33,33,33,.2); 
+}
+
 
 // Collapsible description
 .description {
@@ -89,9 +94,15 @@ summary {
   margin-right: 2em;
 }
 
-.options a {
+.clickable a {
   color: #2780e3;
   text-decoration: none;
+}
+
+.clean-format a{
+  color: black;
+  text-decoration: none;
+  cursor: default;
 }
 
 // sec after options
