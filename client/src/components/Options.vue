@@ -1,6 +1,6 @@
 <template>
   <div v-show="isOpen" class="options-popup" v-bind:style="{'left': left +'px', 'top': top + 'px'}">
-    <v-progress-circular indeterminate color="primary" v-show="isLoading"></v-progress-circular>
+    <div class="loader" v-show="isLoading"></div>
     <!-- Update Editor: cardWidth in case of changing max-width.-->
     <v-card max-width="400px" class="mx-auto" v-show="!isLoading">
       <v-list>

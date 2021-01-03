@@ -260,6 +260,69 @@ img {
 .v-list-item__title {
   white-space: normal;
 }
+
+// Color changing loader taken from: https://codepen.io/zFunx/pen/apqgYJ
+.loader,.loader:before,.loader:after{
+  top:0;
+  bottom:0;
+  left:0;
+  right:0; 
+  content:"";
+  position:absolute;
+  border-radius:50%;
+}
+
+.loader{
+  width:35px;
+  height:35px;
+  margin:0;
+  -webkit-animation:spin 2s linear infinite;
+  animation:spin 2s linear infinite;
+
+}
+
+@-webkit-keyframes spin{
+  100%{transform:rotate(360deg);filter:hue-rotate(360deg)}
+}
+
+@keyframes spin{
+  100%{transform:rotate(360deg);filter:hue-rotate(360deg)}
+}
+
+
+.loader:before{
+  border:5px solid #aaa;
+  border-bottom:5px solid pink;
+  border-left:5px solid pink;
+  animation:spin1 1s linear infinite;
+}
+
+.loader:after{
+  border:5px solid #aaa;
+  border-top:5px solid transparent;
+  border-right:5px solid transparent;
+  animation:spin2 1s linear infinite;
+}
+
+@keyframes spin1{
+  20%{transform:rotate(150deg)}
+  40%{transform:rotate(300deg)}
+  80%{transform:rotate(300deg)}
+  100%{transform:rotate(360deg)}
+}
+
+@keyframes spin2{
+  0%{transform:rotate(-30deg)}
+  20%{transform:rotate(-30deg);
+      border-color:transparent transparent #aaa #aaa}
+  21%{border-color:pink pink transparent transparent}
+  40%{transform:rotate(-30deg)}
+  60%{transform:rotate(120deg);
+      border-color:pink pink transparent transparent}
+  61%{border-color:transparent transparent #aaa #aaa}
+  80%{transform:rotate(270deg)}
+  100%{transform:rotate(330deg);}
+}
 // Ratings card
 
 .rating-el-title-el {
@@ -347,23 +410,4 @@ img {
 .seperator {
   color: #ebe5e5;
   border-top: 0.25em solid;
-}
-
-/* Safari */
-@-webkit-keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }

@@ -115,7 +115,7 @@ export default {
               // To avoid incorrect top, left values after image insertions.
               const positionError = 50;
               if (this.top < positionError) {
-                const presetHeight = 350; const presetWidth = 590;
+                const presetHeight = window.innerHeight/2+150; const presetWidth = window.innerWidth/2;
                 this.top = presetHeight; this.left = presetWidth;
               }
               // Get img from current HTML.
