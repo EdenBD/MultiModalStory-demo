@@ -24,8 +24,10 @@ from story_generator.helper_functions import generate_prompt
 
 def _preprocess_generated_text(sample, tokenizer):
     decoded = tokenizer.decode(
-        sample, skip_special_tokens=True).strip()
-    # filtering � globally
+        sample, skip_special_tokens=True)
+    # Removing multiple spaces.
+    decoded = re.sub("\s\s+", " ", decoded)
+    # Filtering � globally
     return re.sub(u'\uFFFD', '', decoded)
 
 
@@ -47,7 +49,6 @@ def _sample_demo_sequence(model, tokenizer, prompts, max_length, num_return_sequ
     Uses hugginface generate (https://huggingface.co/transformers/main_classes/model.html?highlight=generate#transformers.TFPreTrainedModel.generate)
     With tokenizer.padding size = left, otherwise generation is random (issue https://github.com/huggingface/transformers/issues/3021)
     """
-
     encodings_dict = tokenizer(
         prompts, truncation=True, max_length=constants.MAX_SEQ_LEN)
     prompts_ids = torch.tensor(
