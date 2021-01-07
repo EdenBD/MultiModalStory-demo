@@ -4,7 +4,9 @@
       <h3 class="card-main-title">Score Auto-Generated Story</h3>
       <v-row>
         <v-col cols="12" md="4">
-          <h4 class="card-title rating-el-title-el">Clarity</h4>
+          <a class="clean-format" data-title="Easy to understand">
+            <h4 class="card-title rating-el-title-el">Clarity</h4>
+          </a>
           <v-rating
             v-model="clarity"
             background-color="orange lighten-3"
@@ -16,7 +18,9 @@
         </v-col>
 
         <v-col cols="12" md="4">
-          <h4 class="card-title rating-el-title-el">Coherence</h4>
+          <a class="clean-format" data-title="Follows a consistent theme">
+            <h4 class="card-title rating-el-title-el">Coherence</h4>
+          </a>
           <v-rating
             v-model="coherence"
             background-color="orange lighten-3"
@@ -27,7 +31,9 @@
           ></v-rating>
         </v-col>
         <v-col cols="12" md="4">
-          <h4 class="card-title rating-el-title-el">Creativity</h4>
+          <a class="clean-format" data-title="Engaging and interesting to read">
+            <h4 class="card-title rating-el-title-el">Creativity</h4>
+          </a>
           <v-rating
             v-model="creativity"
             background-color="orange lighten-3"

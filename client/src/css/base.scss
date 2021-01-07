@@ -38,11 +38,11 @@ header .inner-heading {
   width: auto;
   padding: 0;
   position: relative;
-  top: -1em;
+  top: -0.5em;
   cursor: default;
 }
 
-// Logo Tooltip
+// a tags Tooltip
 a[data-title]:hover::after {
   content: attr(data-title);
   background-color: #27272c;
@@ -51,6 +51,7 @@ a[data-title]:hover::after {
   position: absolute;
   padding: 1px 5px 2px 5px;
   text-decoration: none;
+  z-index: 100;
 }
 
 .shadow:hover{
@@ -346,6 +347,13 @@ img {
 
 .v-rating .v-icon {
   color: orange;
+}
+
+//  Rating headers
+.clean-format {
+  color: black;
+  text-decoration: none;
+  cursor: default;
 }
 
 // Validation errors
