@@ -12,11 +12,9 @@
             background-color="orange lighten-3"
             color="orange"
             large
-            :rules="ratingRules"
             half-increments
           ></v-rating>
         </v-col>
-
         <v-col cols="12" md="4">
           <a class="clean-format" data-title="Follows a consistent theme">
             <h4 class="card-title rating-el-title-el">Coherence</h4>
@@ -26,7 +24,6 @@
             background-color="orange lighten-3"
             color="orange"
             large
-            :rules="ratingRules"
             half-increments
           ></v-rating>
         </v-col>
@@ -39,7 +36,6 @@
             background-color="orange lighten-3"
             color="orange"
             large
-            :rules="ratingRules"
             half-increments
           ></v-rating>
         </v-col>
@@ -106,12 +102,9 @@ export default {
   },
   data: () => ({
   valid: false,
-  coherence: 2.5,
-  clarity: 2.5,
-  creativity: 2.5,
-  ratingRules: [
-    v => !!v || 'Rating is required',
-  ],
+  coherence: 0,
+  clarity: 0,
+  creativity: 0,
   free: '',
   checkbox: false,
 }),
