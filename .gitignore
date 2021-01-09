@@ -75,4 +75,5 @@ client/public/unsplash25k/**
 # DVC 
 .dvc/config
 backend/outputs/**
+!backend/outputs/jsons_collect.py
 client/public/unsplash25k/**
