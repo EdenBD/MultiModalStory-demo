@@ -373,26 +373,25 @@ img {
   border-color: gray;
 }
 
-.v-alert__icon {
-  align-self: auto;
-}
-
-// Submission alert & share
-
-.alert {
-  background-color: #72e476  !important;
-  border-color: #4caf50  !important;
+// Submission pop-up & share
+.v-dialog {
+  overflow-y: visible;
   font-weight: bolder;
   text-decoration: none !important;
+  }
+
+.popup-header{
+    background-color: #72e476  !important;
+    border-color: #4caf50  !important;
+  }
+
+.v-dialog > .v-card > .v-card__title {
+    font-size: 2em;
+    font-weight: 500;
+    letter-spacing: 0.0125em;
+    padding: 1em;
 }
 
-.v-speed-dial--top {
-  top: 8px;
-}
-
-.theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
-  background-color: deepskyblue;
-}
 
 // Footer
 .footer {
@@ -419,4 +418,10 @@ img {
 .seperator {
   color: #ebe5e5;
   border-top: 0.25em solid;
+}
+
+// Disable Vuetify theme
+
+.theme--light.v-application {
+  background: none;
 }

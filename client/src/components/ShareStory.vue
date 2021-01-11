@@ -1,12 +1,6 @@
 <template>
   <div>
-    <v-speed-dial v-model="dialShare" absolute left top direction="bottom" open-on-hover>
-      <template v-slot:activator>
-        <v-btn fab bottom small color="black" class="share-btn">
-          <v-icon v-if="dialShare">mdi-close</v-icon>
-          <v-icon v-else>mdi-share-variant</v-icon>
-        </v-btn>
-      </template>
+    <v-row justify="space-around">
       <v-btn
         dark
         fab
@@ -62,7 +56,7 @@
       >
         <v-icon>mdi-email</v-icon>
       </v-btn>
-    </v-speed-dial>
+    </v-row>
   </div>
 </template>
 
@@ -72,7 +66,6 @@ export default {
   name: "ShareStory",
   data() {
     return {
-      dialShare: false,
       pageUrl: window.location.href,
     }
   },

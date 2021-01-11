@@ -13,7 +13,6 @@
         @img-insert="handleImageInsert"
       ></Options>
     </article>
-    <!-- TODO(FORM submission database + free text form submission security issues) -->
     <RatingStory :submittedFormID="this.submittedFormID" @form-submit="handleFormSubmission"></RatingStory>
   </div>
 </template>

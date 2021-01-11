@@ -1,5 +1,6 @@
 <template>
   <div class="footer">
+    <div class="seperator"></div>
     <div class="footer-txt">Disclaimers</div>
     <div
       class="footer-txt"
