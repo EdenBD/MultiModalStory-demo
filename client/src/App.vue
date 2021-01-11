@@ -121,7 +121,7 @@ export default {
 
 body {
   background-color: #eee;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
   font-weight: 400;
   // top | right | bottom | left
   margin: 12em 5em 0 5em;
