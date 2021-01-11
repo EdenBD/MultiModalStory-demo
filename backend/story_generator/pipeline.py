@@ -80,6 +80,7 @@ class Pipeline():
             re_ranking (int): number of texts to generate to be able to re-rank. 
 
         Returns num_return_sequences list of generated texts, each of max_length according to given extracts.
+        Might return less than num_return_sequences if some are empty/ include only \s. 
 
         """
         start_time = time.time()

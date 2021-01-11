@@ -67,8 +67,10 @@ def _sample_demo_sequence(model, tokenizer, prompts, max_length, num_return_sequ
         num_return_sequences=num_return_sequences,
         pad_token_id=tokenizer.pad_token_id,
     )  # returns tensor of shape (len(prompts)*num_return_sequences x max_length)
-    generated = np.array(list(map(lambda sample: _preprocess_generated_text(
-        sample[first_idx:], tokenizer), sample_outputs)))
+    generated = map(lambda sample: _preprocess_generated_text(
+        sample[first_idx:], tokenizer), sample_outputs)
+    generated = np.array(
+        list(filter(lambda sample: len(sample.strip()) > 2, generated)))
     return generated
 
 
