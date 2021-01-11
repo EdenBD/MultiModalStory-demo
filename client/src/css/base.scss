@@ -421,7 +421,6 @@ img {
 }
 
 // Disable Vuetify theme
-
-.theme--light.v-application {
-  background: none;
+.v-application {
+  background: none !important;
 }

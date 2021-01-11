@@ -59,11 +59,12 @@
     </div>
 
     <!-- MAIN EDITOR -->
-
-    <div>
-      <Editor class="editor" ref="childEditor"></Editor>
-    </div>
-    <Footer></Footer>
+    <v-app id="vapp">
+      <div>
+        <Editor class="editor" ref="childEditor"></Editor>
+      </div>
+      <Footer></Footer>
+    </v-app>
   </div>
 </template>
 
