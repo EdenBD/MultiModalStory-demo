@@ -60,7 +60,7 @@ export default {
       editor: new Editor({
         autofocus: 'end',
         disableInputRules: ["strike"],
-        content: `<h2>The Mighty Dragon</h2><p><s>If you wish to follow my instructions, you must call the Dragon by name. The Dragon, you see, is the ruler of all Dragons. He is the ablest of all the living creatures, and because he is so strong, he has no doubt thought of taking pleasure in his beauty.</s><img src='${Constants.IMAGE_PATH}01zdIpN6uHU.jpg' id='01zdIpN6uHU'>However, </p>`,
+        content: "",
         extensions: [
           new Doc(),
           new Title(),

@@ -49,7 +49,7 @@
       <details open>
         <summary></summary>
         <div class="desciption-txt">
-          <b>Step 1:</b> Choose a preset or start your own story.
+          <b>Step 1:</b> Start a stroy from scratch or from a preset example.
           <br />
           <b>Step 2:</b> Autocomplete text and images.
           <br />

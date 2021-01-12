@@ -1,7 +1,7 @@
 export default {
     // If IMAGE_PATH cahnges, need to manually change default stories img tags in backend/outputs. 
     IMAGE_PATH: "unsplash25k/sketch_images1024/",
-    PRESET_TITLES: ["The Plague of the Century", "A Mysterious Angel", "The Unforgettable Sunset", "The Great Sunny Day", "Go To Distance", "I'm in Love", "The Spell under the Ocean", "The Princess of the North", "The Delightful Prince", "The Happy Hippo", "The Adventures of Layla", "A Tale of Two Sisters",
+    PRESET_TITLES: ["The Loving Cat", "The Enchanted Princess", "The Three Friends", "The Fairy", "The Plague of the Century", "A Mysterious Angel", "The Unforgettable Sunset", "The Great Sunny Day", "Go To Distance", "I'm in Love", "The Spell under the Ocean", "The Princess of the North", "The Delightful Prince", "The Happy Hippo", "The Adventures of Layla", "A Tale of Two Sisters",
         "The Hummus Lady", "Party in the West Coast", "Everything changed at Sunset", "The Cold is Coming", "Playing it Safe", "Adventures in Africa",
         "The Eagle of the West", "The Trees Under the Sun", "Under the Shining Sun", "Someone To Trust", "You Only Have Three Wishes", "A Little Piece of Advice",
         "Behind the Curtain", "The Curios Cat", "The Spring of 2050", "No More Fighting", "The Last Days of the King", "The Castle by the Forest", "Singing in the Rain"],
