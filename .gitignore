@@ -70,10 +70,9 @@ Temporary Items
 # Ignore pre-trained models downloads, fine-tuned models and datasets
 backend/story_generator/downloaded/**
 backend/story_generator/style_transfer/**
-client/public/unsplash25k/**
+client/public/unsplash25k/sketch_images1024/**
 
 # DVC 
 .dvc/config
 backend/outputs/**
 !backend/outputs/jsons_collect.py
-client/public/unsplash25k/**
