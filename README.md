@@ -1,5 +1,12 @@
-# MultiModalStory Demo - based on VISStarter
+# [FairyTailor](http://fairytailor.org/): Multimodal Generative Framework for Storytelling
 
+### Human-in-the-loop visual story co-creation. 
+
+Users can create a cohesive children's story by weaving generated texts and retrieved images with their input. 
+With co-creation, writers contribute their creative thinking, while generative models contribute to their constant workflow. 
+FairyTailor adds another modality and modifies the text generation process to help producing a coherent and creative story. 
+
+![Architecture](framework.png)
 ## Client
 
 Uses Vue 3.0 + Typescript.
