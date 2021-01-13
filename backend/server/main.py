@@ -140,8 +140,11 @@ async def submit_form(payload: api.FormPayload):
     payload = api.FormPayload(**payload)
     if _verify_form(payload):
         try:
-            # Generate a unique filename.
-            filename = uuid.uuid4().hex
+            # Generate a unique filename, based on the payload to avoid generating two URLs for the same story + feedback.
+            story_and_feedback = payload.html + \
+                str(payload.creativity) + str(payload.coherence) + \
+                str(payload.clarity) + payload.freeForm
+            filename = uuid.uuid5(uuid.NAMESPACE_X500, story_and_feedback).hex
             file_path = os.path.join(OUTPUT_PATH, f'{filename}.txt')
             # Write new file.
             with open(file_path, 'w') as outfile:

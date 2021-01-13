@@ -13,7 +13,11 @@
         @img-insert="handleImageInsert"
       ></Options>
     </article>
-    <RatingStory :submittedFormID="this.submittedFormID" @form-submit="handleFormSubmission"></RatingStory>
+    <RatingStory
+      :submittedFormID="this.submittedFormID"
+      :isSubmitPressed="this.isSubmitPressed"
+      @form-submit="handleFormSubmission"
+    ></RatingStory>
   </div>
 </template>
 
@@ -158,6 +162,7 @@ export default {
       top: 0,
       left:0,
       submittedFormID: "",
+      isSubmitPressed: false,
     }
   },
   beforeDestroy() {
@@ -230,7 +235,10 @@ export default {
     async handleFormSubmission(coherence, clarity, creativity, freeForm){
       // Send info from editor and form
       this.submittedFormID = "";
+      // Disable submit button during submission.
+      this.isSubmitPressed = true;
       this.submittedFormID = await api.postFormSubmission(coherence, clarity, creativity, freeForm, this.html)
+      this.isSubmitPressed = false;
       // Update URL according to submitted form URL
       this.$router.push({ name: "story", params: { storyid: this.submittedFormID } });
     },

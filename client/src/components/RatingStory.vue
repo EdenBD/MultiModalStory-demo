@@ -103,6 +103,7 @@ export default {
   ],
   props: {
     submittedFormID: String,
+    isSubmitPressed: Boolean,
   },
   data: () => ({
   valid: false,
