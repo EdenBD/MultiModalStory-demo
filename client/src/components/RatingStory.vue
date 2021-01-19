@@ -65,7 +65,7 @@
           <v-dialog transition="dialog-bottom-transition" max-width="700" max-height="500">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                :disabled="!valid"
+                :disabled="!valid && isSubmitPressed"
                 class="story-submit"
                 @click="submit"
                 v-bind="attrs"
