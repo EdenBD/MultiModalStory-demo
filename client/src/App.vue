@@ -4,7 +4,7 @@
     <header class="sticky">
       <div class="inner-heading">
         <div class="header-el">
-          <img class="logo" src="elephant.png" />
+          <img class="logo" src="bear.svg" />
         </div>
         <div class="header-el">
           <a
