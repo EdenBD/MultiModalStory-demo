@@ -12,9 +12,9 @@ FairyTailor adds another modality and modifies the text generation process to he
 
 After cloning the repository:
 
-### Client
+### Client ([Vue 2.6](https://vuejs.org/))
 
-Uses Vue 3.0 + Typescript.
+
 Install and check that the client compiles:
 ```
 cd client
@@ -22,7 +22,7 @@ npm i
 npm run build
 ```
 
-### Backend
+### Backend ([FASTAPI](https://fastapi.tiangolo.com/))
 
 Install and activate the environment (conda provided):
 ```
