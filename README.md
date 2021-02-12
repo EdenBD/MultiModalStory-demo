@@ -46,13 +46,10 @@ nltk.download('sentiwordnet')
 nltk.download('averaged_perceptron_tagger')
 ```
 
-### Large Data Management
+### Large Data Management ([dvc](https://dvc.org/))
 
-We use a tool called [dvc](https://dvc.org/) which to version control large data files like git version controls code. 
+Our large data files are stored on IBM's Cloud Object Storage, and to pull data files from that platform you will use a special, read-only `.dvc/config` file.
 
-These are stored on IBM's Cloud Object Storage, and to push data files to that platform you will use a special, read-only `.dvc/config` file.
-
-To pull data:
 ```
 dvc pull -f
 ```
