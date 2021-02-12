@@ -82,5 +82,7 @@ uvicorn backend.server:app --reload
 - replace the folder `client/public/unsplash25k/sketch_images1024` with yours.
 - Update the current path by changing the constant `IMAGE_PATH` in `client/src/components/Constants.js`.
 ### API functionalities
-- Add functions to `backend/server/main.py` to update backend endpoint, `client/src/js/api/mainApi.js` to call the backend endpoint, and the corresponding user components in `client/src/components`.
+- Add functions to the backend endpoint at `backend/server/main.py`.
+- Update `client/src/js/api/mainApi.js` to call the backend endpoint from the client.
+- Update the corresponding user components in `client/src/components`.
 
