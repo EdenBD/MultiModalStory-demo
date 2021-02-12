@@ -79,7 +79,7 @@ uvicorn backend.server:app --reload
 - Place the transformer in `backend/story_generator/downloaded directory`.
 - Update the current model path by changing the constant `FINETUNED_GPT2_PATH` in `backend/story_generator/constants.py`.
 ### New images folder
-- replace the folder `client/public/unsplash25k/sketch_images1024` with yours.
+- Replace the folder `client/public/unsplash25k/sketch_images1024` with yours.
 - Update the current path by changing the constant `IMAGE_PATH` in `client/src/components/Constants.js`.
 ### API functionalities
 - Add functions to the backend endpoint at `backend/server/main.py`.
