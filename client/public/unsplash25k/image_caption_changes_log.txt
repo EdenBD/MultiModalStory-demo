@@ -7,6 +7,3 @@ Manual changes to image_caption file 'ai_description':
 6. Removed lines where ai_description includes the word sign + removed row JnT4Mjq5n_E,time is up sigange
 7. UAWnUJFdk6Q,men sits on hill -> man sits on hill
 8. Remove rows that don't exist in file directory: ['RDs0THr4lGs', '9_9hzZVjV8s', 'vigsqYux_-8', 'AcG-unN00gw', 'nLqha2mP4ig', 'sEDzxW4NhL4', 'rsJtMXn3p_c']
-9. Deleted the row W-jVyeVGQjE,boy holding dinosaur mask, 29-jDQebh_o,toys in shelf with light, 6VmWnSCJSw8,dinosaur toy lot with box
-
-
