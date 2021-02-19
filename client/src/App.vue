@@ -1,5 +1,8 @@
 <template>
-  <div>
+<div>
+  <div class="small-screen">We're sorry, but we do not currently support smaller screens.</div>
+
+  <div class="big-screen">
     <!-- HEADER + OPTION BAR -->
     <header class="sticky">
       <div class="inner-heading">
@@ -66,6 +69,7 @@
       <Footer></Footer>
     </v-app>
   </div>
+</div>
 </template>
 
 <script>

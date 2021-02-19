@@ -116,7 +116,6 @@ export default {
 methods: {
       submit () {
         // Get all form data and editor JSON and save in directory.
-        console.log("Before validate: checkbox",this.checkbox, "valid",this.valid);
         this.$refs.form.validate();
         this.$emit("form-submit", this.coherence, this.clarity, this.creativity, this.free);
       },

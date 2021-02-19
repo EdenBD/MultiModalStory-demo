@@ -424,3 +424,25 @@ img {
 .v-application {
   background: none !important;
 }
+
+/* If the screen size is big enough (not mobile), show the app */
+@media only screen and (min-width: 601px) {
+  .small-screen {
+    display: none;
+  }
+}
+
+/* If the screen size is small, show notice */
+@media only screen and (max-width: 600px) {
+  .big-screen {
+    display: none;
+  }
+  .small-screen {
+    position: absolute;
+    width: 80%;
+    min-height: 100%;
+    font-size: 6vw;
+    text-align: center;
+    top: 0;
+  }
+}

@@ -11,6 +11,7 @@
         :imgs="this.imgs"
         @text-insert="handleTextInsert"
         @img-insert="handleImageInsert"
+        @close-options="handleClosingOptions"
       ></Options>
     </article>
     <RatingStory
@@ -210,6 +211,9 @@ export default {
       this.top = Math.min(this.top, window.innerHeight-cardHeight);
       this.left = Math.min(this.left, window.innerWidth-cardWidth); 
       return false;
+    },
+    handleClosingOptions() {
+      this.isOpen = false;
     },
     handleImageInsert(imgId) {
       this.isOpen = false;

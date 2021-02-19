@@ -2,7 +2,7 @@
   <div v-show="isOpen" class="options-popup" v-bind:style="{'left': left +'px', 'top': top + 'px'}">
     <div class="loader" v-show="isLoading"></div>
     <!-- Update Editor: cardWidth in case of changing max-width.-->
-    <v-card max-width="400px" class="mx-auto" v-show="!isLoading">
+    <v-card max-width="400px" class="mx-auto" v-show="!isLoading" v-click-outside="onClickOutside">
       <v-list>
         <v-list-item-group>
           <!--     Text Row     -->
@@ -51,6 +51,14 @@ export default {
   data: () => ({
     images_path: Constants.IMAGE_PATH,
   }),
+  methods: {
+    onClickOutside () {
+      // If Options card is open, and user clicks outside card - close it.
+      if (!this.isLoading) {
+        this.$emit('close-options');
+      }
+    },
+  },
 };
 </script>
 
