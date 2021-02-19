@@ -22,11 +22,14 @@ from sklearn.decomposition import TruncatedSVD
 from story_generator.helper_functions import generate_prompt
 
 
-def _preprocess_generated_text(sample, tokenizer):
+def _preprocess_generated_text(sample, tokenizer, has_space):
     decoded = tokenizer.decode(
         sample, skip_special_tokens=True)
-    # Removing multiple spaces.
-    decoded = re.sub("\s\s+", " ", decoded)
+    # Removing spaces.
+    decoded = decoded.strip()
+    # Adding a space at the beginning if needed.
+    if not has_space:
+        decoded = ' ' + decoded 
     # Filtering � globally
     return re.sub(u'\uFFFD', '', decoded)
 
@@ -67,8 +70,9 @@ def _sample_demo_sequence(model, tokenizer, prompts, max_length, num_return_sequ
         num_return_sequences=num_return_sequences,
         pad_token_id=tokenizer.pad_token_id,
     )  # returns tensor of shape (len(prompts)*num_return_sequences x max_length)
+    has_space = prompts[0][-1].isspace()
     generated = map(lambda sample: _preprocess_generated_text(
-        sample[first_idx:], tokenizer), sample_outputs)
+        sample[first_idx:], tokenizer, has_space), sample_outputs)
     generated = np.array(
         list(filter(lambda sample: len(sample.strip()) > 2, generated)))
     return generated

@@ -131,6 +131,7 @@ async def autocomplete_text(payload: api.TextPayload):
     # If extracts are too long, truncation will be taken care of by the tokenizer.
     re_ranking = 10 if payload.quality else 0
     # Might return less than num_return_sequences if some are empty/ just \s.
+    # Returned texts are trimmed/ with one space at the beginning.
     return storyGenerator.autocomplete_text(payload.extracts, max_length=25, num_return_sequences=3, re_ranking=re_ranking)
 
 
