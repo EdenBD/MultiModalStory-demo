@@ -70,7 +70,7 @@
                 @click="submit"
                 v-bind="attrs"
                 v-on="on"
-              >Submit Story</v-btn>
+              >Submit & Share Story</v-btn>
             </template>
             <template v-slot:default="dialog">
               <v-card>

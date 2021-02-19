@@ -15,10 +15,11 @@
     <div class="footer-txt">
       Collaborative work of
       <a href="https://edenbd.dev/">Eden Bensaid</a>,
-      <a href="http://hendrik.strobelt.com/">Hendrik Strobelt</a>,
-      <a href="https://www.mit.edu/~jda/">Jacob Andreas</a>,
-      <a href="https://www.bhoov.com/">Benjamin Hoover</a> and
-      <a href="https://www.mamartino.com/">Mauro Martino</a>.
+      <a href="https://www.mamartino.com/">Mauro Martino</a>,
+      <a href="https://www.bhoov.com/">Benjamin Hoover</a>,
+      <a href="https://www.mit.edu/~jda/">Jacob Andreas</a> and
+      <a href="http://hendrik.strobelt.com/">Hendrik Strobelt</a>.
+
     </div>
     <div class="footer-txt">
       <strong>

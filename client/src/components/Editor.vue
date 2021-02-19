@@ -81,7 +81,7 @@ export default {
               if (node.type.name === "title") {
                 return "Your Story Title";
               }
-              return "Write something awesome...";
+              return "Click to write something awesome...";
             }
           })
         ],

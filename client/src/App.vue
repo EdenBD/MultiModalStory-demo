@@ -125,7 +125,6 @@ body {
   font-weight: 400;
   // top | right | bottom | left
   margin: 12em 5em 0 5em;
-  font-size: larger;
   min-height: 100%;
 }
 
