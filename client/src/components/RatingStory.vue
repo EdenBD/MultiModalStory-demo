@@ -65,7 +65,7 @@
           <v-dialog transition="dialog-bottom-transition" max-width="700" max-height="500">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                :disabled="!valid && isSubmitPressed"
+                :disabled="!valid || isSubmitPressed"
                 class="story-submit"
                 @click="submit"
                 v-bind="attrs"
@@ -116,6 +116,7 @@ export default {
 methods: {
       submit () {
         // Get all form data and editor JSON and save in directory.
+        console.log("Before validate: checkbox",this.checkbox, "valid",this.valid);
         this.$refs.form.validate();
         this.$emit("form-submit", this.coherence, this.clarity, this.creativity, this.free);
       },
