@@ -6,7 +6,6 @@ import torch
 from math import ceil
 
 # Text pre-processing
-
 import re
 # Image retrieval
 import os
@@ -21,6 +20,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
 from story_generator.helper_functions import generate_prompt
 
+# CLIP Image retrieval 
+import clip
+import torch
 
 def _preprocess_generated_text(sample, tokenizer, has_space):
     decoded = tokenizer.decode(
@@ -77,61 +79,36 @@ def _sample_demo_sequence(model, tokenizer, prompts, max_length, num_return_sequ
         list(filter(lambda sample: len(sample.strip()) > 2, generated)))
     return generated
 
-
-def get_retreival_info(captions):
+def encode_search_query(clip_model, device, search_query):
     """
-    Args:
-        captions (str): path to a csv file that has |image_id | ai_description| columns 
-    Returns:
-        dt (sklearn sparse matrix): LSA tf-idf document-term matrix, trained on captions file of shape (#captions x |vocab|).
-        sklearn_tfidf: Vectorizer.
-        lsa_vector: Vectorizer.
-        caption_image_df (pandas df): loaded captions df.
+    Takes a text description and encodes it into a feature vector using the CLIP model.
+    Code taken from https://github.com/haltakov/natural-language-image-search.
     """
-    caption_image_df = pd.read_csv(captions)
-    tf_idf_vector = TfidfVectorizer(
-        norm='l2', use_idf=True, smooth_idf=False, sublinear_tf=True, stop_words='english')
-    lsa_vector = TruncatedSVD(n_components=500)
-    dt = lsa_vector.fit_transform(
-        tf_idf_vector.fit_transform(caption_image_df['ai_description']))
+    with torch.no_grad():
+        # Encode and normalize the search query using CLIP
+        text_encoded = clip_model.encode_text(clip.tokenize(search_query).to(device))
+        text_encoded /= text_encoded.norm(dim=-1, keepdim=True)
 
-    def lsa_embedder(texts): return lsa_vector.transform(
-        tf_idf_vector.transform(texts))
-    nlp = spacy.load("en_core_web_sm")
+    # Retrieve the feature vector converted to Half
+    return text_encoded.half()
 
-    # print('Loaded LSA Tf-IDF and document-term matrix successfully for captions file: ', captions)
-    return dt, lsa_embedder, caption_image_df, nlp
-
-
-def retrieve_images_for_one_extract(generated_text, num_images, captions_embeddings, lsa_embedder, df, nlp, prev_idx=[]):
+def find_best_matches(text_features, photo_features, photo_ids, num_images, prev_idx):
     """
-    Args:
-        generated_text (list/str): one extract text to generate images sequence for.
-        num_images (int): how many images per text. 
-        captions_embeddings (matric): embeddings.
-        lsa_embedder (sklearn Vectorizer).
-        df (pandas df): caption_image data frame. 
-        nlp (spacy model): nlp model to get most frequent nouns from given extract.
-        prev_idx (List[str]): previously retreived images ids, used with API to retreive one non-duplicate image.
-    Returns:
-        ids (list<str>): the corresponding images ids for generated_text.
+    Compares the text feature vector to the feature vectors of all images and finds the best matches. 
+    Returns the IDs of the best matching photos.
+    Code taken from https://github.com/haltakov/natural-language-image-search.
     """
-    # Compute LSA tf-idf per extract by extracting extract's top nouns.
-    generated_text = [generated_text] if isinstance(
-        generated_text, str) else generated_text
-    prompts_text = list(
-        map(lambda txt: generate_prompt(nlp, txt), generated_text))
-    transformed_texts = lsa_embedder(prompts_text)
-    # Compute cosine max similarity per text, shape (#captions x #extract).
-    similarity = cosine_similarity(captions_embeddings, transformed_texts)
+    # Compute the similarity between the search query and each photo using the Cosine similarity
+    similarities = (photo_features @ text_features.T).squeeze(1)
 
-    # Compute num_images*buffer_images most similar images per extract, to handle duplicates.
-    buffer_images = 5*num_images
-    most_similar_idx = similarity.argsort(axis=0)[-buffer_images:][::-1]
-    retreived_idx = most_similar_idx[:, 0]
-    # Covert retreived images indices to their corresponding image ids.
-    retreived_img_idx = list(
-        map(lambda img_caption: img_caption[0], df.iloc[retreived_idx].to_numpy()))
+    # Sort the photos by their similarity score
+    best_photo_idx = (-similarities).argsort()
+
+    # Get extra images ids to handle duplicates. 
+    BUFFER_SIZE = 30
+
+    retreived_img_idx = [photo_ids[i] for i in best_photo_idx[:BUFFER_SIZE]]
+
     # Check for duplicates.
     prev_idx_set = set(prev_idx)
     duplicate_images = set(retreived_img_idx).intersection(prev_idx_set)
@@ -141,8 +118,8 @@ def retrieve_images_for_one_extract(generated_text, num_images, captions_embeddi
         unique_idx = retreived_img_idx[:num_images]
     # Found duplicates, retrieve images from buffer_images in order.
     else:
-        # print(
-        #     f'Retrieved a duplicate images: {duplicate_images}, trying others.')
+        print(
+            f'Retrieved a duplicate images: {duplicate_images}, trying others.')
         unique_idx = []
         for idx in retreived_img_idx:
             if idx not in prev_idx_set:
@@ -151,10 +128,121 @@ def retrieve_images_for_one_extract(generated_text, num_images, captions_embeddi
                 break
         else:
             print(
-                f'Not enough images to try, increase buffer size of {buffer_images} to retrieve non-duplicate')
+                f'Not enough images to try, increase buffer size = {BUFFER_SIZE} to retrieve non-duplicate')
 
-    # Convert to [id1, id2]
+    # Return the photo IDs of the best matches, without duplicates. 
     return unique_idx
+
+def load_clip(device):
+    """
+    Code taken from https://github.com/haltakov/natural-language-image-search.
+    """
+    clip_model, _ = clip.load("ViT-B/32", device=device)
+    # Load the photo IDs
+    photo_ids = pd.read_csv("backend/unsplash-dataset/photo_ids.csv")
+    photo_ids = list(photo_ids['photo_id'])
+
+    # Load the features vectors
+    photo_features = np.load("backend/unsplash-dataset/features.npy")
+
+    # Convert features to Tensors: Float32 on CPU and Float16 on GPU
+    if device == "cpu":
+        photo_features = torch.from_numpy(photo_features).float().to(device)
+    else:
+        photo_features = torch.from_numpy(photo_features).to(device)
+
+    return clip_model, photo_ids, photo_features
+
+def search_unsplash(search_query, photo_features, photo_ids, clip_model, device, num_images=3, prv_ids=[]):
+    """
+    Get num_images images from Unsplash
+    """
+    # Encode the search query
+    # Slice from the end, according to CLIP max number of tokens.
+    MAX_LENGTH = 300
+    text_features = encode_search_query(clip_model, device, search_query[-MAX_LENGTH:])
+
+    # Find the best matches
+    return find_best_matches(text_features, photo_features, photo_ids, num_images, prv_ids)
+
+
+# def get_retreival_info(captions):
+#     """
+#     Args:
+#         captions (str): path to a csv file that has |image_id | ai_description| columns 
+#     Returns:
+#         dt (sklearn sparse matrix): LSA tf-idf document-term matrix, trained on captions file of shape (#captions x |vocab|).
+#         sklearn_tfidf: Vectorizer.
+#         lsa_vector: Vectorizer.
+#         caption_image_df (pandas df): loaded captions df.
+#     """
+#     caption_image_df = pd.read_csv(captions)
+#     tf_idf_vector = TfidfVectorizer(
+#         norm='l2', use_idf=True, smooth_idf=False, sublinear_tf=True, stop_words='english')
+#     lsa_vector = TruncatedSVD(n_components=500)
+#     dt = lsa_vector.fit_transform(
+#         tf_idf_vector.fit_transform(caption_image_df['ai_description']))
+
+#     def lsa_embedder(texts): return lsa_vector.transform(
+#         tf_idf_vector.transform(texts))
+#     nlp = spacy.load("en_core_web_sm")
+
+#     # print('Loaded LSA Tf-IDF and document-term matrix successfully for captions file: ', captions)
+#     return dt, lsa_embedder, caption_image_df, nlp
+
+
+# def retrieve_images_for_one_extract(generated_text, num_images, captions_embeddings, lsa_embedder, df, nlp, prev_idx=[]):
+#     """
+#     Args:
+#         generated_text (list/str): one extract text to generate images sequence for.
+#         num_images (int): how many images per text. 
+#         captions_embeddings (matric): embeddings.
+#         lsa_embedder (sklearn Vectorizer).
+#         df (pandas df): caption_image data frame. 
+#         nlp (spacy model): nlp model to get most frequent nouns from given extract.
+#         prev_idx (List[str]): previously retreived images ids, used with API to retreive one non-duplicate image.
+#     Returns:
+#         ids (list<str>): the corresponding images ids for generated_text.
+#     """
+#     # Compute LSA tf-idf per extract by extracting extract's top nouns.
+#     generated_text = [generated_text] if isinstance(
+#         generated_text, str) else generated_text
+#     prompts_text = list(
+#         map(lambda txt: generate_prompt(nlp, txt), generated_text))
+#     transformed_texts = lsa_embedder(prompts_text)
+#     # Compute cosine max similarity per text, shape (#captions x #extract).
+#     similarity = cosine_similarity(captions_embeddings, transformed_texts)
+
+#     # Compute num_images*buffer_images most similar images per extract, to handle duplicates.
+#     buffer_images = 5*num_images
+#     most_similar_idx = similarity.argsort(axis=0)[-buffer_images:][::-1]
+#     retreived_idx = most_similar_idx[:, 0]
+#     # Covert retreived images indices to their corresponding image ids.
+#     retreived_img_idx = list(
+#         map(lambda img_caption: img_caption[0], df.iloc[retreived_idx].to_numpy()))
+#     # Check for duplicates.
+#     prev_idx_set = set(prev_idx)
+#     duplicate_images = set(retreived_img_idx).intersection(prev_idx_set)
+
+#     # No duplicates.
+#     if not duplicate_images:
+#         unique_idx = retreived_img_idx[:num_images]
+#     # Found duplicates, retrieve images from buffer_images in order.
+#     else:
+#         # print(
+#         #     f'Retrieved a duplicate images: {duplicate_images}, trying others.')
+#         unique_idx = []
+#         for idx in retreived_img_idx:
+#             if idx not in prev_idx_set:
+#                 unique_idx.append(idx)
+#             if len(unique_idx) == num_images:
+#                 break
+#         else:
+#             print(
+#                 f'Not enough images to try, increase buffer size of {buffer_images} to retrieve non-duplicate')
+
+#     # Convert to [id1, id2]
+#     return unique_idx
 
 
 if __name__ == "__main__":

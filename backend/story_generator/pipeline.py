@@ -1,6 +1,6 @@
 # Local imports
 import story_generator.constants as constants
-from story_generator.generation_utils import retrieve_images_for_one_extract, get_retreival_info, _sample_demo_sequence
+from story_generator.generation_utils import retrieve_images_for_one_extract, get_retreival_info, load_clip, search_unsplash, _sample_demo_sequence
 from story_generator.ranking_utils import score_text, sort_scores
 
 # ML imports
@@ -47,9 +47,11 @@ class Pipeline():
         self._gpt2 = self._gpt2.to(self._device)
         # print(f'Loaded GPT2 fine-tuned Model: {constants.FINETUNED_GPT2_PATH}')
 
+        # Image retreival using CLIP embeddings
+        self._clip, self._photo_ids, self._photo_features = load_clip(self._device)
         # LSA TF-IDF word embeddings for image retrieval.
-        self._captions_embedding, self._lsa_embedder, self._caption_image_df, self._nlp = get_retreival_info(
-            captions=constants.IMAGE_TO_CAPTION_CSV)
+        # self._captions_embedding, self._lsa_embedder, self._caption_image_df, self._nlp = get_retreival_info(
+        #     captions=constants.IMAGE_TO_CAPTION_CSV)
 
         # Preset model for evalutaion
         self._preset_model = GPT2LMHeadModel.from_pretrained(
@@ -68,8 +70,12 @@ class Pipeline():
 
         Returns the list of ids of the retrived, non-duplicate images.
         """
-        return retrieve_images_for_one_extract(
-            extract, num_images, self._captions_embedding, self._lsa_embedder, self._caption_image_df, self._nlp, current_images_ids)
+        start_time = time.time()
+        best_img = search_unsplash(extract, self._photo_features, self._photo_ids, self._clip, self._device, num_images, current_images_ids)
+        print(f"Images Time : {round((time.time() - start_time), 4)}s \n")
+        return best_img
+        # return retrieve_images_for_one_extract(
+        #     extract, num_images, self._captions_embedding, self._lsa_embedder, self._caption_image_df, self._nlp, current_images_ids)
 
     def autocomplete_text(self, extracts, max_length, num_return_sequences, re_ranking=0):
         """

@@ -193,7 +193,7 @@ export default {
       if (allText.trim().length){
         // Get last numSenteces
         const numSenteces = 2;
-        const extracts = allText.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
+        const extracts = allText.replace(/([.?!;])\s*(?=[A-Z])/g, "$1|").split("|");
         const imagesExtract = extracts.slice(-numSenteces).join(" ");
         // Call backend
         this.texts = await api.postAutocompleteText(allText, quality);
@@ -218,7 +218,7 @@ export default {
     handleImageInsert(imgId) {
       this.isOpen = false;
       const node = this.view.state.schema.nodes.image.create({
-        src: `${Constants.IMAGE_PATH}${imgId}.jpg`, 
+        src: `${Constants.IMAGE_PATH}${imgId}/1024x1024`, 
         id: imgId});
       const transaction = this.view.state.tr.insert(this.cursorPosition, node);
       transaction.insertText(' ');

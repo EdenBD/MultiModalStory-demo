@@ -27,7 +27,7 @@
             class="options-img"
           >
             <v-list-item-title>
-              <v-img :src="`${images_path}${img}.jpg`"></v-img>
+              <v-img :src="`${images_path}${img}/256x256`"></v-img>
             </v-list-item-title>
           </v-list-item>
         </v-list-item-group>
