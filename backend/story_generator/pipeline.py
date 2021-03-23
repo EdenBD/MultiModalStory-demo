@@ -1,6 +1,6 @@
 # Local imports
 import story_generator.constants as constants
-from story_generator.generation_utils import retrieve_images_for_one_extract, get_retreival_info, load_clip, search_unsplash, _sample_demo_sequence
+from story_generator.generation_utils import load_clip, search_unsplash, _sample_demo_sequence
 from story_generator.ranking_utils import score_text, sort_scores
 
 # ML imports
