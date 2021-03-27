@@ -33,6 +33,7 @@ conda activate MultiModalStory
 Install environment globally in the directory: 
 ```
 pip install -e .
+pip install git+https://github.com/openai/CLIP.git
 ```
 
 After installation run:
