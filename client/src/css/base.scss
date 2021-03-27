@@ -93,7 +93,7 @@ summary {
 
 .options-el {
   display: inline-block;
-  margin-right: 2em;
+  margin-right: 1em;
 }
 
 .clickable a {
@@ -238,16 +238,13 @@ img {
 }
 
 .options-img{
-  margin: 0.5em;
-  width: 28%;
-  height: 28%;
+  max-width: 28%;
+  max-height: 28%;
   margin: 0;
-  // top | right | bottom | left
-  padding: 0 0.5em 0 0.7em;
 }
 
 .options-imgs-icon{
-  padding: 1em 0.3em;
+  padding-left: 0.2em;
   outline: white;
 }
 
@@ -255,12 +252,18 @@ img {
   text-align: left;
 }
 
+// Options images
 .v-list-item {
-  padding: 0 0.4em;
+  padding: 0 0.5em;
 }
 
 .v-list-item__title {
   white-space: normal;
+}
+
+.v-list-item__icon {
+  // top | right | bottom | left
+  margin: 1em 0.5em 0em 0.5em !important;
 }
 
 // Color changing loader taken from: https://codepen.io/zFunx/pen/apqgYJ
