@@ -196,8 +196,8 @@ export default {
         const extracts = allText.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
         const imagesExtract = extracts.slice(-numSenteces).join(" ");
         // Call backend
-        this.texts = await api.postAutocompleteText(allText, quality);
         this.imgs = await api.postRetreiveImage(imagesExtract , currentImgs);
+        this.texts = await api.postAutocompleteText(allText, quality);
       }
       // If editor is empty, return preset titles and images.
       else {

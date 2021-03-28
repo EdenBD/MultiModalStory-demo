@@ -27,7 +27,7 @@
             class="options-img"
           >
             <v-list-item-title>
-              <v-img :src="`${images_path}${img}/90x90`"></v-img>
+              <v-img :src="`${images_path}${img}/90x90`" rel="preload"></v-img>
             </v-list-item-title>
           </v-list-item>
         </v-list-item-group>
