@@ -1,24 +1,28 @@
 <template>
+  <!-- MAIN EDITOR -->
   <div>
-    <article>
-      <editor-content ref="editorRef" :editor="editor" />
-      <Options
-        :isOpen="this.isOpen"
-        :isLoading="this.isLoading"
-        :top="this.top"
-        :left="this.left"
-        :texts="this.texts"
-        :imgs="this.imgs"
-        @text-insert="handleTextInsert"
-        @img-insert="handleImageInsert"
-        @close-options="handleClosingOptions"
-      ></Options>
-    </article>
-    <RatingStory
-      :submittedFormID="this.submittedFormID"
-      :isSubmitPressed="this.isSubmitPressed"
-      @form-submit="handleFormSubmission"
-    ></RatingStory>
+    <Header ref="childHeader"></Header>
+    <div class="editor">
+      <article>
+        <editor-content ref="editorRef" :editor="editor" />
+        <Options
+          :isOpen="this.isOpen"
+          :isLoading="this.isLoading"
+          :top="this.top"
+          :left="this.left"
+          :texts="this.texts"
+          :imgs="this.imgs"
+          @text-insert="handleTextInsert"
+          @img-insert="handleImageInsert"
+          @close-options="handleClosingOptions"
+        ></Options>
+      </article>
+      <RatingStory
+        :submittedFormID="this.submittedFormID"
+        :isSubmitPressed="this.isSubmitPressed"
+        @form-submit="handleFormSubmission"
+      ></RatingStory>
+    </div>
   </div>
 </template>
 
@@ -27,6 +31,7 @@
 import { Editor, EditorContent } from "tiptap";
 import Options from "./Options.vue";
 import RatingStory from "./RatingStory.vue";
+import Header from "./Header.vue";
 
 import Doc from "../nodes/Doc";
 import Title from "../nodes/Title";
@@ -58,6 +63,7 @@ export default {
     EditorContent,
     Options,
     RatingStory,
+    Header,
   },
   data() {
     return {
@@ -124,8 +130,8 @@ export default {
               }
               // Get img from current HTML.
               const currentImgs  = this.getImgFromHTML(this.html);
-              // If Alt,  perform slower text generation with re-ranking
-              const quality = event.shiftKey;
+              // If HQ on,  performs slower text generation with re-ranking
+              const quality = this.$refs.childHeader.isHQAutocompleteOn();
               this.handleOptions(allText, currentImgs, quality);
             }
             else if (event.key == "Escape") {

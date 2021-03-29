@@ -1,75 +1,15 @@
 <template>
-<div>
-  <div class="small-screen">We're sorry, but we do not currently support smaller screens.</div>
-
-  <div class="big-screen">
-    <!-- HEADER + OPTION BAR -->
-    <header class="sticky">
-      <div class="inner-heading">
-        <div class="header-el">
-          <img class="logo" src="bear.svg" />
-        </div>
-        <div class="header-el">
-          <a
-            href="https://github.com/EdenBD/MultiModalStory-demo"
-            target="_blank"
-            data-title="Uses GPT-2 & Unsplash Images to generate text-and-images stories"
-          >
-            <img class="title-logo shadow" src="logo2.png" />
-          </a>
-          <div class="options">
-            <div class="options-el clickable">
-              <a @click.prevent="shuffleStory">
-                <i class="fa fa-random" aria-hidden="true"></i> Shuffle Story
-              </a>
-            </div>
-            <div class="options-el shadow clean-format">
-              <a data-title="Generates up to three text completions and images">
-                <i class="fa fa-magic" aria-hidden="true"></i>
-                <code>tab</code> for
-                <strong>Autocomplete</strong>
-                <span class="timing">(2 sec)</span>
-              </a>
-            </div>
-            <div class="options-el shadow clean-format">
-              <a
-                data-title="Returns top-ranked texts according to creativity, readability, coherency, and positivity measures"
-              >
-                <i class="fa fa-level-up" aria-hidden="true"></i>
-                <code>shift</code> +
-                <code>tab</code> for
-                <strong>High-Quality Autocomplete</strong>
-                <span class="timing">(5 sec)</span>
-              </a>
-            </div>
-          </div>
-        </div>
+  <v-app id="vapp">
+    <div>
+      <div class="small-screen">
+        We're sorry, but we do not currently support smaller screens.
       </div>
-    </header>
-
-    <!-- DESCRIPTION -->
-    <div class="description">
-      <details open>
-        <summary></summary>
-        <div class="desciption-txt">
-          <b>Step 1:</b> Shuffle initial story or start writing.
-          <br />
-          <b>Step 2:</b> Autocomplete text and images.
-          <br />
-          <b>Step 3:</b> Give feedback and submit your story.
-        </div>
-      </details>
+      <div class="big-screen">
+        <Editor ref="childEditor"></Editor>
+        <Footer></Footer>
+      </div>
     </div>
-
-    <!-- MAIN EDITOR -->
-    <v-app id="vapp">
-      <div>
-        <Editor class="editor" ref="childEditor"></Editor>
-      </div>
-      <Footer></Footer>
-    </v-app>
-  </div>
-</div>
+  </v-app>
 </template>
 
 <script>
@@ -80,22 +20,22 @@ const NUM_PRESET_STORIES = 5;
 
 export default {
   name: "App",
-  data: function() {
+  data: function () {
     return {
-      storyID: this.$route.params.storyid || "1"
+      storyID: this.$route.params.storyid || "1",
     };
   },
   components: {
     Editor,
-    Footer
+    Footer,
   },
   watch: {
     $route() {
       this.storyID = this.$route.params.storyid;
-    }
+    },
   },
   methods: {
-    shuffleStory: function() {
+    shuffleStory: function () {
       // User called shuffle story from default story
       if (this.storyID.length === 1) {
         // Once tried all default stories, return to default storyID=1.
@@ -111,8 +51,8 @@ export default {
       this.$router.push({ name: "story", params: { storyid: this.storyID } });
       // Update the editor content.
       this.$refs.childEditor.shuffleStory(this.storyID);
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -1,0 +1,79 @@
+<template>
+  <div>
+    <!-- HEADER + OPTION BAR -->
+    <header class="sticky">
+      <div class="inner-heading">
+        <div class="header-el">
+          <img class="logo" src="bear.svg" />
+        </div>
+        <div class="header-el">
+          <a
+            href="https://github.com/EdenBD/MultiModalStory-demo"
+            target="_blank"
+            data-title="Uses GPT-2 & Unsplash Images to generate text-and-images stories"
+          >
+            <img class="title-logo shadow" src="logo2.png" />
+          </a>
+          <div class="options">
+            <div class="options-el clickable">
+              <a @click.prevent="shuffleStory">
+                <i class="fa fa-random" aria-hidden="true"></i> Shuffle Story
+              </a>
+            </div>
+            <div class="options-el shadow clean-format">
+              <a data-title="Generates up to three text completions and images">
+                <i class="fa fa-magic" aria-hidden="true"></i>
+                <code>tab</code> for
+                <strong>Autocomplete</strong>
+                <span class="timing">(2 sec)</span>
+              </a>
+            </div>
+            <div class="options-el shadow clean-format">
+              <v-switch
+                v-model="highQualityAutocomplete"
+                class="clean-switch ma-0 pa-0"
+                hide-details
+                color="#57ce5b"
+              >
+              </v-switch>
+              <a
+                data-title="Returns top-ranked texts according to creativity, readability, coherency, and positivity measures"
+              >
+                <strong class="clean-switch"> High-Quality Autocomplete</strong>
+                <span class="timing clean-switch">(5 sec)</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- DESCRIPTION -->
+    <div class="description">
+      <div class="desciption-txt">
+        <b>Step 1:</b> Shuffle initial story or start writing.
+        <br />
+        <b>Step 2:</b> Autocomplete text and images.
+        <br />
+        <b>Step 3:</b> Give feedback and submit your story.
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="js">
+export default {
+  name: "Header",
+    data: function () {
+    return {
+      highQualityAutocomplete: false,
+    };
+  },
+  methods: {
+    isHQAutocompleteOn(){
+      return this.highQualityAutocomplete;
+    }
+  }
+};
+</script>
+
