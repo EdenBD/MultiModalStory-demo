@@ -14,7 +14,7 @@ MAIN_DOWNLOADED_MODELS_DIR = RELATIVE_DIR + "/downloaded/"
 TOKENIZER_PATH = os.path.join(
     MAIN_DOWNLOADED_MODELS_DIR, "saved_gpt2_tokenizer/")
 FINETUNED_GPT2_PATH = os.path.join(
-    MAIN_DOWNLOADED_MODELS_DIR, "finetuned_saved_gpt2_medium_tales_title_prompts_226epochs/")
+    MAIN_DOWNLOADED_MODELS_DIR, "finetuned_saved_gpt2_medium_tales_no_prompts_191epochs/")
 PRESET_GPT2_PATH = os.path.join(
     MAIN_DOWNLOADED_MODELS_DIR, "saved_gpt2_medium/")
 
@@ -26,20 +26,28 @@ GENERATION_MAX_LENGTH = 80
 TEMPERATURE = 1.05
 TOP_K = 70
 TOP_P = 0.95
-STARTING_PROMPTS = ["The Truth is Written in the Stars\n"]
 # Max number of tokens to take into account during inference.
 MAX_SEQ_LEN = 550
 
-# Image Retrieval.
+# Image Styles.
+UNSPLASH_IMG_FOLDER = os.path.join("client/public/", 'unsplash/')
+# Change folder according to style model.
+NONE_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'none')
+SKETCH_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'sketch')
+ANIME_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'anime')
+COMICS_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'comics')
 
-UNSPLASH_IMG_FOLDER = os.path.join("client/public/", 'unsplash25k/')
-IMAGE_TO_CAPTION_CSV = os.path.join(UNSPLASH_IMG_FOLDER, 'image_caption.csv')
-# Change folder according to style model
-ORIGINAL_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'images')
-STYLED_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'sketch_images')
+# Style transfer models.
+SKETCH_STYLE_MODEL = PRESET_GPT2_PATH = os.path.join(
+    MAIN_DOWNLOADED_MODELS_DIR, "style_sketch.model")
+ANIME_STYLE_MODEL = PRESET_GPT2_PATH = os.path.join(
+    MAIN_DOWNLOADED_MODELS_DIR, "style_anime.model")
+COMICS_STYLE_MODEL = PRESET_GPT2_PATH = os.path.join(
+    MAIN_DOWNLOADED_MODELS_DIR, "style_comics.model")
+
 IMAGE_WIDTH, IMAGE_HEIGHT = 512, 512
 
-# Pipeline/ Optimization. TODO(IMPROVE constants for deployment with GPU)
+# Pipeline/ Optimization.
 
 MAX_NUM_TEXTS_SAMPLES = 10
 # Generate approximately a sentence before re-ranking
@@ -48,8 +56,6 @@ NUM_TEXTS_TO_SAMPLE_IMAGES_FOR = 5
 NUM_IMAGES_PER_STORY = 2
 NUM_GENREATED_STORIES = 1  # <= NUM_TEXTS_TO_SAMPLE_IMAGES_FOR
 assert NUM_GENREATED_STORIES <= NUM_TEXTS_TO_SAMPLE_IMAGES_FOR, "number of generated stories must be smaller/ equal to number of storeis with images."
-
-GENERATED_IMG_WIDTH, GENERATED_IMG_HEIGHT = 20, 10
 
 # Ranking.
 

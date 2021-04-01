@@ -20,9 +20,14 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
 from story_generator.helper_functions import generate_prompt
 
-# CLIP Image retrieval 
+# CLIP Image retrieval
 import clip
 import torch
+
+# Image style transfer
+from torchvision import transforms
+from story_generator.transformer_net import TransformerNet
+
 
 def _preprocess_generated_text(sample, tokenizer, has_space):
     decoded = tokenizer.decode(
@@ -31,7 +36,7 @@ def _preprocess_generated_text(sample, tokenizer, has_space):
     decoded = decoded.strip()
     # Adding a space at the beginning if needed.
     if not has_space:
-        decoded = ' ' + decoded 
+        decoded = ' ' + decoded
     # Filtering � globally
     return re.sub(u'\uFFFD', '', decoded)
 
@@ -79,6 +84,7 @@ def _sample_demo_sequence(model, tokenizer, prompts, max_length, num_return_sequ
         list(filter(lambda sample: len(sample.strip()) > 2, generated)))
     return generated
 
+
 def encode_search_query(clip_model, device, search_query):
     """
     Takes a text description and encodes it into a feature vector using the CLIP model.
@@ -86,11 +92,13 @@ def encode_search_query(clip_model, device, search_query):
     """
     with torch.no_grad():
         # Encode and normalize the search query using CLIP
-        text_encoded = clip_model.encode_text(clip.tokenize(search_query).to(device))
+        text_encoded = clip_model.encode_text(
+            clip.tokenize(search_query).to(device))
         text_encoded /= text_encoded.norm(dim=-1, keepdim=True)
 
     # Retrieve the feature vector converted to Half
     return text_encoded.half()
+
 
 def find_best_matches(text_features, photo_features, photo_ids, num_images, prev_idx):
     """
@@ -104,7 +112,7 @@ def find_best_matches(text_features, photo_features, photo_ids, num_images, prev
     # Sort the photos by their similarity score
     best_photo_idx = (-similarities).argsort()
 
-    # Get extra images ids to handle duplicates. 
+    # Get extra images ids to handle duplicates.
     BUFFER_SIZE = 30
 
     retreived_img_idx = [photo_ids[i] for i in best_photo_idx[:BUFFER_SIZE]]
@@ -130,8 +138,9 @@ def find_best_matches(text_features, photo_features, photo_ids, num_images, prev
             print(
                 f'Not enough images to try, increase buffer size = {BUFFER_SIZE} to retrieve non-duplicate')
 
-    # Return the photo IDs of the best matches, without duplicates. 
+    # Return the photo IDs of the best matches, without duplicates.
     return unique_idx
+
 
 def load_clip(device):
     """
@@ -153,6 +162,7 @@ def load_clip(device):
 
     return clip_model, photo_ids, photo_features
 
+
 def search_unsplash(search_query, photo_features, photo_ids, clip_model, device, num_images=3, prv_ids=[]):
     """
     Get num_images images from Unsplash
@@ -160,89 +170,60 @@ def search_unsplash(search_query, photo_features, photo_ids, clip_model, device,
     # Encode the search query
     # Slice from the end, according to CLIP max number of tokens.
     MAX_LENGTH = 300
-    text_features = encode_search_query(clip_model, device, search_query[-MAX_LENGTH:])
+    text_features = encode_search_query(
+        clip_model, device, search_query[-MAX_LENGTH:])
 
     # Find the best matches
     return find_best_matches(text_features, photo_features, photo_ids, num_images, prv_ids)
 
 
-# def get_retreival_info(captions):
-#     """
-#     Args:
-#         captions (str): path to a csv file that has |image_id | ai_description| columns 
-#     Returns:
-#         dt (sklearn sparse matrix): LSA tf-idf document-term matrix, trained on captions file of shape (#captions x |vocab|).
-#         sklearn_tfidf: Vectorizer.
-#         lsa_vector: Vectorizer.
-#         caption_image_df (pandas df): loaded captions df.
-#     """
-#     caption_image_df = pd.read_csv(captions)
-#     tf_idf_vector = TfidfVectorizer(
-#         norm='l2', use_idf=True, smooth_idf=False, sublinear_tf=True, stop_words='english')
-#     lsa_vector = TruncatedSVD(n_components=500)
-#     dt = lsa_vector.fit_transform(
-#         tf_idf_vector.fit_transform(caption_image_df['ai_description']))
-
-#     def lsa_embedder(texts): return lsa_vector.transform(
-#         tf_idf_vector.transform(texts))
-#     nlp = spacy.load("en_core_web_sm")
-
-#     # print('Loaded LSA Tf-IDF and document-term matrix successfully for captions file: ', captions)
-#     return dt, lsa_embedder, caption_image_df, nlp
+def load_style_transfer_model(device, style_model_path):
+    style_model = TransformerNet()
+    style_model.load_state_dict(torch.load(style_model_path))
+    # Set model for inference.
+    style_model.eval()
+    style_model.to(device)
+    print('Loaded style tranfer model: ', style_model_path)
+    return style_model
 
 
-# def retrieve_images_for_one_extract(generated_text, num_images, captions_embeddings, lsa_embedder, df, nlp, prev_idx=[]):
-#     """
-#     Args:
-#         generated_text (list/str): one extract text to generate images sequence for.
-#         num_images (int): how many images per text. 
-#         captions_embeddings (matric): embeddings.
-#         lsa_embedder (sklearn Vectorizer).
-#         df (pandas df): caption_image data frame. 
-#         nlp (spacy model): nlp model to get most frequent nouns from given extract.
-#         prev_idx (List[str]): previously retreived images ids, used with API to retreive one non-duplicate image.
-#     Returns:
-#         ids (list<str>): the corresponding images ids for generated_text.
-#     """
-#     # Compute LSA tf-idf per extract by extracting extract's top nouns.
-#     generated_text = [generated_text] if isinstance(
-#         generated_text, str) else generated_text
-#     prompts_text = list(
-#         map(lambda txt: generate_prompt(nlp, txt), generated_text))
-#     transformed_texts = lsa_embedder(prompts_text)
-#     # Compute cosine max similarity per text, shape (#captions x #extract).
-#     similarity = cosine_similarity(captions_embeddings, transformed_texts)
+def _image_style_transfer(image, style_model, device):
+    """
+    Convert an original image to a certain style.
+    Args:
+        image (PIL Image instance): image to covert style to. 
+        style_model_path (Pytorch model): trained neural style transfer model.
+        device (str): cuda or cpu
 
-#     # Compute num_images*buffer_images most similar images per extract, to handle duplicates.
-#     buffer_images = 5*num_images
-#     most_similar_idx = similarity.argsort(axis=0)[-buffer_images:][::-1]
-#     retreived_idx = most_similar_idx[:, 0]
-#     # Covert retreived images indices to their corresponding image ids.
-#     retreived_img_idx = list(
-#         map(lambda img_caption: img_caption[0], df.iloc[retreived_idx].to_numpy()))
-#     # Check for duplicates.
-#     prev_idx_set = set(prev_idx)
-#     duplicate_images = set(retreived_img_idx).intersection(prev_idx_set)
+    From: https://github.com/pytorch/examples/blob/master/fast_neural_style/neural_style/neural_style.py
+    """
+    content_transform = transforms.Compose([
+        transforms.ToTensor(),
+        # Convert from range [0,1] to [0,255]
+        transforms.Lambda(lambda x: x.mul(255))
+    ])
 
-#     # No duplicates.
-#     if not duplicate_images:
-#         unique_idx = retreived_img_idx[:num_images]
-#     # Found duplicates, retrieve images from buffer_images in order.
-#     else:
-#         # print(
-#         #     f'Retrieved a duplicate images: {duplicate_images}, trying others.')
-#         unique_idx = []
-#         for idx in retreived_img_idx:
-#             if idx not in prev_idx_set:
-#                 unique_idx.append(idx)
-#             if len(unique_idx) == num_images:
-#                 break
-#         else:
-#             print(
-#                 f'Not enough images to try, increase buffer size of {buffer_images} to retrieve non-duplicate')
+    content_image = content_transform(image)
+    content_image = content_image.unsqueeze(0).to(device)
 
-#     # Convert to [id1, id2]
-#     return unique_idx
+    with torch.no_grad():
+        styled_img = style_model(content_image).cpu()[0]
+        # Change the range to 0-255
+        styled_img = styled_img.clamp(0, 255).numpy()
+        styled_img = styled_img.transpose(1, 2, 0).astype("uint8")
+        styled_img = Image.fromarray(styled_img)
+    return styled_img
+
+
+def _get_image(image_id):
+    """
+    Args:
+        image_id (str): id of Unsplash image
+    Returns PIL image from file name, file name consists of directory from constants + id.
+    """
+    image = Image.open(os.path.join(
+        constants.NONE_IMAGES_PATH, image_id+'.jpg'))
+    return image.resize((constants.IMAGE_WIDTH, constants.IMAGE_HEIGHT))
 
 
 if __name__ == "__main__":

@@ -15,11 +15,13 @@
             <img class="title-logo shadow" src="logo2.png" />
           </a>
           <div class="options">
+            <!-- Shuffle Story -->
             <div class="options-el clickable">
               <a @click.prevent="shuffleStory">
                 <i class="fa fa-random" aria-hidden="true"></i> Shuffle Story
               </a>
             </div>
+            <!-- Autocomplete -->
             <div class="options-el shadow clean-format">
               <a data-title="Generates up to three text completions and images">
                 <i class="fa fa-magic" aria-hidden="true"></i>
@@ -28,6 +30,7 @@
                 <span class="timing">(2 sec)</span>
               </a>
             </div>
+            <!-- High-Quality Autocomplete -->
             <div class="options-el shadow clean-format">
               <v-switch
                 v-model="highQualityAutocomplete"
@@ -42,6 +45,36 @@
                 <strong class="clean-switch"> High-Quality Autocomplete</strong>
                 <span class="timing clean-switch">(5 sec)</span>
               </a>
+            </div>
+            <!--     Image Style Transfer     -->
+            <div class="options-el shadow clean-format">
+              <a
+                data-title="Changes inserted images' style. Applies no styling by default"
+              >
+                <strong>Image Style</strong>
+                <span class="timing">(5 sec)</span>
+              </a>
+              <div class="header-imgs">
+                <v-btn-toggle
+                  v-model="chosen_style"
+                  color="#00FF00"
+                  dense
+                  borderless
+                >
+                  <v-btn
+                    v-for="(style, index) in styles"
+                    :key="index"
+                    x-large
+                    fab
+                    tile
+                    class="header-btn-img"
+                  >
+                    <v-avatar tile size="55">
+                      <img :src="`${style}.png`" class="header-style-img" />
+                    </v-avatar>
+                  </v-btn>
+                </v-btn-toggle>
+              </div>
             </div>
           </div>
         </div>
@@ -67,6 +100,9 @@ export default {
     data: function () {
     return {
       highQualityAutocomplete: false,
+      styles: ['none', 'comics', 'sketch', 'anime'],
+      // Index Corresponds to list of styles
+      chosen_style: 0,
     };
   },
   methods: {

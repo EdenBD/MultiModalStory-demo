@@ -1,6 +1,6 @@
 # Local imports
 import story_generator.constants as constants
-from story_generator.generation_utils import load_clip, search_unsplash, _sample_demo_sequence
+from story_generator.generation_utils import load_clip, search_unsplash, _sample_demo_sequence, load_style_transfer_model, _get_image, _image_style_transfer
 from story_generator.ranking_utils import score_text, sort_scores
 
 # ML imports
@@ -45,13 +45,18 @@ class Pipeline():
         self._gpt2 = GPT2LMHeadModel.from_pretrained(
             constants.FINETUNED_GPT2_PATH)
         self._gpt2 = self._gpt2.to(self._device)
-        # print(f'Loaded GPT2 fine-tuned Model: {constants.FINETUNED_GPT2_PATH}')
 
         # Image retreival using CLIP embeddings
-        self._clip, self._photo_ids, self._photo_features = load_clip(self._device)
-        # LSA TF-IDF word embeddings for image retrieval.
-        # self._captions_embedding, self._lsa_embedder, self._caption_image_df, self._nlp = get_retreival_info(
-        #     captions=constants.IMAGE_TO_CAPTION_CSV)
+        self._clip, self._photo_ids, self._photo_features = load_clip(
+            self._device)
+
+        # Loading Image style transfer models
+        self._sketch_model = load_style_transfer_model(
+            self._device, style_model_path=constants.SKETCH_STYLE_MODEL)
+        self._anime_model = load_style_transfer_model(
+            self._device, style_model_path=constants.ANIME_STYLE_MODEL)
+        self._comics_model = load_style_transfer_model(
+            self._device, style_model_path=constants.COMICS_STYLE_MODEL)
 
         # Preset model for evalutaion
         self._preset_model = GPT2LMHeadModel.from_pretrained(
@@ -61,21 +66,38 @@ class Pipeline():
         print(
             f"Loading models Time : {round((time.time() - start_time), 2)}s \n")
 
-    def retrieve_images(self, extract, num_images, current_images_ids):
+    def retrieve_images(self, extract, num_images, current_images_ids, chosen_style=0):
         """
         Args:
             extract (str): retrieve image for the given extract.
             num_images (int): Number of images to retreive. 
             current_images_ids (List<str>): List of images ids that already exists in story. 
+            chosen_style (int): represents the style chosen by user. 
 
         Returns the list of ids of the retrived, non-duplicate images.
         """
         start_time = time.time()
-        best_img = search_unsplash(extract, self._photo_features, self._photo_ids, self._clip, self._device, num_images, current_images_ids)
-        print(f"Images Time : {round((time.time() - start_time), 4)}s \n")
-        return best_img
-        # return retrieve_images_for_one_extract(
-        #     extract, num_images, self._captions_embedding, self._lsa_embedder, self._caption_image_df, self._nlp, current_images_ids)
+        best_imgs_ids = search_unsplash(extract, self._photo_features, self._photo_ids,
+                                        self._clip, self._device, num_images, current_images_ids)
+        # Download original images if not in folder.
+
+        # Style images from downloaded images.
+        chosen_style_model = _model_from_style(chosen_style)
+        if chosen_style_model is not None:
+            # Return a tuple per image (img_id, PIL_IMAGE)
+            ids_pil_images = list(
+                map(lambda img_id: (img_id, _get_image(img_id), best_imgs_ids)))
+            styled_ids_imgs = list(map(lambda id_pil_img: (id_pil_img[0], _image_style_transfer(
+                id_pil_img[1], chosen_style_model, self._device)), ids_pil_images))
+            # Save styled images
+            print("Styled Image path: ", os.path.join(
+                constants.UNSPLASH_IMG_FOLDER, _style_from_int(chosen_style), styled_id_img[0], '.jpg'))
+
+            list(map(lambda styled_id_img: styled_id_img[1].save(os.path.join(
+                constants.UNSPLASH_IMG_FOLDER, _style_from_int(chosen_style), styled_id_img[0], '.jpg')), styled_ids_imgs))
+        print(
+            f"Images IDs + Download + Style Time : {round((time.time() - start_time), 4)}s \n")
+        return best_imgs_ids
 
     def autocomplete_text(self, extracts, max_length, num_return_sequences, re_ranking=0):
         """
@@ -107,6 +129,28 @@ class Pipeline():
         # print(
         #     f"Generation Time : {round((time.time() - start_time), 2)}s \n")
         return generated
+
+    def _model_from_style(chosen_style):
+        """
+        Must correspond to _style_from_int.
+        Args:
+            chosen_style (int): represents none, comics, sketch or anime style.
+        Returns a style model instance
+        """
+        INT_TO_MODEL = {0: None, 1: self._comics_model,
+                        2: self._sketch_model, 3: self._anime_model}
+        return INT_TO_MODEL[chosen_style]
+
+    def _style_from_int(chosen_style):
+        """
+        Must correspond to _model_from_style.
+        Args:
+            chosen_style (int): represents none, comics, sketch or anime style.
+        Returns (str): the style name. 
+        """
+        INT_TO_STYLE = {0: None, 1: "comics",
+                        2: "sketch", 3: "anime"}
+        return INT_TO_STYLE[chosen_style]
 
 
 if __name__ == "__main__":

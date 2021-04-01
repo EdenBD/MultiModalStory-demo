@@ -124,6 +124,23 @@ summary {
   padding-right: 0.7em;
 }
 
+// Images Style Transfer Menu
+.header-imgs {
+  flex-direction: row;
+  display: inline-flex;
+  position: absolute;
+  top: 1.5em;
+}
+
+.header-btn-img {
+  margin: 0 0.1em;
+}
+
+.header-style-img {
+  padding: 0;
+  margin: 0;
+}
+
 //  Article attributes taken from https://codepen.io/tomhodgins/pen/BKPJaN
 article {
   font-family: inherit;

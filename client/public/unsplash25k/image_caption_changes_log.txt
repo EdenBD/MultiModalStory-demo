@@ -1,9 +1,0 @@
-Manual changes to image_caption file 'ai_description':
-1. Replaced "school of" with empty space, because the image retrieval confused school with school of fish.
-2. Replaced id tuYmiNlEJR0 from little girl meme to the book of Ecclesiastes.
-3. Removed TK1z7nRT6aE,blue red and yellow light droplets
-4. Modified FSpOrEqFND4 man holding a green board in a rally--> person holding a green board in an environmental rally
-5. Modified Oz7_usBqwuY,man portraying The Joker --> man portraying The Joker wearing make-up
-6. Removed lines where ai_description includes the word sign + removed row JnT4Mjq5n_E,time is up sigange
-7. UAWnUJFdk6Q,men sits on hill -> man sits on hill
-8. Remove rows that don't exist in file directory: ['RDs0THr4lGs', '9_9hzZVjV8s', 'vigsqYux_-8', 'AcG-unN00gw', 'nLqha2mP4ig', 'sEDzxW4NhL4', 'rsJtMXn3p_c']
