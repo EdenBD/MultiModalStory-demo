@@ -204,6 +204,7 @@ export default {
         // Call backend
         this.imgs = await api.postRetreiveImage(imagesExtract , currentImgs);
         this.texts = await api.postAutocompleteText(allText, quality);
+
       }
       // If editor is empty, return preset titles and images.
       else {

@@ -12,21 +12,17 @@ import os
 import pandas as pd
 import numpy as np
 from PIL import Image
-
-# TF-IDF + LSA
-import spacy
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.decomposition import TruncatedSVD
-from story_generator.helper_functions import generate_prompt
+# To download image from URL
+from urllib import request
+from io import BytesIO
 
 # CLIP Image retrieval
 import clip
-import torch
 
 # Image style transfer
 from torchvision import transforms
 from story_generator.transformer_net import TransformerNet
+import multiprocessing
 
 
 def _preprocess_generated_text(sample, tokenizer, has_space):
@@ -183,7 +179,6 @@ def load_style_transfer_model(device, style_model_path):
     # Set model for inference.
     style_model.eval()
     style_model.to(device)
-    print('Loaded style tranfer model: ', style_model_path)
     return style_model
 
 
@@ -224,6 +219,87 @@ def _get_image(image_id):
     image = Image.open(os.path.join(
         constants.NONE_IMAGES_PATH, image_id+'.jpg'))
     return image.resize((constants.IMAGE_WIDTH, constants.IMAGE_HEIGHT))
+
+
+def download_image(image_id, img_target_size=constants.IMAGE_HEIGHT, img_quality=constants.IMAGE_QUALITY):
+    """
+    Args:
+        image_id (str): Unsplash image id.
+        img_target_size (int): downloaded image resolution/ dimensions. 
+        img_quality (int): JPEG quality in range 1 (worst) to 95 (best). 
+    Download an image from Unsplash according to image_url to a image_id.jpg file.
+    Compresses the HD image to jpeg with resolution/size img_target_size and JPG quality img_quality.
+    From https://www.kaggle.com/lyakaap/fast-resized-image-download-python-3
+    """
+    image_url = f'{constants.UNSPLASH_URL}{image_id}'
+    filename = os.path.join(constants.NONE_IMAGES_PATH, f'{image_id}.jpg')
+
+    if os.path.exists(filename):
+        # print(f'Image {image_id} already exists. Skipping download.')
+        return 0
+    try:
+        # referer to circumvant hot-linking
+        req = request.Request(image_url, headers={
+                              'Referer': 'https://images.unsplash.com'})
+        response = request.urlopen(req)
+        image_data = response.read()
+    except:
+        print('Warning: Could not download image {} from {}'.format(
+            image_id, image_url))
+        return 1
+    try:
+        pil_image = Image.open(BytesIO(image_data))
+    except:
+        print('Warning: Failed to parse image {}'.format(image_id))
+        return 1
+    try:
+        pil_image = pil_image.convert('RGB')
+    except:
+        print('Warning: Failed to convert image {} to RGB'.format(image_id))
+        return 1
+    try:
+        pil_image = pil_image.resize((img_target_size, img_target_size))
+    except:
+        print('Warning: Failed to resize image {}'.format(image_id))
+        return 1
+    try:
+        pil_image.save(filename, format='JPEG', quality=img_quality)
+    except:
+        print('Warning: Failed to save image {}'.format(filename))
+        return 1
+
+    return 0
+
+
+def _download_image_style_transfer(image_id, style_model, style, img_quality=constants.IMAGE_QUALITY):
+    org_file = os.path.join(constants.NONE_IMAGES_PATH, f'{image_id}.jpg')
+    if os.path.exists(org_file):
+        pil_image = _get_image(image_id)
+        styled_img = _image_style_transfer(pil_image, style_model, "cpu")
+        try:
+            filename = os.path.join(
+                constants.UNSPLASH_IMG_FOLDER, style, f'{image_id}.jpg')
+            styled_img.save(filename,
+                            format='JPEG', quality=img_quality)
+        except:
+            print('Warning: Failed to save image {}'.format(image_id))
+            return 1
+        return 0
+    return 1
+
+
+def _style_loader(imgs_ids, num_workers=3):
+    """
+    Args:
+        imgs_ids (list[str]): Unsplash images ids.
+        num_workers (int): Numnber of proccesses.
+    """
+    pool = multiprocessing.Pool(processes=num_workers)
+    failures = sum(pool.imap_unordered(
+        download_image, imgs_ids))
+    print('Total number of download failures:', failures)
+    pool.close()
+    pool.terminate()
 
 
 if __name__ == "__main__":

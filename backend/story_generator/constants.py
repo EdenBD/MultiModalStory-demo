@@ -36,17 +36,17 @@ NONE_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'none')
 SKETCH_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'sketch')
 ANIME_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'anime')
 COMICS_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'comics')
-
+UNSPLASH_URL = "https://source.unsplash.com/"
 # Style transfer models.
-SKETCH_STYLE_MODEL = PRESET_GPT2_PATH = os.path.join(
+SKETCH_STYLE_MODEL = os.path.join(
     MAIN_DOWNLOADED_MODELS_DIR, "style_sketch.model")
-ANIME_STYLE_MODEL = PRESET_GPT2_PATH = os.path.join(
+ANIME_STYLE_MODEL = os.path.join(
     MAIN_DOWNLOADED_MODELS_DIR, "style_anime.model")
-COMICS_STYLE_MODEL = PRESET_GPT2_PATH = os.path.join(
+COMICS_STYLE_MODEL = os.path.join(
     MAIN_DOWNLOADED_MODELS_DIR, "style_comics.model")
 
 IMAGE_WIDTH, IMAGE_HEIGHT = 512, 512
-
+IMAGE_QUALITY = 95
 # Pipeline/ Optimization.
 
 MAX_NUM_TEXTS_SAMPLES = 10
