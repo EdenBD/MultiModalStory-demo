@@ -99,7 +99,6 @@ class Pipeline():
         print("CLIP + Download time: ", round((time.time() - start_time), 4))
         # Style images from downloaded images.
         style_model = self._model_from_str(chosen_style)
-        print("chosen_style:", chosen_style, "\n", style_model)
         if style_model is not None:
             [_download_image_style_transfer(
                 img_id, style_model, chosen_style) for img_id in best_imgs_ids]

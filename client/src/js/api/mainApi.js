@@ -33,7 +33,7 @@ export class API {
         const url = makeUrl(this.baseURL + '/post-autocomplete-img');
         const payload = toPayload(toSend)
 
-        console.log("--- POST " + url, payload);
+        // console.log("--- POST " + url, payload);
 
         return d3.json(url, payload)
     }

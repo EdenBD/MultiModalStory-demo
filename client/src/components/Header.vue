@@ -95,6 +95,9 @@
 </template>
 
 <script lang="js">
+import Constants from "./Constants";
+
+
 export default {
   name: "Header",
     data: function () {
@@ -103,7 +106,13 @@ export default {
       styles: ['none', 'comics', 'sketch', 'anime'],
       // Index Corresponds to list of styles
       chosen_style: 0,
+      storyID: this.$route.params.storyid || "1",
     };
+  },
+    watch: {
+    $route() {
+      this.storyID = this.$route.params.storyid;
+    },
   },
   methods: {
     isHQAutocompleteOn(){
@@ -111,7 +120,25 @@ export default {
     },
     currentStyling(){
       return this.styles[this.chosen_style]
+    },
+    shuffleStory: function () {
+    // User called shuffle story from default story
+    if (this.storyID.length === 1) {
+      // Once tried all default stories, return to default storyID=1.
+      this.storyID = (
+        (Number(this.storyID) % Constants.NUM_PRESET_STORIES) +
+        1
+      ).toString();
+      // User called shuffle after submitting a form
+    } else {
+      this.storyID = "2";
     }
+    // Update the route.
+    this.$router.push({ name: "story", params: { storyid: this.storyID } });
+    // Update the editor content.
+    this.$emit('shuffle-story', this.storyID);
+    // this.$refs.childEditor.shuffleStory();
+  },
   }
 };
 </script>

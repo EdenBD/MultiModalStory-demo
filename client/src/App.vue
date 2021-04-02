@@ -5,7 +5,7 @@
         We're sorry, but we do not currently support smaller screens.
       </div>
       <div class="big-screen">
-        <Editor ref="childEditor"></Editor>
+        <Editor></Editor>
         <Footer></Footer>
       </div>
     </div>
@@ -16,42 +16,11 @@
 import Editor from "./components/Editor.vue";
 import Footer from "./components/Footer.vue";
 
-const NUM_PRESET_STORIES = 5;
-
 export default {
   name: "App",
-  data: function () {
-    return {
-      storyID: this.$route.params.storyid || "1",
-    };
-  },
   components: {
     Editor,
     Footer,
-  },
-  watch: {
-    $route() {
-      this.storyID = this.$route.params.storyid;
-    },
-  },
-  methods: {
-    shuffleStory: function () {
-      // User called shuffle story from default story
-      if (this.storyID.length === 1) {
-        // Once tried all default stories, return to default storyID=1.
-        this.storyID = (
-          (Number(this.storyID) % NUM_PRESET_STORIES) +
-          1
-        ).toString();
-        // User called shuffle after submitting a form
-      } else {
-        this.storyID = "2";
-      }
-      // Update the route.
-      this.$router.push({ name: "story", params: { storyid: this.storyID } });
-      // Update the editor content.
-      this.$refs.childEditor.shuffleStory(this.storyID);
-    },
   },
 };
 </script>

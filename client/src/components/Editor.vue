@@ -1,7 +1,7 @@
 <template>
   <!-- MAIN EDITOR -->
   <div>
-    <Header ref="childHeader"></Header>
+    <Header ref="childHeader" @shuffle-story="handleShuffleStory"></Header>
     <div class="editor">
       <article>
         <editor-content ref="editorRef" :editor="editor" />
@@ -181,7 +181,7 @@ export default {
     getEditor(){
       return this.editor;
     },
-    async shuffleStory(storyID){
+    async handleShuffleStory(storyID){
       const storyHTML = await api.getStory(storyID);
       // If file not found, api returns "".
       if (storyHTML.length){
@@ -192,7 +192,7 @@ export default {
       const routeStoryId = this.$route.params.storyid;
       if (routeStoryId && routeStoryId !== "1"){
         // Get routeStoryId HTML from server.
-        this.shuffleStory(routeStoryId)
+        this.handleShuffleStory(routeStoryId)
       }
     },
     async handleOptions(allText, currentImgs, quality){
