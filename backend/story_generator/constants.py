@@ -4,6 +4,7 @@ from stop_words import get_stop_words
 # Data Paths.
 
 RELATIVE_DIR = "backend/story_generator"
+# Only for training the LM
 # DATA_DIR = RELATIVE_DIR + "/data/"
 # PROCESSED_DATA_DIR = os.path.join(DATA_DIR, "/processedData/")
 # TALES_DATASET_FILENAME = "cleaned_merged_fairy_tales.txt"

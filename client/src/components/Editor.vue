@@ -12,6 +12,7 @@
           :left="this.left"
           :texts="this.texts"
           :imgs="this.imgs"
+          :styling="this.styling"
           @text-insert="handleTextInsert"
           @img-insert="handleImageInsert"
           @close-options="handleClosingOptions"
@@ -163,13 +164,14 @@ export default {
       cursorPosition: 0,
       // For Options - optional text and imgs.
       texts: ["1st Choice","2nd Choice","3rd Choice"],
-      imgs: ["__G2yFuW7jQ", "ZzqM2YmqZ-o", "zZzKLzKP24o"],
+      imgs: ["HxhSVDapt-I", "h2LMXbpvwCw", "I9EhRx3oQ7Q"],
       isLoading: false,
       isOpen: false,
       top: 0,
       left:0,
       submittedFormID: "",
       isSubmitPressed: false,
+      styling: "none",
     }
   },
   beforeDestroy() {
@@ -194,22 +196,24 @@ export default {
       }
     },
     async handleOptions(allText, currentImgs, quality){
+      // Update Options props
       this.isOpen = true;
       this.isLoading = true;
+      this.styling = this.$refs.childHeader.currentStyling();
       if (allText.trim().length){
         // Get last numSenteces
         const numSenteces = 2;
         const extracts = allText.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
         const imagesExtract = extracts.slice(-numSenteces).join(" ");
         // Call backend
-        this.imgs = await api.postRetreiveImage(imagesExtract , currentImgs);
+        this.imgs = await api.postRetreiveImage(imagesExtract , currentImgs, this.styling);
         this.texts = await api.postAutocompleteText(allText, quality);
 
       }
       // If editor is empty, return preset titles and images.
       else {
         this.texts = sample(Constants.PRESET_TITLES, 3);
-        this.img = sample(Constants.PRESET_IMG_IDS, 3);
+        this.imgs = sample(Constants.PRESET_IMG_IDS, 3);
       }
       // finished Loading
       this.isLoading = false;
@@ -225,7 +229,7 @@ export default {
     handleImageInsert(imgId) {
       this.isOpen = false;
       const node = this.view.state.schema.nodes.image.create({
-        src: `${Constants.IMAGE_PATH}${imgId}/256x256`, 
+        src: `${Constants.IMAGE_PATH}${this.styling}/${imgId}.jpg`, 
         id: imgId});
       const transaction = this.view.state.tr.insert(this.cursorPosition, node);
       transaction.insertText(' ');

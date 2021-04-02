@@ -68,35 +68,23 @@ class Pipeline():
         print(
             f"Loading models Time : {round((time.time() - start_time), 2)}s \n")
 
-    def _model_from_int(self, chosen_style):
+    def _model_from_str(self, chosen_style):
         """
-        Must correspond to _style_from_int.
         Args:
-            chosen_style (int): represents none, comics, sketch or anime style.
-        Returns a style model instance
+            chosen_style (str): one of none, comics, sketch or anime style.
+        Returns a style model instance or None if no exisiting chosen_style.
         """
-        INT_TO_MODEL = {0: None, 1: self._comics_model,
-                        2: self._sketch_model, 3: self._anime_model}
-        return INT_TO_MODEL[chosen_style]
+        INT_TO_MODEL = {"none": None, "comics": self._comics_model,
+                        "sketch": self._sketch_model, "anime": self._anime_model}
+        return INT_TO_MODEL.get(chosen_style)
 
-    def _style_from_int(self, chosen_style):
-        """
-        Must correspond to _model_from_style.
-        Args:
-            chosen_style (int): represents none, comics, sketch or anime style.
-        Returns (str): the style name. 
-        """
-        INT_TO_STYLE = {0: None, 1: "comics",
-                        2: "sketch", 3: "anime"}
-        return INT_TO_STYLE[chosen_style]
-
-    def retrieve_images(self, extract, num_images, current_images_ids, chosen_style=1):
+    def retrieve_images(self, extract, num_images, current_images_ids, chosen_style):
         """
         Args:
             extract (str): retrieve image for the given extract.
             num_images (int): Number of images to retreive. 
             current_images_ids (List<str>): List of images ids that already exists in story. 
-            chosen_style (int): represents the style chosen by user. 
+            chosen_style (str): represents the style chosen by user. 
 
         Returns the list of ids of the retrived, non-duplicate images.
         """
@@ -104,20 +92,19 @@ class Pipeline():
         best_imgs_ids = search_unsplash(extract, self._photo_features, self._photo_ids,
                                         self._clip, self._device, num_images, current_images_ids)
         print(
-            f"Images IDs: {round((time.time() - start_time), 4)}s \n")
+            f"CLIP Time: {round((time.time() - start_time), 4)}s \n")
         # Download original images.
         # _style_loader(best_imgs_ids) slower multiprocessing
         [download_image(img_id) for img_id in best_imgs_ids]
-        # print("Downloading time: ", round((time.time() - start_time), 4))
+        print("CLIP + Download time: ", round((time.time() - start_time), 4))
         # Style images from downloaded images.
-        style_model = self._model_from_int(chosen_style)
+        style_model = self._model_from_str(chosen_style)
+        print("chosen_style:", chosen_style, "\n", style_model)
         if style_model is not None:
-            style_name = self._style_from_int(
-                chosen_style)
             [_download_image_style_transfer(
-                img_id, style_model, style_name) for img_id in best_imgs_ids]
+                img_id, style_model, chosen_style) for img_id in best_imgs_ids]
         print(
-            f"Download + Style Time : {round((time.time() - start_time), 4)}s \n")
+            f"Total Time (CLIP + Download + Style) : {round((time.time() - start_time), 4)}s \n")
         return best_imgs_ids
 
     def autocomplete_text(self, extracts, max_length, num_return_sequences, re_ranking=0):

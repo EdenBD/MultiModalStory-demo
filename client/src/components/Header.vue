@@ -108,6 +108,9 @@ export default {
   methods: {
     isHQAutocompleteOn(){
       return this.highQualityAutocomplete;
+    },
+    currentStyling(){
+      return this.styles[this.chosen_style]
     }
   }
 };

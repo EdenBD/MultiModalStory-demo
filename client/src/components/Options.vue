@@ -1,8 +1,17 @@
 <template>
-  <div v-show="isOpen" class="options-popup" v-bind:style="{'left': left +'px', 'top': top + 'px'}">
+  <div
+    v-show="isOpen"
+    class="options-popup"
+    v-bind:style="{ left: left + 'px', top: top + 'px' }"
+  >
     <div class="loader" v-show="isLoading"></div>
     <!-- Update Editor: cardWidth in case of changing max-width.-->
-    <v-card max-width="400px" class="mx-auto" v-show="!isLoading" v-click-outside="onClickOutside">
+    <v-card
+      max-width="400px"
+      class="mx-auto"
+      v-show="!isLoading"
+      v-click-outside="onClickOutside"
+    >
       <v-list>
         <v-list-item-group>
           <!--     Text Row     -->
@@ -22,12 +31,12 @@
           </v-list-item-icon>
           <v-list-item
             v-for="(img, index) in imgs"
-            :key="index+texts.length"
+            :key="index + texts.length"
             @click="$emit('img-insert', img)"
             class="options-img"
           >
             <v-list-item-title>
-              <v-img :src="`${images_path}${img}/90x90`" rel="preload"></v-img>
+              <v-img :src="`${images_path}${styling}/${img}.jpg`"></v-img>
             </v-list-item-title>
           </v-list-item>
         </v-list-item-group>
@@ -47,14 +56,15 @@ export default {
     top: Number,
     left: Number,
     texts: Array,
-    imgs: Array},
+    imgs: Array,
+    styling: String},
   data: () => ({
     images_path: Constants.IMAGE_PATH,
   }),
   methods: {
     onClickOutside () {
       // If Options card is open, and user clicks outside card - close it.
-      if (!this.isLoading) {
+      if (!this.isLoading && this.isOpen) {
         this.$emit('close-options');
       }
     },

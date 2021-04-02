@@ -24,6 +24,7 @@ class TextPayload(HashableBaseModel):
 class ImagePayload(HashableBaseModel):
     extract: str
     current: Optional[List[str]]
+    styling: str
 
 
 class FormPayload(HashableBaseModel):

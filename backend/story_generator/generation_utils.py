@@ -272,6 +272,14 @@ def download_image(image_id, img_target_size=constants.IMAGE_HEIGHT, img_quality
 
 
 def _download_image_style_transfer(image_id, style_model, style, img_quality=constants.IMAGE_QUALITY):
+    """
+    Download style transferre image from exisiting file.
+    Args:
+        image_id (str): Unsplash image id.
+        style_model (model): preset model instance from downloaded models directory.
+        style (str): chosen style, corresponds to folder name. 
+        img_quality (int): JPEG quality in range 1 (worst) to 95 (best).         
+    """
     org_file = os.path.join(constants.NONE_IMAGES_PATH, f'{image_id}.jpg')
     if os.path.exists(org_file):
         pil_image = _get_image(image_id)
@@ -290,6 +298,7 @@ def _download_image_style_transfer(image_id, style_model, style, img_quality=con
 
 def _style_loader(imgs_ids, num_workers=3):
     """
+    Downloading with multi-processing
     Args:
         imgs_ids (list[str]): Unsplash images ids.
         num_workers (int): Numnber of proccesses.
@@ -304,7 +313,12 @@ def _style_loader(imgs_ids, num_workers=3):
 
 if __name__ == "__main__":
     # Debugging
-    captions_tfidf, lsa_embedder, caption_image_df, nlp = get_retreival_info(
-        captions=constants.IMAGE_TO_CAPTION_CSV)
-    print(retrieve_images_for_one_extract(
-        ['Pandas were famous for their bravery and their fierce pride, but their real star was their big horned heads.'], 3, captions_tfidf, lsa_embedder, caption_image_df, nlp))
+    img_ids = ["HxhSVDapt-I", "h2LMXbpvwCw",
+               "I9EhRx3oQ7Q", "QAgOqt7M8_E", "7YdPCUbbb9M"]
+    device = torch.device(
+        "cuda" if torch.cuda.is_available() else "cpu")
+    style = "anime"
+    style_model = load_style_transfer_model(
+        device, style_model_path=constants.ANIME_STYLE_MODEL)
+    [_download_image_style_transfer(
+        image_id, style_model, style) for image_id in img_ids]
