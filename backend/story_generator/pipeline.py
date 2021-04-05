@@ -101,7 +101,7 @@ class Pipeline():
         style_model = self._model_from_str(chosen_style)
         if style_model is not None:
             [_download_image_style_transfer(
-                img_id, style_model, chosen_style) for img_id in best_imgs_ids]
+                img_id, style_model, chosen_style, self._device) for img_id in best_imgs_ids]
         print(
             f"Total Time (CLIP + Download + Style) : {round((time.time() - start_time), 4)}s \n")
         return best_imgs_ids

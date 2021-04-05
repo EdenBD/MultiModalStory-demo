@@ -271,7 +271,7 @@ def download_image(image_id, img_target_size=constants.IMAGE_HEIGHT, img_quality
     return 0
 
 
-def _download_image_style_transfer(image_id, style_model, style, img_quality=constants.IMAGE_QUALITY):
+def _download_image_style_transfer(image_id, style_model, style, device, img_quality=constants.IMAGE_QUALITY):
     """
     Download style transferre image from exisiting file.
     Args:
@@ -283,7 +283,7 @@ def _download_image_style_transfer(image_id, style_model, style, img_quality=con
     org_file = os.path.join(constants.NONE_IMAGES_PATH, f'{image_id}.jpg')
     if os.path.exists(org_file):
         pil_image = _get_image(image_id)
-        styled_img = _image_style_transfer(pil_image, style_model, "cpu")
+        styled_img = _image_style_transfer(pil_image, style_model, device)
         try:
             filename = os.path.join(
                 constants.UNSPLASH_IMG_FOLDER, style, f'{image_id}.jpg')
