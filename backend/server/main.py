@@ -71,7 +71,7 @@ def index():
 # the `file_path:path` says to accept any path as a string here. Otherwise, `file_paths` containing `/` will not be served properly
 @app.get("/client/{file_path:path}")
 def send_static_client(file_path: str):
-    """ Serves (makes accessible) all files from ./client/ to ``/client/{path}``. Used primarily for development. NGINX handles production.
+    """ Serves (makes accessible) all files from ``/client/dist/{path}``. Used primarily for development. NGINX handles production.
 
     NOTE: Not needed for Vue CLI
 

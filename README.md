@@ -65,14 +65,15 @@ Which will pull:
 Client: 
 ```
 cd client
-npm run serve
+npm run devw
 ```
 
 Backend (with server auto reload): 
 ```
-uvicorn backend.server:app --reload
+uvicorn backend.server:app --reload --reload-dir backend
 ```
 
+Open the uvicorn server `localhost:8000` in your web browser
 
 ## Modifications Ideas:
 
