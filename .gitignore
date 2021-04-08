@@ -70,7 +70,6 @@ Temporary Items
 # Ignore pre-trained models downloads, fine-tuned models and datasets
 backend/story_generator/downloaded/**
 backend/unsplash-dataset/**
-client/public/unsplash/**
 
 # DVC 
 .dvc/config

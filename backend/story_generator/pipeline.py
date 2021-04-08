@@ -1,6 +1,6 @@
 # Local imports
 import story_generator.constants as constants
-from story_generator.generation_utils import load_clip, search_unsplash, _sample_demo_sequence, load_style_transfer_model, _get_image, _image_style_transfer, _style_loader, download_image, _download_image_style_transfer
+from story_generator.generation_utils import load_clip, search_unsplash, _sample_demo_sequence
 from story_generator.ranking_utils import score_text, sort_scores
 
 # ML imports
@@ -58,13 +58,6 @@ class Pipeline():
         self._clip, self._photo_ids, self._photo_features = load_clip(
             self._device)
 
-        # Loading Image style transfer models
-        self._sketch_model = load_style_transfer_model(
-            self._device, style_model_path=constants.SKETCH_STYLE_MODEL)
-        self._anime_model = load_style_transfer_model(
-            self._device, style_model_path=constants.ANIME_STYLE_MODEL)
-        self._comics_model = load_style_transfer_model(
-            self._device, style_model_path=constants.COMICS_STYLE_MODEL)
         print(
             f"Loading models Time : {round((time.time() - start_time), 2)}s \n")
 
@@ -78,13 +71,12 @@ class Pipeline():
                         "sketch": self._sketch_model, "anime": self._anime_model}
         return INT_TO_MODEL.get(chosen_style)
 
-    def retrieve_images(self, extract, num_images, current_images_ids, chosen_style):
+    def retrieve_images(self, extract, num_images, current_images_ids):
         """
         Args:
             extract (str): retrieve image for the given extract.
             num_images (int): Number of images to retreive. 
             current_images_ids (List<str>): List of images ids that already exists in story. 
-            chosen_style (str): represents the style chosen by user. 
 
         Returns the list of ids of the retrived, non-duplicate images.
         """
@@ -93,17 +85,6 @@ class Pipeline():
                                         self._clip, self._device, num_images, current_images_ids)
         print(
             f"CLIP Time: {round((time.time() - start_time), 4)}s \n")
-        # Download original images.
-        # _style_loader(best_imgs_ids) slower multiprocessing
-        [download_image(img_id) for img_id in best_imgs_ids]
-        print("CLIP + Download time: ", round((time.time() - start_time), 4))
-        # Style images from downloaded images.
-        style_model = self._model_from_str(chosen_style)
-        if style_model is not None:
-            [_download_image_style_transfer(
-                img_id, style_model, chosen_style) for img_id in best_imgs_ids]
-        print(
-            f"Total Time (CLIP + Download + Style) : {round((time.time() - start_time), 4)}s \n")
         return best_imgs_ids
 
     def autocomplete_text(self, extracts, max_length, num_return_sequences, re_ranking=0):

@@ -206,7 +206,7 @@ export default {
         const extracts = allText.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
         const imagesExtract = extracts.slice(-numSenteces).join(" ");
         // Call backend
-        this.imgs = await api.postRetreiveImage(imagesExtract , currentImgs, this.styling);
+        this.imgs = await api.postRetreiveImage(imagesExtract , currentImgs);
         this.texts = await api.postAutocompleteText(allText, quality);
 
       }

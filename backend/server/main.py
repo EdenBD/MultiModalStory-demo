@@ -121,8 +121,7 @@ async def retreive_image(payload: api.ImagePayload):
     current_imgs = [] if payload.current is None else payload.current
     storyGenerator = getGenerator()
     # Extract is the last "numSenteces" sentences defined in Editor.vue
-    # styling is the chosen style transfer.
-    return storyGenerator.retrieve_images(payload.extract, num_images=3, current_images_ids=current_imgs, chosen_style=payload.styling)
+    return storyGenerator.retrieve_images(payload.extract, num_images=3, current_images_ids=current_imgs)
 
 
 @app.post("/api/post-autocomplete-text", response_model=List[str])
