@@ -51,8 +51,7 @@
               <a
                 data-title="Changes inserted images' style. Applies no styling by default"
               >
-                <strong>Image Style</strong>
-                <span class="timing">(5 sec)</span>
+                <strong class="header-style">Image Style</strong>
               </a>
               <div class="header-imgs">
                 <v-btn-toggle
