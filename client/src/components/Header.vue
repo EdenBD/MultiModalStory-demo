@@ -70,7 +70,11 @@
                     class="header-btn-img"
                   >
                     <v-avatar tile size="55">
-                      <img :src="`${style}.png`" class="header-style-img" />
+                      <img
+                        src="none.png"
+                        class="header-style-img"
+                        :class="style"
+                      />
                     </v-avatar>
                   </v-btn>
                 </v-btn-toggle>
@@ -103,7 +107,7 @@ export default {
     data: function () {
     return {
       highQualityAutocomplete: false,
-      styles: ['none', 'comics', 'sketch', 'anime'],
+      styles: ['none', 'sepia', 'sketch', 'invert'],
       // Index Corresponds to list of styles
       chosen_style: 0,
       storyID: this.$route.params.storyid || "1",

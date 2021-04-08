@@ -141,6 +141,23 @@ summary {
   margin: 0;
 }
 
+// Images Styles
+
+.none {
+  filter: none;
+}
+
+.sepia{
+  filter:sepia(100%);
+}
+
+.sketch{
+  filter:grayscale(100%);}
+
+.invert{
+  filter:hue-rotate(90deg);
+}
+
 //  Article attributes taken from https://codepen.io/tomhodgins/pen/BKPJaN
 article {
   font-family: inherit;

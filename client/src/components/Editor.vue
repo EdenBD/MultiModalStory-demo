@@ -229,8 +229,8 @@ export default {
     handleImageInsert(imgId) {
       this.isOpen = false;
       const node = this.view.state.schema.nodes.image.create({
-        src: `${Constants.IMAGE_PATH}${this.styling}/${imgId}.jpg`, 
-        id: imgId});
+        src: `${Constants.IMAGE_PATH}${imgId}/256x256`, 
+        id: imgId, class: this.styling});
       const transaction = this.view.state.tr.insert(this.cursorPosition, node);
       transaction.insertText(' ');
       this.view.dispatch(transaction);
