@@ -87,7 +87,7 @@
     <!-- DESCRIPTION -->
     <div class="description">
       <div class="desciption-txt">
-        <b>Step 1:</b> Shuffle initial story or start writing.
+        <b>Step 1:</b> <a @click.prevent="shuffleStory">Shuffle initial story</a> or start writing.
         <br />
         <b>Step 2:</b> Press <i class="fa fa-magic" aria-hidden="true"></i>
                 <code style="font-weight: 900">tab</code> to autocomplete text and images.
