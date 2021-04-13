@@ -1,5 +1,5 @@
 <template>
-  <v-form v-model="valid" ref="form">
+  <v-form v-model="valid" ref="form" v-if="showContent">
     <v-container>
       <h3 class="card-main-title">Score Auto-Generated Story</h3>
       <v-row>
@@ -54,7 +54,7 @@
         <v-col cols="12" md="12">
           <v-checkbox
             v-model="checkbox"
-            :rules="[v => !!v || 'You must agree to submit!']"
+            :rules="[(v) => !!v || 'You must agree to submit!']"
             label="Do you agree to submit your feedback and publish your story?"
             required
           ></v-checkbox>
@@ -62,7 +62,11 @@
       </v-row>
       <v-row>
         <v-col cols="12" md="4">
-          <v-dialog transition="dialog-bottom-transition" max-width="700" max-height="500">
+          <v-dialog
+            transition="dialog-bottom-transition"
+            max-width="700"
+            max-height="500"
+          >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 :disabled="!valid || isSubmitPressed"
@@ -70,12 +74,15 @@
                 @click="submit"
                 v-bind="attrs"
                 v-on="on"
-              >Submit & Share Story</v-btn>
+                >Submit & Share Story</v-btn
+              >
             </template>
             <template v-slot:default="dialog">
               <v-card>
                 <v-toolbar class="popup-header">Thank you &#129299;</v-toolbar>
-                <v-card-title class="justify-center">Successfully Published Story &#128079;</v-card-title>
+                <v-card-title class="justify-center"
+                  >Successfully Published Story &#128079;</v-card-title
+                >
                 <ShareStory></ShareStory>
                 <v-spacer></v-spacer>
                 <v-card-actions class="justify-end">
@@ -104,22 +111,26 @@ export default {
   props: {
     submittedFormID: String,
     isSubmitPressed: Boolean,
+    showContent: {
+      type: Boolean,
+      default: true
+    }
   },
   data: () => ({
-  valid: false,
-  coherence: 0,
-  clarity: 0,
-  creativity: 0,
-  free: '',
-  checkbox: false,
-}),
-methods: {
-      submit () {
-        // Get all form data and editor JSON and save in directory.
-        this.$refs.form.validate();
-        this.$emit("form-submit", this.coherence, this.clarity, this.creativity, this.free);
+    valid: false,
+    coherence: 0,
+    clarity: 0,
+    creativity: 0,
+    free: '',
+    checkbox: false,
+  }),
+  methods: {
+        submit () {
+          // Get all form data and editor JSON and save in directory.
+          this.$refs.form.validate();
+          this.$emit("form-submit", this.coherence, this.clarity, this.creativity, this.free);
+        },
       },
-    },
-};
+  };
 </script>
 

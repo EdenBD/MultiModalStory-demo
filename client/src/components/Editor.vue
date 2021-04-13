@@ -21,6 +21,7 @@
       <RatingStory
         :submittedFormID="this.submittedFormID"
         :isSubmitPressed="this.isSubmitPressed"
+        :showContent="this.allowFeedback"
         @form-submit="handleFormSubmission"
       ></RatingStory>
     </div>
@@ -99,10 +100,14 @@ export default {
           // Change default story if route includes user's story id. 
           this.getInitialStory();
         },
-        onUpdate: ({ getJSON, getHTML }) => {
+        onUpdate: ({ getJSON, getHTML}) => {
           // Update json that represents data.
           this.json = getJSON();
           this.html = getHTML();
+
+          const hasContent = this.editor.view.dom.innerText.trim().length
+          console.log("has content? ", hasContent)
+          this.allowFeedback = hasContent > 0
         },
         editorProps: {
           // Open options menu.
@@ -172,6 +177,7 @@ export default {
       submittedFormID: "",
       isSubmitPressed: false,
       styling: "none",
+      allowFeedback: false
     }
   },
   beforeDestroy() {

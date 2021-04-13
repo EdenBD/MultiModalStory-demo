@@ -89,7 +89,8 @@
       <div class="desciption-txt">
         <b>Step 1:</b> Shuffle initial story or start writing.
         <br />
-        <b>Step 2:</b> Autocomplete text and images.
+        <b>Step 2:</b> Press <i class="fa fa-magic" aria-hidden="true"></i>
+                <code style="font-weight: 900">tab</code> to autocomplete text and images.
         <br />
         <b>Step 3:</b> Give feedback and submit your story.
       </div>

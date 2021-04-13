@@ -75,3 +75,4 @@ backend/unsplash-dataset/**
 .dvc/config
 backend/outputs/**
 !backend/outputs/jsons_collect.py
+pnpm-lock.yaml
