@@ -31,7 +31,7 @@ TOP_P = 0.95
 MAX_SEQ_LEN = 550
 
 # Image Styles.
-UNSPLASH_IMG_FOLDER = os.path.join("client/public/", 'unsplash/')
+UNSPLASH_IMG_FOLDER = os.path.join("client/dist/", 'unsplash/')
 # Change folder according to style model.
 NONE_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'none')
 SKETCH_IMAGES_PATH = os.path.join(UNSPLASH_IMG_FOLDER, 'sketch')
