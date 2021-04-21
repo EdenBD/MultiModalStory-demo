@@ -171,6 +171,7 @@ def search_unsplash(search_query, photo_features, photo_ids, clip_model, device,
     return find_best_matches(text_features, photo_features, photo_ids, num_images, prv_ids)
 
 
+
 if __name__ == "__main__":
     # Debugging
     img_ids = ["HxhSVDapt-I", "h2LMXbpvwCw",
