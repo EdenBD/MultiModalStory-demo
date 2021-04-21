@@ -51,8 +51,7 @@
               <a
                 data-title="Changes inserted images' style. Applies no styling by default"
               >
-                <strong>Image Style</strong>
-                <span class="timing">(5 sec)</span>
+                <strong class="header-style">Image Style</strong>
               </a>
               <div class="header-imgs">
                 <v-btn-toggle
@@ -70,7 +69,11 @@
                     class="header-btn-img"
                   >
                     <v-avatar tile size="55">
-                      <img :src="`${style}.png`" class="header-style-img" />
+                      <img
+                        src="none.png"
+                        class="header-style-img"
+                        :class="style"
+                      />
                     </v-avatar>
                   </v-btn>
                 </v-btn-toggle>
@@ -84,9 +87,10 @@
     <!-- DESCRIPTION -->
     <div class="description">
       <div class="desciption-txt">
-        <b>Step 1:</b> Shuffle initial story or start writing.
+        <b>Step 1:</b> <a @click.prevent="shuffleStory">Shuffle initial story</a> or start writing.
         <br />
-        <b>Step 2:</b> Autocomplete text and images.
+        <b>Step 2:</b> Press <i class="fa fa-magic" aria-hidden="true"></i>
+                <code style="font-weight: 900">tab</code> to autocomplete text and images.
         <br />
         <b>Step 3:</b> Give feedback and submit your story.
       </div>
@@ -103,7 +107,7 @@ export default {
     data: function () {
     return {
       highQualityAutocomplete: false,
-      styles: ['none', 'comics', 'sketch', 'anime'],
+      styles: ['none', 'sepia', 'sketch', 'invert'],
       // Index Corresponds to list of styles
       chosen_style: 0,
       storyID: this.$route.params.storyid || "1",

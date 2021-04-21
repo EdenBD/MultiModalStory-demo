@@ -119,6 +119,10 @@ summary {
   padding-left: 0.2em;
 }
 
+.header-style{
+  padding-right: 0.5em;
+}
+
 .header-el {
   display: inline-block;
   padding-right: 0.7em;
@@ -139,6 +143,23 @@ summary {
 .header-style-img {
   padding: 0;
   margin: 0;
+}
+
+// Images Styles
+
+.none {
+  filter: none;
+}
+
+.sepia{
+  filter:sepia(100%);
+}
+
+.sketch{
+  filter:grayscale(100%);}
+
+.invert{
+  filter:hue-rotate(90deg);
 }
 
 //  Article attributes taken from https://codepen.io/tomhodgins/pen/BKPJaN

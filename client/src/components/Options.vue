@@ -34,9 +34,10 @@
             :key="index + texts.length"
             @click="$emit('img-insert', img)"
             class="options-img"
+            :class="styling"
           >
             <v-list-item-title>
-              <v-img :src="`${images_path}${styling}/${img}.jpg`"></v-img>
+              <v-img :src="`${images_path}${img}/90x90`"></v-img>
             </v-list-item-title>
           </v-list-item>
         </v-list-item-group>

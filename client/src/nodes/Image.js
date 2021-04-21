@@ -30,6 +30,9 @@ export default class Image extends Node {
                 id: {
                     default: null,
                 },
+                class: {
+                    default: null
+                },
             },
             group: 'inline',
             draggable: true,
@@ -42,10 +45,12 @@ export default class Image extends Node {
                         title: dom.getAttribute('title'),
                         alt: dom.getAttribute('alt'),
                         id: dom.getAttribute('id'),
+                        class: dom.getAttribute("class")
                     }),
                 },
             ],
-            toDOM: node => ['img', node.attrs],
+            // Dynamic class
+            toDOM: node => ["img", { ...node.attrs, ...{ class: node.attrs.class } }]
         }
     }
 

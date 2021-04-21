@@ -16,18 +16,16 @@ export class API {
     // Options bar.
 
     /**
-     * Call MultiModal StoryGenerator to retreive non-duplicate images according to given extract, current images ids and style transfer.
+     * Call MultiModal StoryGenerator to retreive non-duplicate images according to given extract and current images ids.
      * Returns: Promise<Array<string>>
      * @param extract
      * @param current
-     * @param styling
 
      */
-    postRetreiveImage(extract, current, styling) {
+    postRetreiveImage(extract, current) {
         const toSend = {
             extract: extract,
             current: current,
-            styling: styling,
         }
 
         const url = makeUrl(this.baseURL + '/post-autocomplete-img');
