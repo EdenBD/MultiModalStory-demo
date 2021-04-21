@@ -50,10 +50,13 @@ def _sample_demo_sequence(model, tokenizer, prompts, max_length, num_return_sequ
     Uses hugginface generate (https://huggingface.co/transformers/main_classes/model.html?highlight=generate#transformers.TFPreTrainedModel.generate)
     With tokenizer.padding size = left, otherwise generation is random (issue https://github.com/huggingface/transformers/issues/3021)
     """
+    assert len(prompts) == 1, "Generate function assumes one prompt"
     encodings_dict = tokenizer(
-        prompts, truncation=True, max_length=constants.MAX_SEQ_LEN)
+        prompts)
+    # Truncates tokens from the end of the sequence.
+    sliced_inputs = [encodings_dict['input_ids'][0][-constants.MAX_SEQ_LEN:]]
     prompts_ids = torch.tensor(
-        encodings_dict['input_ids'], device=device, dtype=torch.long)
+        sliced_inputs, device=device, dtype=torch.long)
     first_idx = len(prompts_ids[0]) if first_idx else 0
 
     sample_outputs = model.generate(
