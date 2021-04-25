@@ -154,6 +154,11 @@ export default {
           },
           handleTextInput: (view, from) => {
             // Learned from similar code: https://gitmemory.com/issue/scrumpy/tiptap/490/565634509.
+
+            // Was the last input in the body of the story? This has a bug and looks at two inputs ago
+            this.lastInputWasInBody = view.trackWrites?.parentElement?.nodeName == 'P'
+            console.log(view)
+
             // For all char keys, to distinguish generated from user text.
             const [strike] = view.state.tr.selection.$anchor.marks();
             const isStrike = strike && strike.type.name === "strike";
@@ -186,6 +191,7 @@ export default {
       styling: "none",
       hasSomeContent: false,
       hasAutocompleted: false,
+      lastInputWasInBody: false
     }
   },
   beforeDestroy() {
@@ -193,7 +199,7 @@ export default {
   },
   computed: {
     showTabPrompt() {
-      return !this.hasAutocompleted && this.hasSomeContent
+      return !this.hasAutocompleted && this.hasSomeContent && this.lastInputWasInBody
     }
   },
   methods: {
