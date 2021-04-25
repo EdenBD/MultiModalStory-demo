@@ -3,7 +3,11 @@
   <div>
     <Header ref="childHeader" @shuffle-story="handleShuffleStory"></Header>
     <div class="editor">
-      <article>
+      <article class="main">
+        <transition name="fade">
+          <div class="float-info bounce-6" v-if="showTabPrompt">Press <i class="fa fa-magic" aria-hidden="true"></i>
+                <code style="font-weight: 900">tab</code> to autocomplete</div>
+        </transition>
         <editor-content ref="editorRef" :editor="editor" />
         <Options
           :isOpen="this.isOpen"
@@ -94,6 +98,8 @@ export default {
           })
         ],
         onInit: ({ view }) => {
+          localStorage.clear()
+
           // Log view once the editor is initialized.
           this.view = view;
           // Change default story if route includes user's story id. 
@@ -103,12 +109,17 @@ export default {
           // Update json that represents data.
           this.json = getJSON();
           this.html = getHTML();
+
+          const editorContentLength = this.editor.view.dom.innerText.trim().length
+          this.hasSomeContent = editorContentLength > 0
         },
         editorProps: {
           // Open options menu.
           handleKeyDown: (view, event) => { 
             // Check isLoading to prevent multiple keypresses from sending extra requests. 
-            if (event.key === "Tab" && !this.isLoading) {
+            const devComplete = event.ctrlKey && event.key == " "
+            const requestAutocomplete = event.key == "Tab" || devComplete
+            if (requestAutocomplete && !this.isLoading ) {
               // Get info for auto-complete pop-up menu.
               event.preventDefault();
               this.cursorPosition = view.state.selection.anchor;
@@ -134,6 +145,7 @@ export default {
               // If HQ on,  performs slower text generation with re-ranking
               const quality = this.$refs.childHeader.isHQAutocompleteOn();
               this.handleOptions(allText, currentImgs, quality);
+              this.hasAutocompleted = true
             }
             else if (event.key == "Escape") {
               this.isOpen = false;
@@ -172,10 +184,17 @@ export default {
       submittedFormID: "",
       isSubmitPressed: false,
       styling: "none",
+      hasSomeContent: false,
+      hasAutocompleted: false,
     }
   },
   beforeDestroy() {
     this.editor.destroy();
+  },
+  computed: {
+    showTabPrompt() {
+      return !this.hasAutocompleted && this.hasSomeContent
+    }
   },
   methods: {
     getEditor(){
@@ -278,5 +297,40 @@ export default {
   pointer-events: none;
   height: 0;
   font-style: italic;
+}
+
+article {
+  position: static;
+}
+
+.float-info {
+  position: absolute;
+  right: 0.5rem;
+  padding: inherit;
+  top: 1rem;
+  transform-origin: bottom;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+.bounce-6 {
+    animation-name: bounce-6;
+    animation-timing-function: ease;
+}
+@keyframes bounce-6 {
+    0%   { transform: scale(1,1)      translateY(0); }
+    10%  { transform: scale(1.03,.97)   translateY(0); }
+    30%  { transform: scale(.97,1.03)   translateY(-3px); }
+    50%  { transform: scale(1.01,.99) translateY(0); }
+    57%  { transform: scale(1,1)      translateY(-1px); }
+    64%  { transform: scale(1,1)      translateY(0); }
+    100% { transform: scale(1,1)      translateY(0); }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
