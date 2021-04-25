@@ -185,12 +185,11 @@ def KLDIV_error_per_text(tokenizer, preset_model, finetuned_model, text):
     return loss_fct(logSoftmax(logists_preset), softmax(logits_finetuned)).item()
 
 
-def score_text(text, lsa_embedder, tokenizer, preset_model, finetuned_model):
+def score_text(text, tokenizer, preset_model, finetuned_model):
     """ Uses rule-based rankings. Higher is better, but different features have different scales.
 
     Args:
         text (str/ List[str]): one story to rank.
-        lsa_embedder (Sklearn Vectorizer): lsa_embedder model to generate embeddings.
         tokenizer (Pytroch tokenizer): GPT2 Byte Tokenizer. 
         preset_model (Pytorch model): preset GPT2 model of the same/ different size of the finetuned model. 
         finetuned_model (Pytorch model): fine-tuned GPT2 model. 
@@ -206,7 +205,7 @@ def score_text(text, lsa_embedder, tokenizer, preset_model, finetuned_model):
     # Keep same order as in constants.FEATURES
     scores = [0 for _ in range(len(constants.FEATURES))]
     texts_sentences = split_to_sentences(text)
-    scores[0] = _coherency(texts_sentences, lsa_embedder)
+    # scores[0] = _coherency(texts_sentences, lsa_embedder)
     scores[1] = _readabilty(text, texts_sentences)
 
     # Set of text words without punctuation and stop words.

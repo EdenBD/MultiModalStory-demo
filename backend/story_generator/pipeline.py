@@ -105,7 +105,7 @@ class Pipeline():
                 self._gpt2, self._tokenizer, [extracts], max_length, re_ranking, self._device, first_idx=True)
             # Re-rank generated stories.
             stories_scores = np.array(list(map(lambda text: score_text(
-                text, self._lsa_embedder, self._tokenizer, self._preset_model, self._gpt2), generated)))
+                text, self._tokenizer, self._preset_model, self._gpt2), generated)))
             sorted_idx = sort_scores(stories_scores)
             # Apply ranking and Keep best <num_return_sequences>.
             # print(
