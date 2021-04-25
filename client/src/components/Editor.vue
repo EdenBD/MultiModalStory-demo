@@ -26,6 +26,7 @@
         :submittedFormID="this.submittedFormID"
         :isSubmitPressed="this.isSubmitPressed"
         @form-submit="handleFormSubmission"
+        :showContent="this.hasSomeContent"
       ></RatingStory>
     </div>
   </div>
