@@ -1,4 +1,4 @@
-# [FairyTailor](http://fairytailor.org/): Multimodal Generative Framework for Storytelling
+# [FairyTailor](https://fairytailor.vizhub.ai/): Multimodal Generative Framework for Storytelling
 
 ### Human-in-the-loop visual story co-creation. 
 
