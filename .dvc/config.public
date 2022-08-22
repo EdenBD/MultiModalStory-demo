@@ -1,0 +1,8 @@
+[core]
+    remote = ibmremote
+['remote "ibmremote"']
+    url = s3://hoo-eden-multi-modal-story-gen
+    endpointurl = https://s3.ap.cloud-object-storage.appdomain.cloud
+    access_key_id = 9b4b628dc7dc40859eb6f1d961cb58c9
+    secret_access_key = 92f9f9dc3b2e94ee2a61b9209f69490336b57f7f483cb62a 
+    region = ap-geo
