@@ -72,7 +72,6 @@ backend/story_generator/downloaded/**
 backend/unsplash-dataset/**
 
 # DVC 
-.dvc/config
 backend/outputs/**
 !backend/outputs/jsons_collect.py
 pnpm-lock.yaml
