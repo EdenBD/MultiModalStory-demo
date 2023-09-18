@@ -1,4 +1,7 @@
-# [FairyTailor](https://fairytailor.vizhub.ai/): Multimodal Generative Framework for Storytelling
+# [FairyTailor](https://arxiv.org/pdf/2108.04324.pdf): Multimodal Generative Framework for Storytelling
+
+**Notice (Updated September 17, 2023)**:
+The [demo](https://fairytailor.vizhub.ai/) and dvc downloads are no longer available. 
 
 ### Human-in-the-loop visual story co-creation. 
 
@@ -47,7 +50,7 @@ nltk.download('sentiwordnet')
 nltk.download('averaged_perceptron_tagger')
 ```
 
-### Large Data Management ([dvc](https://dvc.org/))
+### [DEPRECTAED] Large Data Management ([dvc](https://dvc.org/))
 
 Our large data files are stored on IBM's Cloud Object Storage, and to pull data files from that platform you will use a special, read-only `.dvc/config` file.
 
