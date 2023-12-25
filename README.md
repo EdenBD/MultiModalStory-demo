@@ -1,17 +1,22 @@
 # [FairyTailor](https://arxiv.org/pdf/2108.04324.pdf): Multimodal Generative Framework for Storytelling
 
-**Notice (Updated September 17, 2023)**:
-The [demo](https://fairytailor.vizhub.ai/) and dvc downloads are no longer available. 
 
-### Human-in-the-loop visual story co-creation. 
+## Human-in-the-loop visual story co-creation
 
 Users can create a cohesive children's story by weaving generated texts and retrieved images with their input. 
 With co-creation, writers contribute their creative thinking, while generative models contribute to their constant workflow. 
 FairyTailor adds another modality and modifies the text generation process to help producing a coherent and creative story. 
 
-![Architecture](framework.png)
+## Demo
 
-## Set-up (development)
+[Demo Video](https://github.com/EdenBD/MultiModalStory-demo/assets/25120539/db475ea0-36f9-485f-bfb6-b5e5a9ef237d)
+
+---
+
+## Set-up (local development)
+
+**Notice (Updated September 17, 2023):** 
+The [live demo](https://fairytailor.vizhub.ai/) and dvc downloads are no longer available.
 
 After cloning the repository:
 
